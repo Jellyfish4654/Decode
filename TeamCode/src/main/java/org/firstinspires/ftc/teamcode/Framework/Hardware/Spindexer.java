@@ -7,11 +7,11 @@ public class Spindexer {
     private double[] posIn = {0, 0.3, 0.6};
     private double[] posOut = {0.5, 0.2, 0.4};
 
-    public void in (int slot) {
+    public void setIn (int slot) {
         spindexer.setPosition(posIn[slot-1]);
     }
 
-    public void out (int slot) {
+    public void setOut (int slot) {
         spindexer.setPosition(posOut[slot-1]);
     }
 
