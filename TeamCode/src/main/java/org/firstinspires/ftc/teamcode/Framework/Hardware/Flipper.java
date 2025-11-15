@@ -6,7 +6,7 @@ public class Flipper {
     private final Servo servo;
     private final double up = 0.77;
     private final double down = 0.1875;
-    private int position;
+    private double position;
 
     public Flipper(Servo servo) {
         this.servo = servo;
@@ -22,6 +22,7 @@ public class Flipper {
 
     public void changePosition(double position) {
         servo.setPosition(position);
+        this.position = position;
     }
 
     public double getCurrentPosition() {
