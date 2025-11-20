@@ -2,6 +2,8 @@ package org.firstinspires.ftc.teamcode.Framework;
 
 import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.hardwareMap;
 
+import com.qualcomm.hardware.rev.RevColorSensorV3;
+import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
@@ -11,6 +13,7 @@ import org.firstinspires.ftc.teamcode.Framework.Hardware.Drivetrain;
 import org.firstinspires.ftc.teamcode.Framework.Hardware.Flipper;
 import org.firstinspires.ftc.teamcode.Framework.Hardware.Intake;
 import org.firstinspires.ftc.teamcode.Framework.Hardware.Outtake;
+import org.firstinspires.ftc.teamcode.Framework.Hardware.SensorColor;
 import org.firstinspires.ftc.teamcode.Framework.Hardware.Spindexer;
 
 public class BaseOpMode {
@@ -19,6 +22,8 @@ public class BaseOpMode {
     protected Intake intake;
     protected Outtake outtake;
     protected Spindexer spindexer;
+
+    protected SensorColor colorSensor;
 
     public void initHardware() {
 
@@ -51,5 +56,7 @@ public class BaseOpMode {
 
         spindexer = new Spindexer(hardwareMap.get(Servo.class, "spinServo"));
         spindexer.setIn(1);
+
+        colorSensor = new SensorColor (hardwareMap.get(RevColorSensorV3.class, "colorSensor"));
     }
 }
