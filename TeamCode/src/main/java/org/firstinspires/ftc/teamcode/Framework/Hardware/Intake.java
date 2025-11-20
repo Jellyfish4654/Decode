@@ -3,7 +3,11 @@ package org.firstinspires.ftc.teamcode.Framework.Hardware;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 
 public class Intake {
-    private DcMotorEx intake;
+    private final DcMotorEx intake;
+
+    public Intake (DcMotorEx motor) {
+        this.intake = motor;
+    }
 
     public void on () {
         intake.setPower(1);
