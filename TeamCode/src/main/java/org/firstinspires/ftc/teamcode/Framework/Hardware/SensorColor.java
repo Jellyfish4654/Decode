@@ -10,7 +10,7 @@ public class SensorColor {
         colorSensor = sensor;
     }
 
-    public void detectColor () {
+    public int[] detectColors () {
         colorSensor.enableLed(true);
         int red = colorSensor.red();
         int blue = colorSensor.blue();
@@ -19,6 +19,7 @@ public class SensorColor {
 
         int combined = colorSensor.argb();
 
+        return new int[] {red, blue, green, alpha, combined};
     }
 
 }
