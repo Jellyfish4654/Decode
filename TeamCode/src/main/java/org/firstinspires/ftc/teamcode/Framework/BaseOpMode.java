@@ -3,20 +3,23 @@ package org.firstinspires.ftc.teamcode.Framework;
 import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.hardwareMap;
 
 import com.qualcomm.hardware.rev.RevColorSensorV3;
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 
+import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.teamcode.Framework.Hardware.Drivetrain;
 import org.firstinspires.ftc.teamcode.Framework.Hardware.Flipper;
 import org.firstinspires.ftc.teamcode.Framework.Hardware.Intake;
 import org.firstinspires.ftc.teamcode.Framework.Hardware.Outtake;
 import org.firstinspires.ftc.teamcode.Framework.Hardware.SensorColor;
 import org.firstinspires.ftc.teamcode.Framework.Hardware.Spindexer;
+import org.firstinspires.ftc.teamcode.Framework.Hardware.Vision;
 
-public class BaseOpMode {
+public abstract class BaseOpMode extends LinearOpMode {
     protected Drivetrain drivetrain;
     protected Flipper flipper;
     protected Intake intake;
@@ -24,7 +27,7 @@ public class BaseOpMode {
     protected Spindexer spindexer;
 
     protected SensorColor colorSensor;
-
+    protected Vision vision;
     public void initHardware() {
 
         // wheel motors
@@ -58,5 +61,7 @@ public class BaseOpMode {
         spindexer.setIn(1);
 
         colorSensor = new SensorColor (hardwareMap.get(RevColorSensorV3.class, "colorSensor"));
+
+        vision = new Vision(hardwareMap.get(WebcamName.class, "vision"));
     }
 }
