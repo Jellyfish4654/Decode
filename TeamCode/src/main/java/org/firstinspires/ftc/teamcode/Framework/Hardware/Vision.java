@@ -138,7 +138,7 @@ public class Vision {
     /**
      * Analyzes a Blob to get the (approximate) location of an artifact and angle to the artifact
      * @param blob The Blob to analyze
-     * @return double[] with the distance in inches and the angle in this.
+     * @return double[] with the distance in inches and the angle
      */
     public double[] getArtifactLocation(ColorBlobLocatorProcessor.Blob blob){
         //Triangle Similarity: https://pyimagesearch.com/2015/01/19/find-distance-camera-objectmarker-using-python-opencv/
