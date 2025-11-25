@@ -32,7 +32,6 @@ public class Vision {
     AngleUnit angleUnit = AngleUnit.DEGREES;
     int camWidth=640;
     int camHeight=480;
-    //TODO: Calibrate this? (it must be in inches)
     double focalLength = 0.03937008;
 
     /**

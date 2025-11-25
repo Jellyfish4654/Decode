@@ -2,23 +2,25 @@ package org.firstinspires.ftc.teamcode.Tuners;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.hardware.Servo;
 
-import org.firstinspires.ftc.teamcode.Framework.BaseOpMode;
-import org.firstinspires.ftc.teamcode.Framework.Hardware.Flipper;
+import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
+import org.firstinspires.ftc.teamcode.Framework.Hardware.Vision;
 import org.firstinspires.ftc.vision.apriltag.AprilTagDetection;
 import org.firstinspires.ftc.vision.opencv.ColorBlobLocatorProcessor;
 
 
 @TeleOp(name = "Vision Tuner", group = "Test")
-public class VisionTuner extends BaseOpMode
+public class VisionTuner extends LinearOpMode
 {
+    Vision vision;
+
     @Override
     public void runOpMode() throws InterruptedException
     {
+        vision = new Vision(hardwareMap.get(WebcamName.class, "vision"));
 
         boolean togglePressed = false;
-        boolean isDetectingTags = true;
+        int mode = 1;
 
         AprilTagDetection tag;
         double[] tagNav;
@@ -26,13 +28,18 @@ public class VisionTuner extends BaseOpMode
         ColorBlobLocatorProcessor.Blob blob;
         double[] blobNav;
 
+        double percievedWidth;
+        double distance=5;
+        double focalLength=0;
+        double focalLengthSum=0;
+        double focalLengthAmount=0;
 
         waitForStart();
 
         while (opModeIsActive())
         {
-            if (isDetectingTags) {
-                telemetry.addLine("Detecting Tags");
+            if (mode==1) {
+                telemetry.addLine("Mode 1: Detecting Tags");
                 for (Object tagDetection : vision.getTags()){
                     tag = (AprilTagDetection) tagDetection;
                     telemetry.addLine();
@@ -52,8 +59,8 @@ public class VisionTuner extends BaseOpMode
                         telemetry.addData("\tType: ", "Unrecognized Tag");
                     }
                 }
-            }else{
-                telemetry.addLine("Detecting Blobs/Artifacts");
+            }else if (mode==2){
+                telemetry.addLine("Mode 2: Detecting Blobs/Artifacts");
                 for (Object blobDetection : vision.getGreenArtifacts()){
                     telemetry.addLine();
                     blob = (ColorBlobLocatorProcessor.Blob) blobDetection;
@@ -63,14 +70,44 @@ public class VisionTuner extends BaseOpMode
                             .addData("Bearing: ",blobNav[1]);
 
                 }
+                for (Object blobDetection : vision.getPurpleArtifacts()){
+                    telemetry.addLine();
+                    blob = (ColorBlobLocatorProcessor.Blob) blobDetection;
+                    telemetry.addData("\tColor: ","Purple");
+                    blobNav = vision.getArtifactLocation(blob);
+                    telemetry.addData("\tApprox. Dist: ",blobNav[0])
+                            .addData("Bearing: ",blobNav[1]);
+
+                }
+            } else{
+                telemetry.addLine("Mode 3: Focal Length Calibration (Use a purple artifact)");
+                blob = (ColorBlobLocatorProcessor.Blob) vision.getPurpleArtifacts()[0];
+                percievedWidth = blob.getCircle().getRadius()*2;
+                focalLength = (percievedWidth*distance) / 5;
+
+                focalLengthAmount+=1;
+                focalLengthSum += focalLength;
+                telemetry.addData("Distance (in): ",distance);
+                telemetry.addData("Width (px): ",percievedWidth);
+                telemetry.addData("Focal Length (in): ", focalLength);
+
+                telemetry.addData("\nAvg. Focal Length (in)", focalLengthSum/focalLengthAmount);
+
+                if (gamepad1.dpad_left){
+                    distance -= 1;
+                }else if (gamepad1.dpad_right){
+                    distance += 1;
+                }
             }
 
             if (gamepad1.a && !togglePressed){
-                isDetectingTags = !isDetectingTags;
+                mode = mode==3? 1 : mode+1;
                 togglePressed = true;
             }else if (!gamepad1.a && togglePressed){
                 togglePressed = false;
             }
+
+
 
             telemetry.update();
         }
