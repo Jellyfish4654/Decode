@@ -18,7 +18,7 @@ import org.firstinspires.ftc.teamcode.Framework.Hardware.Vision;
 
 public abstract class BaseOpMode extends LinearOpMode {
     protected Drivetrain drivetrain;
-    protected Paddle flipper;
+    protected Paddle paddle;
     protected Intake intake;
     protected Outtake outtake;
     protected Spindexer spindexer;
@@ -45,8 +45,8 @@ public abstract class BaseOpMode extends LinearOpMode {
                 DcMotorSimple.Direction.REVERSE  // motorBR
         });
 
-        flipper = new Paddle(hardwareMap.get(Servo.class, "flipperServo"));
-        flipper.setPosDown();
+        paddle = new Paddle(hardwareMap.get(Servo.class, "paddleServo"));
+        paddle.setPosDown();
 
         intake = new Intake(hardwareMap.get(DcMotorEx.class, "intakeMotor"));
         intake.off();

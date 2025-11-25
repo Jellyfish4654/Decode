@@ -14,11 +14,11 @@ public class PaddleTuner extends LinearOpMode
     @Override
     public void runOpMode() throws InterruptedException
     {
-        final Servo flipperServo;
+        final Servo paddleServo;
         telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
-        flipperServo = hardwareMap.get(Servo.class, "paddleServo");
+        paddleServo = hardwareMap.get(Servo.class, "paddleServo");
 
-        Paddle paddle = new Paddle(flipperServo);
+        Paddle paddle = new Paddle(paddleServo);
 
         double position = paddle.getCurrentPosition();
 
