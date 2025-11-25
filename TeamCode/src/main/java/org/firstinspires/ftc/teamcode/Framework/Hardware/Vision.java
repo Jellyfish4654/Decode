@@ -119,8 +119,17 @@ public class Vision {
      * @return Object[] of Blobs (can be cast to ColorBlobLocatorProcessor.Blob)
      */
     public Object[] getGreenArtifacts(){
+
         List<ColorBlobLocatorProcessor.Blob> blobs;
         blobs = this.greenArtifactDetector.getBlobs();
+
+        ColorBlobLocatorProcessor.Util.filterByCriteria(
+                ColorBlobLocatorProcessor.BlobCriteria.BY_CONTOUR_AREA,
+                50, 20000, blobs);
+
+        ColorBlobLocatorProcessor.Util.filterByCriteria(
+                ColorBlobLocatorProcessor.BlobCriteria.BY_CIRCULARITY,
+                0.6, 1, blobs);
         return blobs.toArray(new ColorBlobLocatorProcessor.Blob[0]);
     }
 
@@ -131,6 +140,14 @@ public class Vision {
     public Object[] getPurpleArtifacts(){
         List<ColorBlobLocatorProcessor.Blob> blobs;
         blobs = this.purpleArtifactDetector.getBlobs();
+
+        ColorBlobLocatorProcessor.Util.filterByCriteria(
+                ColorBlobLocatorProcessor.BlobCriteria.BY_CONTOUR_AREA,
+                50, 20000, blobs);
+
+        ColorBlobLocatorProcessor.Util.filterByCriteria(
+                ColorBlobLocatorProcessor.BlobCriteria.BY_CIRCULARITY,
+                0.6, 1, blobs);
         return blobs.toArray(new ColorBlobLocatorProcessor.Blob[0]);
     }
 
