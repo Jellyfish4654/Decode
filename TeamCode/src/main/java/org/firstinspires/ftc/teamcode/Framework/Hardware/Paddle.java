@@ -2,14 +2,14 @@ package org.firstinspires.ftc.teamcode.Framework.Hardware;
 
 import com.qualcomm.robotcore.hardware.Servo;
 
-public class Flipper {
-    private final Servo flipper;
+public class Paddle {
+    private final Servo paddle;
     private final double up = 0.77;
     private final double down = 0.1875;
     private double position;
 
-    public Flipper(Servo servo) {
-        this.flipper = servo;
+    public Paddle(Servo servo) {
+        this.paddle = servo;
     }
 
     public void setPosUp() {
@@ -21,7 +21,7 @@ public class Flipper {
     }
 
     public void changePosition(double position) {
-        flipper.setPosition(position);
+        paddle.setPosition(position);
         this.position = position;
     }
 

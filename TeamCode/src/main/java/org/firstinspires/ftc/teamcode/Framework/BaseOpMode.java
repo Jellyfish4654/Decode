@@ -1,10 +1,7 @@
 package org.firstinspires.ftc.teamcode.Framework;
 
-import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.hardwareMap;
-
 import com.qualcomm.hardware.rev.RevColorSensorV3;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
@@ -12,7 +9,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.teamcode.Framework.Hardware.Drivetrain;
-import org.firstinspires.ftc.teamcode.Framework.Hardware.Flipper;
+import org.firstinspires.ftc.teamcode.Framework.Hardware.Paddle;
 import org.firstinspires.ftc.teamcode.Framework.Hardware.Intake;
 import org.firstinspires.ftc.teamcode.Framework.Hardware.Outtake;
 import org.firstinspires.ftc.teamcode.Framework.Hardware.SensorColor;
@@ -21,7 +18,7 @@ import org.firstinspires.ftc.teamcode.Framework.Hardware.Vision;
 
 public abstract class BaseOpMode extends LinearOpMode {
     protected Drivetrain drivetrain;
-    protected Flipper flipper;
+    protected Paddle flipper;
     protected Intake intake;
     protected Outtake outtake;
     protected Spindexer spindexer;
@@ -48,7 +45,7 @@ public abstract class BaseOpMode extends LinearOpMode {
                 DcMotorSimple.Direction.REVERSE  // motorBR
         });
 
-        flipper = new Flipper(hardwareMap.get(Servo.class, "flipperServo"));
+        flipper = new Paddle(hardwareMap.get(Servo.class, "flipperServo"));
         flipper.setPosDown();
 
         intake = new Intake(hardwareMap.get(DcMotorEx.class, "intakeMotor"));
