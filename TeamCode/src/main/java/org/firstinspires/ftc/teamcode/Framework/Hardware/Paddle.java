@@ -4,8 +4,8 @@ import com.qualcomm.robotcore.hardware.Servo;
 
 public class Paddle {
     private final Servo paddle;
-    private final double up = 0.77;
-    private final double down = 0.1875;
+    private final double up = 0.224;
+    private final double down = 0.142;
     private double position;
 
     public Paddle(Servo servo) {
