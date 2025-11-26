@@ -55,7 +55,7 @@ public abstract class BaseOpMode extends LinearOpMode {
         outtake.off();
 
         spindexer = new Spindexer(hardwareMap.get(Servo.class, "spinServo"));
-        spindexer.setPosIn(1);
+        spindexer.setSlot(1);
 
         colorSensor = new SensorColor (hardwareMap.get(RevColorSensorV3.class, "colorSensor"));
 

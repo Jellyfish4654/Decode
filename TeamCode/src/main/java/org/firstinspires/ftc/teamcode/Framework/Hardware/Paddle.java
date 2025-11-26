@@ -7,7 +7,7 @@ public class Paddle {
     private final double posUp = 0.224;
     private final double posDown = 0.142;
     private double position;
-    private boolean state;
+    private boolean isUp;
 
     public Paddle(Servo servo) {
         this.paddle = servo;
@@ -15,12 +15,12 @@ public class Paddle {
 
     public void setUp() {
         changePosition(posUp);
-        this.state = true;
+        this.isUp = true;
     }
 
     public void setDown() {
         changePosition(posDown);
-        this.state = false;
+        this.isUp = false;
     }
 
     public void changePosition(double position) {
@@ -32,7 +32,7 @@ public class Paddle {
         return position;
     }
     
-    public boolean getCurrentState() {
-        return state;
+    public boolean getState() {
+        return isUp;
     }
 }
