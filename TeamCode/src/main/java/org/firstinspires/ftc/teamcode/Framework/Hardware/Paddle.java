@@ -4,20 +4,23 @@ import com.qualcomm.robotcore.hardware.Servo;
 
 public class Paddle {
     private final Servo paddle;
-    private final double up = 0.224;
-    private final double down = 0.142;
+    private final double posUp = 0.224;
+    private final double posDown = 0.142;
     private double position;
+    private boolean state;
 
     public Paddle(Servo servo) {
         this.paddle = servo;
     }
 
-    public void setPosUp() {
-        changePosition(up);
+    public void setUp() {
+        changePosition(posUp);
+        this.state = true;
     }
 
-    public void setPosDown() {
-        changePosition(down);
+    public void setDown() {
+        changePosition(posDown);
+        this.state = false;
     }
 
     public void changePosition(double position) {
@@ -27,5 +30,9 @@ public class Paddle {
 
     public double getCurrentPosition() {
         return position;
+    }
+    
+    public boolean getCurrentState() {
+        return state;
     }
 }

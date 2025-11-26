@@ -30,10 +30,10 @@ public abstract class BaseOpMode extends LinearOpMode {
         // wheel motors
 
         DcMotor[] driveMotors = {
-                hardwareMap.dcMotor.get("motorFL"),
-                hardwareMap.dcMotor.get("motorBL"),
-                hardwareMap.dcMotor.get("motorFR"),
-                hardwareMap.dcMotor.get("motorBR")};
+                hardwareMap.get(DcMotor.class, "motorFL"),
+                hardwareMap.get(DcMotor.class, "motorBL"),
+                hardwareMap.get(DcMotor.class, "motorFR"),
+                hardwareMap.get(DcMotor.class, "motorBR")};
 
         drivetrain = new Drivetrain(driveMotors);
 
@@ -46,7 +46,7 @@ public abstract class BaseOpMode extends LinearOpMode {
         });
 
         paddle = new Paddle(hardwareMap.get(Servo.class, "paddleServo"));
-        paddle.setPosDown();
+        paddle.setDown();
 
         intake = new Intake(hardwareMap.get(DcMotorEx.class, "intakeMotor"));
         intake.off();
@@ -55,7 +55,7 @@ public abstract class BaseOpMode extends LinearOpMode {
         outtake.off();
 
         spindexer = new Spindexer(hardwareMap.get(Servo.class, "spinServo"));
-        spindexer.setIn(1);
+        spindexer.setPosIn(1);
 
         colorSensor = new SensorColor (hardwareMap.get(RevColorSensorV3.class, "colorSensor"));
 

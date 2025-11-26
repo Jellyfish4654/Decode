@@ -5,7 +5,7 @@ import com.arcrobotics.ftclib.gamepad.GamepadEx;
 public class Controller {
     private final GamepadEx gamepad;
     //finish this later
-    Controller(GamepadEx gamepad){
+    public Controller(GamepadEx gamepad){
         this.gamepad = gamepad;
     }
 }
