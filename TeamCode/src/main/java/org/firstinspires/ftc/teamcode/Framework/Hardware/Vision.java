@@ -55,8 +55,8 @@ public class Vision {
                 .setBlurSize(5)          // Smooth the transitions between different colors in image
 
                 // the following options have been added to fill in perimeter holes.
-                .setDilateSize(15)       // Expand blobs to fill any divots on the edges
-                .setErodeSize(15)        // Shrink blobs back to original size
+                .setDilateSize(35)       // Expand blobs to fill any divots on the edges
+                .setErodeSize(35)        // Shrink blobs back to original size
                 .setMorphOperationType(ColorBlobLocatorProcessor.MorphOperationType.CLOSING);
         //Make two processors for the different artifact colors
         this.purpleArtifactDetector = artifactDetectorBuilder
@@ -73,7 +73,7 @@ public class Vision {
                 .addProcessor(this.purpleArtifactDetector)
                 .addProcessor(this.greenArtifactDetector)
                 //lower resolution possibly might make code faster if possible (ex 320, 240)
-                //however, camera will need to be calibrated
+                //however, camera will need to be calibrated and itll probably be a pain
                 .setCameraResolution(new Size(camWidth, camHeight))
                 .setStreamFormat(VisionPortal.StreamFormat.YUY2)
                 .enableLiveView(true)
@@ -125,11 +125,15 @@ public class Vision {
 
         ColorBlobLocatorProcessor.Util.filterByCriteria(
                 ColorBlobLocatorProcessor.BlobCriteria.BY_CONTOUR_AREA,
-                50, 20000, blobs);
+                80, 200000, blobs);
 
         ColorBlobLocatorProcessor.Util.filterByCriteria(
                 ColorBlobLocatorProcessor.BlobCriteria.BY_CIRCULARITY,
-                0.6, 1, blobs);
+                0.5, 1, blobs);
+
+        ColorBlobLocatorProcessor.Util.filterByCriteria(
+                ColorBlobLocatorProcessor.BlobCriteria.BY_DENSITY,
+                0, 0.75, blobs);
         return blobs.toArray(new ColorBlobLocatorProcessor.Blob[0]);
     }
 
@@ -143,11 +147,15 @@ public class Vision {
 
         ColorBlobLocatorProcessor.Util.filterByCriteria(
                 ColorBlobLocatorProcessor.BlobCriteria.BY_CONTOUR_AREA,
-                50, 20000, blobs);
+                80, 200000, blobs);
 
         ColorBlobLocatorProcessor.Util.filterByCriteria(
                 ColorBlobLocatorProcessor.BlobCriteria.BY_CIRCULARITY,
-                0.6, 1, blobs);
+                0.5, 1, blobs);
+
+        ColorBlobLocatorProcessor.Util.filterByCriteria(
+                ColorBlobLocatorProcessor.BlobCriteria.BY_DENSITY,
+                0, 0.75, blobs);
         return blobs.toArray(new ColorBlobLocatorProcessor.Blob[0]);
     }
 
