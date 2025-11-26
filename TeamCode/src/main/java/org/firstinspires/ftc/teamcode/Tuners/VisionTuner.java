@@ -58,9 +58,9 @@ public class VisionTuner extends LinearOpMode
                             telemetry.addData("\tLabel: ", String.format("%s (%s)",tag.metadata.name, tag.metadata.id));
 
                             telemetry.addData("\tRange: ",tagNav[0])
-                                    .addData("Bearing: ", tagNav[1])
-                                    .addData("Elevation", tagNav[2])
-                                    .addData("Yaw", tagNav[3]);
+                                    .addData("\tBearing: ", tagNav[1])
+                                    .addData("\tElevation", tagNav[2])
+                                    .addData("\tYaw", tagNav[3]);
                         }else{
                             telemetry.addData("\tType: ", "Unrecognized Tag");
                         }
@@ -73,7 +73,7 @@ public class VisionTuner extends LinearOpMode
                         telemetry.addData("\tColor: ","Green");
                         blobNav = vision.getArtifactLocation(blob);
                         telemetry.addData("\tApprox. Dist: ",blobNav[0])
-                                .addData("Bearing: ",blobNav[1]);
+                                .addData("\tBearing: ",blobNav[1]);
 
                     }
                     for (Object blobDetection : vision.getPurpleArtifacts()){
@@ -82,30 +82,32 @@ public class VisionTuner extends LinearOpMode
                         telemetry.addData("\tColor: ","Purple");
                         blobNav = vision.getArtifactLocation(blob);
                         telemetry.addData("\tApprox. Dist: ",blobNav[0])
-                                .addData("Bearing: ",blobNav[1]);
+                                .addData("\tBearing: ",blobNav[1]);
 
                     }
                 } else{
                     telemetry.addLine("Mode 3: Focal Length Calibration (Use a purple artifact)");
-                    blob = (ColorBlobLocatorProcessor.Blob) vision.getPurpleArtifacts()[0];
-                    percievedWidth = blob.getCircle().getRadius()*2;
-                    focalLength = (percievedWidth*distance) / 5;
+                    try{
+                        blob = (ColorBlobLocatorProcessor.Blob) vision.getPurpleArtifacts()[0];
+                        percievedWidth = blob.getCircle().getRadius()*2;
+                        focalLength = (percievedWidth*distance) / 5;
 
-                    focalLengthAmount+=1;
-                    focalLengthSum += focalLength;
-                    telemetry.addData("Distance (in): ",distance);
-                    telemetry.addData("Width (px): ",percievedWidth);
-                    telemetry.addData("Focal Length (in): ", focalLength);
+                        focalLengthAmount+=1;
+                        focalLengthSum += focalLength;
+                        telemetry.addData("Distance (in): ",distance);
+                        telemetry.addData("Width (px): ",percievedWidth);
+                        telemetry.addData("Focal Length (in): ", focalLength);
 
-                    telemetry.addData("\nAvg. Focal Length (in)", focalLengthSum/focalLengthAmount);
+                        telemetry.addData("\nAvg. Focal Length (in)", focalLengthSum/focalLengthAmount);
 
-                    if (gamepad1.dpad_left){
-                        distanceDouble -= 0.0005;
-                        distance = (int) distanceDouble;
-                    }else if (gamepad1.dpad_right){
-                        distanceDouble += 0.0005;
-                        distance = (int) distanceDouble;
-                    }
+                        if (gamepad1.dpad_left){
+                            distanceDouble -= 0.0005;
+                            distance = (int) distanceDouble;
+                        }else if (gamepad1.dpad_right){
+                            distanceDouble += 0.0005;
+                            distance = (int) distanceDouble;
+                        }
+                    }catch (Exception exception){}
                 }
 
                 if (gamepad1.cross && !togglePressed){

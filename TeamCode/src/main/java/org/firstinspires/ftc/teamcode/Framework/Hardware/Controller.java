@@ -3,6 +3,9 @@ package org.firstinspires.ftc.teamcode.Framework.Hardware;
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
 
 public class Controller {
-    private final GamepadEx Gamepad;
+    private final GamepadEx gamepad;
     //finish this later
+    Controller(GamepadEx gamepad){
+        this.gamepad = gamepad;
+    }
 }

@@ -18,18 +18,19 @@ public class IntakeTuner extends LinearOpMode
         telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
         intakeMotor = hardwareMap.get(DcMotor.class, "intakeMotor");
 
+        double power;
 
         waitForStart();
 
         while (opModeIsActive()) {
-
+            power = (gamepad1.left_stick_x+1)/2;
             if (gamepad1.a)
             {
                 intakeMotor.setPower(0);
             }
             else if (gamepad1.x)
             {
-                intakeMotor.setPower(1);
+                intakeMotor.setPower(power);
             }
         }
     }
