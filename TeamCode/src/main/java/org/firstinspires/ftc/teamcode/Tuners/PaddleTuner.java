@@ -19,8 +19,11 @@ public class PaddleTuner extends LinearOpMode
         paddleServo = hardwareMap.get(Servo.class, "paddleServo");
 
         Paddle paddle = new Paddle(paddleServo);
-
+        
+        paddle.setDown();
         double position = paddle.getCurrentPosition();
+        
+        
 
         waitForStart();
 
@@ -29,7 +32,8 @@ public class PaddleTuner extends LinearOpMode
             telemetry.addData("target position", position);
             telemetry.addData("position", paddle.getCurrentPosition());
             telemetry.update();
-
+            
+            
             paddle.changePosition(position);
 
             if (gamepad1.dpad_left)
