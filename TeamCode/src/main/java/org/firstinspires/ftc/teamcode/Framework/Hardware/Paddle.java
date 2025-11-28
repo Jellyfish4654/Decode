@@ -4,7 +4,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 
 public class Paddle {
     private final Servo paddle;
-    private final double posUp = 0.224;
+    private final double posUp = 0.2735;
     private final double posDown = 0.142;
     private double position;
     private boolean isUp;
