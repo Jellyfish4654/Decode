@@ -3,6 +3,8 @@ package org.firstinspires.ftc.teamcode.Framework.Hardware;
 import android.graphics.Color;
 import android.util.Size;
 
+import com.acmerobotics.dashboard.config.Config;
+
 import org.firstinspires.ftc.robotcore.external.hardware.camera.*;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
@@ -18,21 +20,31 @@ import org.firstinspires.ftc.vision.opencv.ImageRegion;
 
 import java.util.List;
 
-
+@Config
 public class Vision {
-    CameraName name;
-    AprilTagProcessor aprilTag;
-    VisionPortal visionPortal;
-    ColorBlobLocatorProcessor.Builder artifactDetectorBuilder;
-    ColorBlobLocatorProcessor greenArtifactDetector;
-    ColorBlobLocatorProcessor purpleArtifactDetector;
+    //"Constants" that can be changed by FTC Dashboard
+    public static double FOCAL_LENGTH = 0.03937008;
+    public static double DENSITY_MIN = 0;
+    public static double DENSITY_MAX = 0.75;
+    public static double CIRCULARITY_MIN = 0.2;
+    public static double CIRCULARITY_MAX = 1;
+    public static double CONTOUR_AREA_MIN = 80;
+    public static double CONTOUR_AREA_MAX = 200000;
+
+
+    private CameraName name;
+    private AprilTagProcessor aprilTag;
+    private VisionPortal visionPortal;
+    private ColorBlobLocatorProcessor.Builder artifactDetectorBuilder;
+    private ColorBlobLocatorProcessor greenArtifactDetector;
+    private ColorBlobLocatorProcessor purpleArtifactDetector;
 
     //change these units depending on what we need -- currently inches and degrees
-    DistanceUnit distanceUnit = DistanceUnit.INCH;
-    AngleUnit angleUnit = AngleUnit.DEGREES;
-    int camWidth=640;
-    int camHeight=480;
-    double focalLength = 0.03937008;
+    private DistanceUnit distanceUnit = DistanceUnit.INCH;
+    private AngleUnit angleUnit = AngleUnit.DEGREES;
+    private int camWidth=640;
+    private int camHeight=480;
+
 
     /**
      * Constructs the Vision class, including a VisionPortal and two processors for both Blob (Artifact) and
@@ -64,7 +76,7 @@ public class Vision {
                 .setCircleFitColor(Color.rgb(0, 255, 255)) //draw circlefit with a color of cyan
                 .build();
         this.greenArtifactDetector = artifactDetectorBuilder
-                .setTargetColorRange(ColorRange.ARTIFACT_PURPLE)
+                .setTargetColorRange(ColorRange.ARTIFACT_GREEN)
                 .setCircleFitColor(Color.rgb(255, 255, 0)) //draw circlefit with a color of yellow
                 .build();
         this.visionPortal = new VisionPortal.Builder()
@@ -125,15 +137,13 @@ public class Vision {
 
         ColorBlobLocatorProcessor.Util.filterByCriteria(
                 ColorBlobLocatorProcessor.BlobCriteria.BY_CONTOUR_AREA,
-                80, 200000, blobs);
+                CONTOUR_AREA_MIN, CONTOUR_AREA_MAX, blobs);
 
         ColorBlobLocatorProcessor.Util.filterByCriteria(
                 ColorBlobLocatorProcessor.BlobCriteria.BY_CIRCULARITY,
-                0.5, 1, blobs);
+                CIRCULARITY_MIN, CIRCULARITY_MAX, blobs);
 
-        ColorBlobLocatorProcessor.Util.filterByCriteria(
-                ColorBlobLocatorProcessor.BlobCriteria.BY_DENSITY,
-                0, 0.75, blobs);
+        ColorBlobLocatorProcessor.Util.filterByCriteria(ColorBlobLocatorProcessor.BlobCriteria.BY_DENSITY,DENSITY_MIN, DENSITY_MAX, blobs);
         return blobs.toArray(new ColorBlobLocatorProcessor.Blob[0]);
     }
 
@@ -147,15 +157,13 @@ public class Vision {
 
         ColorBlobLocatorProcessor.Util.filterByCriteria(
                 ColorBlobLocatorProcessor.BlobCriteria.BY_CONTOUR_AREA,
-                80, 200000, blobs);
+                CONTOUR_AREA_MIN, CONTOUR_AREA_MAX, blobs);
 
         ColorBlobLocatorProcessor.Util.filterByCriteria(
                 ColorBlobLocatorProcessor.BlobCriteria.BY_CIRCULARITY,
-                0.5, 1, blobs);
+                CIRCULARITY_MIN, CIRCULARITY_MAX, blobs);
 
-        ColorBlobLocatorProcessor.Util.filterByCriteria(
-                ColorBlobLocatorProcessor.BlobCriteria.BY_DENSITY,
-                0, 0.75, blobs);
+        ColorBlobLocatorProcessor.Util.filterByCriteria(ColorBlobLocatorProcessor.BlobCriteria.BY_DENSITY,DENSITY_MIN, DENSITY_MAX, blobs);
         return blobs.toArray(new ColorBlobLocatorProcessor.Blob[0]);
     }
 
@@ -168,7 +176,7 @@ public class Vision {
         //Triangle Similarity: https://pyimagesearch.com/2015/01/19/find-distance-camera-objectmarker-using-python-opencv/
         Circle circle = blob.getCircle();
         double diameter = circle.getRadius()*2;
-        double realWorldDist = (5.0*this.focalLength)/diameter;
+        double realWorldDist = (5.0*FOCAL_LENGTH)/diameter;
 
         //https://stackoverflow.com/questions/1211212/how-to-calculate-an-angle-from-three-points
 
