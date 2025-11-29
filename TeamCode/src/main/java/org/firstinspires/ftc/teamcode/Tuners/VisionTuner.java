@@ -7,6 +7,8 @@ import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.teamcode.Framework.Hardware.Vision;
 import org.firstinspires.ftc.vision.apriltag.AprilTagDetection;
 import org.firstinspires.ftc.vision.opencv.ColorBlobLocatorProcessor;
+import com.acmerobotics.dashboard.FtcDashboard;
+import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 
 
 @TeleOp(name = "Vision Tuner", group = "Test")
@@ -17,6 +19,7 @@ public class VisionTuner extends LinearOpMode
     @Override
     public void runOpMode() throws InterruptedException
     {
+        telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
         vision = new Vision(hardwareMap.get(WebcamName.class, "vision"));
 
         boolean togglePressed = false;
@@ -72,8 +75,11 @@ public class VisionTuner extends LinearOpMode
                         blob = (ColorBlobLocatorProcessor.Blob) blobDetection;
                         telemetry.addData("\tColor: ","Green");
                         blobNav = vision.getArtifactLocation(blob);
-                        telemetry.addData("\tApprox. Dist: ",blobNav[0])
-                                .addData("\tBearing: ",blobNav[1]);
+                        telemetry.addData("\tApprox. Dist (in): ",blobNav[0])
+                                .addData("\tBearing (deg): ",blobNav[1])
+                                .addData("\tDensity: ",blob.getDensity())
+                                .addData("\tCircularity: ",blob.getCircularity())
+                                .addData("\tArea: ",blob.getContourArea());
 
                     }
                     for (Object blobDetection : vision.getPurpleArtifacts()){
@@ -81,8 +87,11 @@ public class VisionTuner extends LinearOpMode
                         blob = (ColorBlobLocatorProcessor.Blob) blobDetection;
                         telemetry.addData("\tColor: ","Purple");
                         blobNav = vision.getArtifactLocation(blob);
-                        telemetry.addData("\tApprox. Dist: ",blobNav[0])
-                                .addData("\tBearing: ",blobNav[1]);
+                        telemetry.addData("\tApprox. Dist (in): ",blobNav[0])
+                                .addData("\tBearing (deg): ",blobNav[1])
+                                .addData("\tDensity: ",blob.getDensity())
+                                .addData("\tCircularity: ",blob.getCircularity())
+                                .addData("\tArea: ",blob.getContourArea());
 
                     }
                 } else{
@@ -113,6 +122,8 @@ public class VisionTuner extends LinearOpMode
                 if (gamepad1.cross && !togglePressed){
                     mode = mode==3? 1 : mode+1;
                     togglePressed = true;
+                    distance=5;
+                    distanceDouble=5;
                 }else if (!gamepad1.cross && togglePressed){
                     togglePressed = false;
                 }
