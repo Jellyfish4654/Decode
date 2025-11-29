@@ -13,7 +13,11 @@ public class Spindexer {
     
     // positive numbers for intake positions, negative for outtake positions, -3 to -1 and 1 to 3
     // absolute value and minus 1 for position indexes
-    private int slot;
+    private int currentSlot;
+    
+    // artifacts in slots
+    // 0=empty 1=green 2=purple
+    private int[] contents = new int[3];
 
     public Spindexer (Servo servo) {
         this.spindexer = servo;
@@ -27,18 +31,18 @@ public class Spindexer {
         } else if (newSlot < 0) {
             changePosition(posOut[posIndex]);
         }
-        this.slot = newSlot;
+        this.currentSlot = newSlot;
     }
     
     // separated methods with positive for both, 1 to 3
     public void setSlotIn (int newSlot) {
         changePosition(posIn[newSlot-1]);
-        this.slot = newSlot;
+        this.currentSlot = newSlot;
     }
 
     public void setSlotOut (int newSlot) {
         changePosition(posOut[newSlot-1]);
-        this.slot = -newSlot;
+        this.currentSlot = -newSlot;
     }
     
     
@@ -52,7 +56,15 @@ public class Spindexer {
     }
     
     public int getSlot() {
-        return slot;
+        return currentSlot;
+    }
+    
+    public void setContents(int slot, int newContents) {
+        this.contents[slot-1] = newContents;
+    }
+    
+    public int getContents(int slot) {
+        return this.contents[slot-1];
     }
 
 }
