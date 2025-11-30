@@ -1,5 +1,9 @@
 package org.firstinspires.ftc.teamcode.Framework.Hardware;
 
+import androidx.annotation.NonNull;
+
+import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
+import com.acmerobotics.roadrunner.Action;
 import com.qualcomm.robotcore.hardware.Servo;
 
 public class Paddle {
@@ -34,5 +38,29 @@ public class Paddle {
     
     public boolean getState() {
         return isUp;
+    }
+
+    public class PaddleUp implements Action {
+        @Override
+        public boolean run(@NonNull TelemetryPacket packet) {
+            paddle.setPosition(posUp);
+            position = paddle.getPosition();
+            return getState();
+        }
+    }
+    public Action paddleUp() {
+        return new PaddleUp();
+    }
+
+    public class PaddleDown implements Action {
+        @Override
+        public boolean run(@NonNull TelemetryPacket packet) {
+            paddle.setPosition(posDown);
+            position = paddle.getPosition();
+            return !getState();
+        }
+    }
+    public Action paddleDown() {
+        return new PaddleDown();
     }
 }
