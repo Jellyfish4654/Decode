@@ -60,10 +60,10 @@ public class VisionTuner extends LinearOpMode
                             telemetry.addData("\tType: ", "Team Target");
                             telemetry.addData("\tLabel: ", String.format("%s (%s)",tag.metadata.name, tag.metadata.id));
 
-                            telemetry.addData("\tRange: ",tagNav[0])
-                                    .addData("\tBearing: ", tagNav[1])
-                                    .addData("\tElevation", tagNav[2])
-                                    .addData("\tYaw", tagNav[3]);
+                            telemetry.addData("\tRange: ",tagNav[0]);
+                            telemetry.addData("\tBearing: ", tagNav[1]);
+                            telemetry.addData("\tElevation", tagNav[2]);
+                            telemetry.addData("\tYaw", tagNav[3]);
                         }else{
                             telemetry.addData("\tType: ", "Unrecognized Tag");
                         }
@@ -75,11 +75,11 @@ public class VisionTuner extends LinearOpMode
                         blob = (ColorBlobLocatorProcessor.Blob) blobDetection;
                         telemetry.addData("\tColor: ","Green");
                         blobNav = vision.getArtifactLocation(blob);
-                        telemetry.addData("\tApprox. Dist (in): ",blobNav[0])
-                                .addData("\tBearing (deg): ",blobNav[1])
-                                .addData("\tDensity: ",blob.getDensity())
-                                .addData("\tCircularity: ",blob.getCircularity())
-                                .addData("\tArea: ",blob.getContourArea());
+                        telemetry.addData("\tApprox. Dist (in): ",blobNav[0]);
+                        telemetry.addData("\tBearing (deg): ",blobNav[1]);
+                        telemetry.addData("\tDensity: ",blob.getDensity());
+                        telemetry.addData("\tCircularity: ",blob.getCircularity());
+                        telemetry.addData("\tArea: ",blob.getContourArea());
 
                     }
                     for (Object blobDetection : vision.getPurpleArtifacts()){
@@ -87,11 +87,11 @@ public class VisionTuner extends LinearOpMode
                         blob = (ColorBlobLocatorProcessor.Blob) blobDetection;
                         telemetry.addData("\tColor: ","Purple");
                         blobNav = vision.getArtifactLocation(blob);
-                        telemetry.addData("\tApprox. Dist (in): ",blobNav[0])
-                                .addData("\tBearing (deg): ",blobNav[1])
-                                .addData("\tDensity: ",blob.getDensity())
-                                .addData("\tCircularity: ",blob.getCircularity())
-                                .addData("\tArea: ",blob.getContourArea());
+                        telemetry.addData("\tApprox. Dist (in): ",blobNav[0]);
+                        telemetry.addData("\tBearing (deg): ",blobNav[1]);
+                        telemetry.addData("\tDensity: ",blob.getDensity());
+                        telemetry.addData("\tCircularity: ",blob.getCircularity());
+                        telemetry.addData("\tArea: ",blob.getContourArea());
 
                     }
                 } else{

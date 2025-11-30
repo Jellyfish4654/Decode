@@ -6,6 +6,7 @@ import android.util.Size;
 import com.acmerobotics.dashboard.config.Config;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.*;
+import org.firstinspires.ftc.robotcore.external.hardware.camera.controls.GainControl;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.vision.VisionPortal;
@@ -23,13 +24,15 @@ import java.util.List;
 @Config
 public class Vision {
     //"Constants" that can be changed by FTC Dashboard
-    public static double FOCAL_LENGTH = 0.03937008;
-    public static double DENSITY_MIN = 0;
-    public static double DENSITY_MAX = 0.75;
-    public static double CIRCULARITY_MIN = 0.2;
+    public static double FOCAL_LENGTH = 617;
+    public static double DENSITY_MIN = 0.2;
+    public static double DENSITY_MAX = 1;
+    public static double CIRCULARITY_MIN = 0.4;
     public static double CIRCULARITY_MAX = 1;
-    public static double CONTOUR_AREA_MIN = 80;
-    public static double CONTOUR_AREA_MAX = 200000;
+    public static double CONTOUR_AREA_MIN = 400;
+    public static double CONTOUR_AREA_MAX = 200_000;
+    
+    public static int GAIN = 100;
 
 
     private CameraName name;
@@ -44,6 +47,8 @@ public class Vision {
     private AngleUnit angleUnit = AngleUnit.DEGREES;
     private int camWidth=640;
     private int camHeight=480;
+    
+    private GainControl gainControl;
 
 
     /**
@@ -91,6 +96,8 @@ public class Vision {
                 .enableLiveView(true)
                 .setAutoStopLiveView(true)
                 .build();
+        this.gainControl = visionPortal.getCameraControl(gainControl.getClass());
+        
 
 
     }
@@ -100,7 +107,7 @@ public class Vision {
      * @return Object[] of AprilTags (can be cast to AprilTagDetection)
      */
     public Object[] getTags(){
-
+        gainControl.setGain(GAIN);
         List<AprilTagDetection> detectionsList;
         detectionsList = this.aprilTag.getDetections();
         return detectionsList.toArray(new AprilTagDetection[0]);
@@ -131,7 +138,7 @@ public class Vision {
      * @return Object[] of Blobs (can be cast to ColorBlobLocatorProcessor.Blob)
      */
     public Object[] getGreenArtifacts(){
-
+        gainControl.setGain(GAIN);
         List<ColorBlobLocatorProcessor.Blob> blobs;
         blobs = this.greenArtifactDetector.getBlobs();
 
@@ -152,6 +159,7 @@ public class Vision {
      * @return Object[] of Blobs (can be cast to ColorBlobLocatorProcessor.Blob)
      */
     public Object[] getPurpleArtifacts(){
+        gainControl.setGain(GAIN);
         List<ColorBlobLocatorProcessor.Blob> blobs;
         blobs = this.purpleArtifactDetector.getBlobs();
 
