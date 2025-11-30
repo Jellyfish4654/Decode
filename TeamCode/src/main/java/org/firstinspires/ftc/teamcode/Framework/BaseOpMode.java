@@ -6,8 +6,10 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.hardware.Gamepad;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
+import org.firstinspires.ftc.teamcode.Framework.Hardware.Controller;
 import org.firstinspires.ftc.teamcode.Framework.Hardware.Drivetrain;
 import org.firstinspires.ftc.teamcode.Framework.Hardware.Paddle;
 import org.firstinspires.ftc.teamcode.Framework.Hardware.Intake;
@@ -25,6 +27,8 @@ public abstract class BaseOpMode extends LinearOpMode {
 
     protected SensorColor colorSensor;
     protected Vision vision;
+
+    protected Controller controller;
     public void initHardware() {
 
         // wheel motors
@@ -60,5 +64,7 @@ public abstract class BaseOpMode extends LinearOpMode {
         colorSensor = new SensorColor (hardwareMap.get(RevColorSensorV3.class, "colorSensor"));
 
         vision = new Vision(hardwareMap.get(WebcamName.class, "vision"));
+
+        controller = new Controller (new Gamepad());
     }
 }
