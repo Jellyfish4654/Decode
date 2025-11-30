@@ -6,8 +6,8 @@ public class Spindexer {
     private final Servo spindexer;
     
     // Placeholder values
-    private final double[] posIn = {0, 0.3, 0.6};
-    private final double[] posOut = {0.5, 0.2, 0.4};
+    private final double[] posIn = {0.745, 0.382, 0};
+    private final double[] posOut = {0.19, 0.93, 0.56};
     
     private double position;
     
