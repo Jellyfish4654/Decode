@@ -6,6 +6,7 @@ import android.util.Size;
 import com.acmerobotics.dashboard.config.Config;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.*;
+import org.firstinspires.ftc.robotcore.external.hardware.camera.controls.ExposureControl;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.controls.GainControl;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
@@ -20,6 +21,7 @@ import org.firstinspires.ftc.vision.opencv.ImageRegion;
 
 
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 @Config
 public class Vision {
@@ -31,8 +33,13 @@ public class Vision {
     public static double CIRCULARITY_MAX = 1;
     public static double CONTOUR_AREA_MIN = 400;
     public static double CONTOUR_AREA_MAX = 200_000;
-    
-    public static int GAIN = 100;
+
+    /* Logitech C920 ranges:
+    Exposure 0 to 204 ms
+    Gain 0 to 255
+     */
+    public static int GAIN = 150;
+    public static long EXPOSURE = 150;
 
 
     private CameraName name;
@@ -49,6 +56,7 @@ public class Vision {
     private int camHeight=480;
     
     private GainControl gainControl;
+    private ExposureControl exposureControl;
 
 
     /**
@@ -66,7 +74,7 @@ public class Vision {
         this.artifactDetectorBuilder = new ColorBlobLocatorProcessor.Builder()
                 .setContourMode(ColorBlobLocatorProcessor.ContourMode.EXTERNAL_ONLY)
                 //change top based on where camera is... ROI needs (probably) to exclude the obelisk
-                .setRoi(ImageRegion.asUnityCenterCoordinates(-0.75, 0.4, 0.75, -1))
+                .setRoi(ImageRegion.asUnityCenterCoordinates(-1, 0.4, 1, -1))
                 .setDrawContours(true)   // Show contours on the Stream Preview -- can disable for performance
                 .setBoxFitColor(0)       // Disable the drawing of rectangles
                 .setBlurSize(5)          // Smooth the transitions between different colors in image
@@ -96,18 +104,35 @@ public class Vision {
                 .enableLiveView(true)
                 .setAutoStopLiveView(true)
                 .build();
-        this.gainControl = visionPortal.getCameraControl(gainControl.getClass());
-        
+        while(visionPortal.getCameraState()!= VisionPortal.CameraState.STREAMING){}
+        this.gainControl = visionPortal.getCameraControl(GainControl.class);
+        this.exposureControl = visionPortal.getCameraControl(ExposureControl.class);
+        exposureControl.setMode(ExposureControl.Mode.Manual);
+        gainControl.setGain(GAIN);
+        exposureControl.setExposure(EXPOSURE,TimeUnit.MILLISECONDS);
+
+
 
 
     }
 
+    private void exposureUpdate(){
+        //TODO: DELETE THIS AFTER FINDING OPTIMAL EXPOSURE
+        this.gainControl = visionPortal.getCameraControl(GainControl.class);
+        this.exposureControl = visionPortal.getCameraControl(ExposureControl.class);
+
+        if(exposureControl.getMode() != ExposureControl.Mode.Manual) {
+            exposureControl.setMode(ExposureControl.Mode.Manual);
+        }
+        gainControl.setGain(GAIN);
+        exposureControl.setExposure(EXPOSURE,TimeUnit.MILLISECONDS);
+    }
     /**
      * Get AprilTags detected by the camera
      * @return Object[] of AprilTags (can be cast to AprilTagDetection)
      */
     public Object[] getTags(){
-        gainControl.setGain(GAIN);
+        exposureUpdate();
         List<AprilTagDetection> detectionsList;
         detectionsList = this.aprilTag.getDetections();
         return detectionsList.toArray(new AprilTagDetection[0]);
@@ -138,13 +163,13 @@ public class Vision {
      * @return Object[] of Blobs (can be cast to ColorBlobLocatorProcessor.Blob)
      */
     public Object[] getGreenArtifacts(){
-        gainControl.setGain(GAIN);
+        exposureUpdate();
         List<ColorBlobLocatorProcessor.Blob> blobs;
         blobs = this.greenArtifactDetector.getBlobs();
 
         ColorBlobLocatorProcessor.Util.filterByCriteria(
                 ColorBlobLocatorProcessor.BlobCriteria.BY_CONTOUR_AREA,
-                CONTOUR_AREA_MIN, CONTOUR_AREA_MAX, blobs);
+                CONTOUR_AREA_MIN+150, CONTOUR_AREA_MAX, blobs);
 
         ColorBlobLocatorProcessor.Util.filterByCriteria(
                 ColorBlobLocatorProcessor.BlobCriteria.BY_CIRCULARITY,
@@ -159,7 +184,7 @@ public class Vision {
      * @return Object[] of Blobs (can be cast to ColorBlobLocatorProcessor.Blob)
      */
     public Object[] getPurpleArtifacts(){
-        gainControl.setGain(GAIN);
+        exposureUpdate();
         List<ColorBlobLocatorProcessor.Blob> blobs;
         blobs = this.purpleArtifactDetector.getBlobs();
 
