@@ -17,7 +17,9 @@ public class IntakeTuner extends LinearOpMode
         intakeMotor = hardwareMap.get(DcMotor.class, "intakeMotor");
 
         double offset = 0;
+        double speed;
         double power = 0;
+        boolean frozen = false;
 
         waitForStart();
 
@@ -28,12 +30,24 @@ public class IntakeTuner extends LinearOpMode
                 offset += 0.05;
             }
             
-            power = offset+gamepad1.right_trigger;
+            speed = offset+gamepad1.right_trigger;
             
-            intakeMotor.setPower(power);
+            if (!frozen) {
+                power = speed;
+                intakeMotor.setPower(power);
+            }
+            
+            // Circle button to freeze / unfreeze
+            if (gamepad1.bWasPressed()) {
+                frozen = !frozen;
+            }
+            
             telemetry.addData("button offset", offset);
             telemetry.addData("trigger", gamepad1.right_trigger);
-            telemetry.addData("final power", power);
+            telemetry.addData("combined speed", speed);
+            telemetry.addData("frozen", frozen);
+            telemetry.addData("applied power", power);
+            
             telemetry.update();
         }
     }
