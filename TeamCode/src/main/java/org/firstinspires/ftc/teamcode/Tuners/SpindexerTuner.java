@@ -17,7 +17,7 @@ public class SpindexerTuner extends LinearOpMode
     {
         final Servo spindexerServo;
         telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
-        spindexerServo = hardwareMap.get(Servo.class, "paddleServo");
+        spindexerServo = hardwareMap.get(Servo.class, "spindexerServo");
         
         Spindexer spindexer = new Spindexer(spindexerServo);
         
