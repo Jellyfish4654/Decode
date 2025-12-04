@@ -8,9 +8,9 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 
 /*
-|--------------------------------------------|
-|        Copy this tuner for outtake!        |
-|--------------------------------------------|
+|---------------------------------------------|
+|        Copy this tuner for outtake!         |
+|---------------------------------------------|
  */
 
 @TeleOp(name = "Intake Tuner", group = "Test")
