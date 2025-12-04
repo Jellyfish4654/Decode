@@ -26,23 +26,29 @@ public class Spindexer {
     // combined, parameter directly matches slot variable above
     public void setSlot(int newSlot) {
         int posIndex = Math.abs(newSlot) - 1;
-        if (newSlot > 0) {
-            changePosition(posIn[posIndex]);
-        } else if (newSlot < 0) {
-            changePosition(posOut[posIndex]);
+        if (posIndex >= 0 && posIndex <= 2) {
+            if (newSlot > 0) {
+                changePosition(posIn[posIndex]);
+            } else if (newSlot < 0) {
+                changePosition(posOut[posIndex]);
+            }
+            this.currentSlot = newSlot;
         }
-        this.currentSlot = newSlot;
     }
     
     // separated methods with positive for both, 1 to 3
     public void setSlotIn (int newSlot) {
-        changePosition(posIn[newSlot-1]);
-        this.currentSlot = newSlot;
+        if (newSlot >= 1 && newSlot <= 3) {
+            changePosition(posIn[newSlot - 1]);
+            this.currentSlot = newSlot;
+        }
     }
 
     public void setSlotOut (int newSlot) {
-        changePosition(posOut[newSlot-1]);
-        this.currentSlot = -newSlot;
+        if (newSlot >= 1 && newSlot <= 3) {
+            changePosition(posOut[newSlot - 1]);
+            this.currentSlot = -newSlot;
+        }
     }
     
     
@@ -60,11 +66,17 @@ public class Spindexer {
     }
     
     public void setContents(int slot, int newContents) {
-        this.contents[slot-1] = newContents;
+        if (slot >= 1 && slot <= 3 && newContents >= 0 && newContents <= 2) {
+            this.contents[slot - 1] = newContents;
+        }
     }
     
     public int getContents(int slot) {
-        return this.contents[slot-1];
+        if (slot >= 1 && slot <= 3) {
+            return this.contents[slot - 1];
+        } else {
+            return 0;
+        }
     }
 
 }

@@ -7,6 +7,12 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 
+/*
+|--------------------------------------------|
+|        Copy this tuner for outtake!        |
+|--------------------------------------------|
+ */
+
 @TeleOp(name = "Intake Tuner", group = "Test")
 public class IntakeTuner extends LinearOpMode
 {
@@ -17,21 +23,22 @@ public class IntakeTuner extends LinearOpMode
         intakeMotor = hardwareMap.get(DcMotor.class, "intakeMotor");
 
         double offset = 0;
-        double speed;
-        double power = 0;
         boolean frozen = false;
+        double power = 0;
 
         waitForStart();
 
         while (opModeIsActive()) {
+            
+            // dpad left / right for fine control
             if (gamepad1.dpadLeftWasPressed() && offset > 0) {
                 offset -= 0.05;
             } else if (gamepad1.dpadRightWasPressed() && offset < 1) {
                 offset += 0.05;
             }
             
-            speed = offset+gamepad1.right_trigger;
-            
+            // combined with right trigger for quick control
+            double speed = offset+gamepad1.right_trigger;
             if (!frozen) {
                 power = speed;
                 intakeMotor.setPower(power);
@@ -43,9 +50,9 @@ public class IntakeTuner extends LinearOpMode
             }
             
             telemetry.addData("button offset", offset);
-            telemetry.addData("trigger", gamepad1.right_trigger);
+            telemetry.addData("r trigger", gamepad1.right_trigger);
             telemetry.addData("combined speed", speed);
-            telemetry.addData("frozen", frozen);
+            telemetry.addData("applied power frozen", frozen);
             telemetry.addData("applied power", power);
             
             telemetry.update();

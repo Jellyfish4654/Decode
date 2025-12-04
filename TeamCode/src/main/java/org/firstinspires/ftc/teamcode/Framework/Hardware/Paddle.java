@@ -43,8 +43,7 @@ public class Paddle {
     public class PaddleUp implements Action {
         @Override
         public boolean run(@NonNull TelemetryPacket packet) {
-            paddle.setPosition(posUp);
-            position = paddle.getPosition();
+            setUp();
             return getState();
         }
     }
@@ -55,8 +54,7 @@ public class Paddle {
     public class PaddleDown implements Action {
         @Override
         public boolean run(@NonNull TelemetryPacket packet) {
-            paddle.setPosition(posDown);
-            position = paddle.getPosition();
+            setDown();
             return !getState();
         }
     }

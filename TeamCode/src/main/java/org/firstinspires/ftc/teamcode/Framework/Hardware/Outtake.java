@@ -13,18 +13,23 @@ public class Outtake {
         this.outtake = motor;
     }
 
-    public void on () {
-        outtake.setPower(1);
+    public void on() {
+        outtake.setPower(1); // adjust based on outtake tuner
     }
 
-    public void off () {
+    public void off() {
         outtake.setPower(0);
     }
+    
+    public boolean isOn() {
+        return outtake.getPower() != 0;
+    }
+    
     public class OuttakeOn implements Action {
         @Override
         public boolean run(@NonNull TelemetryPacket packet) {
-            outtake.setPower(1);
-            return true;
+            on();
+            return isOn();
         }
     }
     public Action outtakeOn() {
@@ -34,8 +39,8 @@ public class Outtake {
     public class OuttakeOff implements Action {
         @Override
         public boolean run (@NonNull TelemetryPacket packet) {
-            outtake.setPower(0);
-            return true;
+            off();
+            return !isOn();
         }
     }
     public Action outtakeOff() {

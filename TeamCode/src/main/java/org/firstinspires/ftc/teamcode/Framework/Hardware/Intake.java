@@ -13,18 +13,23 @@ public class Intake {
         this.intake = motor;
     }
 
-    public void on () {
-        intake.setPower(1);
+    public void on() {
+        intake.setPower(1); // adjust based on intake tuner
     }
 
-    public void off () {
+    public void off() {
         intake.setPower(0);
     }
+    
+    public boolean isOn() {
+        return intake.getPower() != 0;
+    }
+    
     public class IntakeOn implements Action {
         @Override
         public boolean run(@NonNull TelemetryPacket packet) {
-            intake.setPower(1);
-            return true;
+            on();
+            return isOn();
         }
     }
     public Action intakeOn() {
@@ -34,8 +39,8 @@ public class Intake {
     public class IntakeOff implements Action {
         @Override
         public boolean run (@NonNull TelemetryPacket packet) {
-            intake.setPower(0);
-            return true;
+            off();
+            return !isOn();
         }
     }
     public Action intakeOff() {
