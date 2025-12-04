@@ -52,19 +52,19 @@ public abstract class BaseOpMode extends LinearOpMode {
         paddle = new Paddle(hardwareMap.get(Servo.class, "paddleServo"));
         paddle.setDown();
 
-        intake = new Intake(hardwareMap.get(DcMotorEx.class, "intakeMotor"));
-        intake.off();
-
-        outtake = new Outtake(hardwareMap.get(DcMotorEx.class, "outtakeMotor"));
-        outtake.off();
+//        intake = new Intake(hardwareMap.get(DcMotorEx.class, "intakeMotor"));
+//        intake.off();
+//
+//        outtake = new Outtake(hardwareMap.get(DcMotorEx.class, "outtakeMotor"));
+//        outtake.off();
 
         spindexer = new Spindexer(hardwareMap.get(Servo.class, "spindexerServo"));
         spindexer.setSlot(1);
 
-        colorSensor = new SensorColor (hardwareMap.get(RevColorSensorV3.class, "colorSensor"));
+        //colorSensor = new SensorColor (hardwareMap.get(RevColorSensorV3.class, "colorSensor"));
 
-        vision = new Vision(hardwareMap.get(WebcamName.class, "vision"));
+        //vision = new Vision(hardwareMap.get(WebcamName.class, "vision"));
 
-        controller = new Controller (new Gamepad());
+        controller = new Controller(gamepad1);
     }
 }
