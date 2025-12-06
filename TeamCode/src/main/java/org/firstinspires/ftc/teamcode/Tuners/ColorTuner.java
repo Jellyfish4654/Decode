@@ -6,6 +6,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
+import com.qualcomm.robotcore.hardware.NormalizedRGBA;
 
 import org.firstinspires.ftc.teamcode.Framework.Hardware.SensorColor;
 
@@ -19,13 +20,17 @@ public class ColorTuner extends LinearOpMode
         sensor = hardwareMap.get(RevColorSensorV3.class, "colorSensor");
 
         SensorColor color = new SensorColor(sensor);
+        NormalizedRGBA detectedColor;
 
         double power;
 
         waitForStart();
 
         while (opModeIsActive()) {
-            telemetry.addData("colors:", color.detectColors());
+            detectedColor = color.detectColors();
+            telemetry.addData("R", detectedColor.red);
+            telemetry.addData("G", detectedColor.green);
+            telemetry.addData("B", detectedColor.blue);
             telemetry.update();
         }
     }
