@@ -22,6 +22,7 @@ public class JellyTele extends BaseOpMode {
         waitForStart();
         while (opModeIsActive()) {
             updateDrive(calculatePrecisionMultiplier());
+            updateIntake();
             //updateOuttake();
             telemetry.update();
         }
@@ -65,6 +66,14 @@ public class JellyTele extends BaseOpMode {
             }
         }
         controller.rumble(200);
+    }
+
+    private void updateIntake(){
+        if(controller.intake()){
+            intake.on();
+        } else if (intake.isOn()) {
+            intake.off();
+        }
     }
 
     private void updateDrive (double precisionMultiplier) {
