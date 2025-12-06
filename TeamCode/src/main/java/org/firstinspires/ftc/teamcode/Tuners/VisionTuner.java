@@ -128,7 +128,7 @@ public class VisionTuner extends LinearOpMode
                     togglePressed = false;
                 }
 
-
+                telemetry.clear();
                 telemetry.update();
             }
 

@@ -39,7 +39,7 @@ public class Vision {
     Gain 0 to 255
      */
     public static int GAIN = 150;
-    public static long EXPOSURE = 150;
+    public static long EXPOSURE = 30;
 
 
     private CameraName name;
