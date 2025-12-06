@@ -98,13 +98,14 @@ public class JellyTele extends BaseOpMode {
     }
 
     private double[] calculateMotorSpeeds() {
-        telemetry.addData("turn", controller.turnStickX());
-        telemetry.addData("moveX", controller.moveStickX());
-        telemetry.addData("moveY", controller.moveStickY());
-        
         double r = applyDeadband(controller.turnStickX());
         double x = applyDeadband(controller.moveStickX()) * STRAFE_ADJUSTMENT_FACTOR;
         double y = applyDeadband(controller.moveStickY());
+        
+        telemetry.addLine("Drivetrain:");
+        telemetry.addData("\tDriveR", r);
+        telemetry.addData("\tDriveX", x);
+        telemetry.addData("\tDriveY", y);
 
         double sum = ((Math.abs(y))+(Math.abs(x))+(Math.abs(r)));
         double denominator = Math.max(sum, 1);

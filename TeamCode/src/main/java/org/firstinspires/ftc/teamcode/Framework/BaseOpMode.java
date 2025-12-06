@@ -42,10 +42,10 @@ public abstract class BaseOpMode extends LinearOpMode {
 
 
         drivetrain.setMotorDirections(new DcMotorSimple.Direction[]{
-                DcMotorSimple.Direction.FORWARD, // motorFL
-                DcMotorSimple.Direction.FORWARD, // motorBL
-                DcMotorSimple.Direction.FORWARD, // motorFR
-                DcMotorSimple.Direction.REVERSE  // motorBR
+                DcMotorSimple.Direction.REVERSE, // motorFL
+                DcMotorSimple.Direction.REVERSE, // motorBL
+                DcMotorSimple.Direction.REVERSE, // motorFR
+                DcMotorSimple.Direction.FORWARD  // motorBR
         });
 
         paddle = new Paddle(hardwareMap.get(Servo.class, "paddleServo"));
