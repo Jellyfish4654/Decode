@@ -81,8 +81,11 @@ public class JellyTele extends BaseOpMode {
         drivetrain.setMotorSpeeds(precisionMultiplier, motorSpeeds);
     }
     private double applyDeadband(double stick) {
-        double sign = Math.signum(stick);
-        return stick + (-sign * DEADBAND_VALUE);
+        if (Math.abs(stick) > DEADBAND_VALUE) {
+            return stick;
+        } else {
+            return 0;
+        }
     }
 
     private double calculatePrecisionMultiplier() {
@@ -95,6 +98,10 @@ public class JellyTele extends BaseOpMode {
     }
 
     private double[] calculateMotorSpeeds() {
+        telemetry.addData("turn", controller.turnStickX());
+        telemetry.addData("moveX", controller.moveStickX());
+        telemetry.addData("moveY", controller.moveStickY());
+        
         double r = applyDeadband(controller.turnStickX());
         double x = applyDeadband(controller.moveStickX()) * STRAFE_ADJUSTMENT_FACTOR;
         double y = applyDeadband(controller.moveStickY());

@@ -6,9 +6,8 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
-import com.qualcomm.robotcore.hardware.Gamepad;
-
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
+
 import org.firstinspires.ftc.teamcode.Framework.Hardware.Controller;
 import org.firstinspires.ftc.teamcode.Framework.Hardware.Drivetrain;
 import org.firstinspires.ftc.teamcode.Framework.Hardware.Paddle;
@@ -44,17 +43,17 @@ public abstract class BaseOpMode extends LinearOpMode {
 
         drivetrain.setMotorDirections(new DcMotorSimple.Direction[]{
                 DcMotorSimple.Direction.FORWARD, // motorFL
-                DcMotorSimple.Direction.REVERSE, // motorBL
-                DcMotorSimple.Direction.REVERSE, // motorFR
+                DcMotorSimple.Direction.FORWARD, // motorBL
+                DcMotorSimple.Direction.FORWARD, // motorFR
                 DcMotorSimple.Direction.REVERSE  // motorBR
         });
 
         paddle = new Paddle(hardwareMap.get(Servo.class, "paddleServo"));
         paddle.setDown();
 
-//        intake = new Intake(hardwareMap.get(DcMotorEx.class, "intakeMotor"));
-//        intake.off();
-//
+        intake = new Intake(hardwareMap.get(DcMotorEx.class, "intakeMotor"));
+        intake.off();
+
 //        outtake = new Outtake(hardwareMap.get(DcMotorEx.class, "outtakeMotor"));
 //        outtake.off();
 
