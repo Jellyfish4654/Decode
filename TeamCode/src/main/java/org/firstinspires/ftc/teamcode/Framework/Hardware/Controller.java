@@ -135,9 +135,9 @@ public class Controller {
     public double moveStickY(){
         switch (this.moveStk){
             case LEFT_JOYSTICK:
-                return this.gamepad.left_stick_y;
+                return -this.gamepad.left_stick_y;
             case RIGHT_JOYSTICK:
-                return this.gamepad.right_stick_y;
+                return -this.gamepad.right_stick_y;
         }
         return 0.0;
     }

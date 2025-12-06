@@ -11,6 +11,7 @@ public class Intake {
 
     public Intake (DcMotorEx motor) {
         this.intake = motor;
+        intake.setDirection(DcMotorEx.Direction.REVERSE);
     }
 
     public void on() {
