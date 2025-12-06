@@ -30,7 +30,7 @@ public abstract class BaseOpMode extends LinearOpMode {
     protected Controller controller;
     public void initHardware() {
 
-        // wheel motors
+        // wheel motors (SAME ORDER IN HARDWARE CONFIG PLS)
 
         DcMotor[] driveMotors = {
                 hardwareMap.get(DcMotor.class, "motorFL"),
