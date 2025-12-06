@@ -13,7 +13,7 @@ import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 |---------------------------------------------|
  */
 
-@TeleOp(name = "Intake Tuner", group = "Test")
+@TeleOp(name = "Intake Tuner", group = "Tuner")
 public class IntakeTuner extends LinearOpMode
 {
     @Override

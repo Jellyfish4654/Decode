@@ -22,6 +22,7 @@ public class JellyTele extends BaseOpMode {
         waitForStart();
         while (opModeIsActive()) {
             updateDrive(calculatePrecisionMultiplier());
+            //updateOuttake();
             telemetry.update();
         }
     }
@@ -48,9 +49,10 @@ public class JellyTele extends BaseOpMode {
                 spindexer.setSlot(-slot);
                 spindexerStartTime = System.currentTimeMillis();
                 isOuttakingGreen = true;
-                break;
+                return;
             }
         }
+        gamepad1.rumble(200);
     }
 
     private void outPurple(){
@@ -58,10 +60,11 @@ public class JellyTele extends BaseOpMode {
             if(spindexer.getContents(slot)==2){
                 spindexer.setSlot(-slot);
                 spindexerStartTime = System.currentTimeMillis();
-                isOuttakingGreen = true;
-                break;
+                isOuttakingPurple = true;
+                return;
             }
         }
+        gamepad1.rumble(200);
     }
 
     private void updateDrive (double precisionMultiplier) {
