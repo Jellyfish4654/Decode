@@ -43,6 +43,7 @@ public class Controller {
 
         this.turnStk = Joysticks.RIGHT_JOYSTICK;
         this.moveStk = Joysticks.LEFT_JOYSTICK;
+
     }
 
     private Field getField(Buttons btn) throws NoSuchFieldException{
@@ -228,4 +229,10 @@ public class Controller {
         }
     }
 
+    public void rumble(int durationMs){
+        this.gamepad.rumble(durationMs);
+    }
+    public void rumble(double rumble1, double rumble2, int durationMs){
+        this.gamepad.rumble(rumble1,rumble2,durationMs);
+    }
 }

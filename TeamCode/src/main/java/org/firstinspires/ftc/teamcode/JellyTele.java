@@ -52,7 +52,7 @@ public class JellyTele extends BaseOpMode {
                 return;
             }
         }
-        gamepad1.rumble(200);
+        controller.rumble(200);
     }
 
     private void outPurple(){
@@ -64,7 +64,7 @@ public class JellyTele extends BaseOpMode {
                 return;
             }
         }
-        gamepad1.rumble(200);
+        controller.rumble(200);
     }
 
     private void updateDrive (double precisionMultiplier) {
