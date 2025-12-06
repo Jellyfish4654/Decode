@@ -11,7 +11,7 @@ import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 
 
-@TeleOp(name = "Vision Tuner", group = "Tuner")
+@TeleOp(name = "Vision Tuner", group = "2-Tuner")
 public class VisionTuner extends LinearOpMode
 {
     Vision vision;

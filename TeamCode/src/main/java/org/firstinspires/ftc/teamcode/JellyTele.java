@@ -4,7 +4,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.Framework.BaseOpMode;
 
-@TeleOp(name = "JellyTele", group = "OpMode")
+@TeleOp(name = "JellyTele", group = "1-OpMode")
 public class JellyTele extends BaseOpMode {
     private final double PRECISION_MULTIPLIER_LOW = 0.35;
     private final double PRECISION_MULTIPLIER_HIGH = 0.2;

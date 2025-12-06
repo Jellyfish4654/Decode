@@ -9,7 +9,7 @@ import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 
 import org.firstinspires.ftc.teamcode.Framework.Hardware.Spindexer;
 
-@TeleOp(name = "Spindexer Tuner", group = "Tuner")
+@TeleOp(name = "Spindexer Tuner", group = "2-Tuner")
 public class SpindexerTuner extends LinearOpMode
 {
     @Override
