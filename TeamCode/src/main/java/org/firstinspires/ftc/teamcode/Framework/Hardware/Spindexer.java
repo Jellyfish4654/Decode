@@ -5,9 +5,9 @@ import com.qualcomm.robotcore.hardware.Servo;
 public class Spindexer {
     private final Servo spindexer;
     
-    // Placeholder values
-    private final double[] posIn = {0.745, 0.382, 0};
-    private final double[] posOut = {0.19, 0.93, 0.56};
+    // Servo positions for intake and outtake of slots
+    private final double[] POSITIONS_IN = {0.745, 0.382, 0};
+    private final double[] POSITIONS_OUT = {0.19, 0.93, 0.56};
     
     private double position;
     
@@ -28,9 +28,9 @@ public class Spindexer {
         int posIndex = Math.abs(newSlot) - 1;
         if (posIndex >= 0 && posIndex <= 2) {
             if (newSlot > 0) {
-                changePosition(posIn[posIndex]);
+                changePosition(POSITIONS_IN[posIndex]);
             } else if (newSlot < 0) {
-                changePosition(posOut[posIndex]);
+                changePosition(POSITIONS_OUT[posIndex]);
             }
             this.currentSlot = newSlot;
         }
@@ -39,14 +39,14 @@ public class Spindexer {
     // separated methods with positive for both, 1 to 3
     public void setSlotIn (int newSlot) {
         if (newSlot >= 1 && newSlot <= 3) {
-            changePosition(posIn[newSlot - 1]);
+            changePosition(POSITIONS_IN[newSlot - 1]);
             this.currentSlot = newSlot;
         }
     }
 
     public void setSlotOut (int newSlot) {
         if (newSlot >= 1 && newSlot <= 3) {
-            changePosition(posOut[newSlot - 1]);
+            changePosition(POSITIONS_OUT[newSlot - 1]);
             this.currentSlot = -newSlot;
         }
     }

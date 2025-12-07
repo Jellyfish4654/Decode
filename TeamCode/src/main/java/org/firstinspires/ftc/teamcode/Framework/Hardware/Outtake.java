@@ -8,13 +8,19 @@ import com.qualcomm.robotcore.hardware.DcMotorEx;
 
 public class Outtake {
     private final DcMotorEx outtake;
+    private final double DEFAULT_POWER = 1;
 
     public Outtake (DcMotorEx motor) {
         this.outtake = motor;
     }
 
     public void on() {
-        outtake.setPower(1); // adjust based on outtake tuner
+        outtake.setPower(DEFAULT_POWER);
+    }
+    
+    // variable power depending on launch distance
+    public void on(double power) {
+        outtake.setPower(power);
     }
 
     public void off() {

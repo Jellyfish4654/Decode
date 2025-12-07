@@ -8,14 +8,15 @@ import com.qualcomm.robotcore.hardware.DcMotorEx;
 
 public class Intake {
     private final DcMotorEx intake;
-
+    private final double DEFAULT_POWER = 1;
+    
     public Intake (DcMotorEx motor) {
         this.intake = motor;
         intake.setDirection(DcMotorEx.Direction.REVERSE);
     }
 
     public void on() {
-        intake.setPower(1); // adjust based on intake tuner
+        intake.setPower(DEFAULT_POWER);
     }
 
     public void off() {
