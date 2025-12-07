@@ -50,7 +50,7 @@ public abstract class BaseOpMode extends LinearOpMode {
         
         
         // OTHER HARDWARE
-        // TODO: work on hardware and un-comment
+        // TODO: integrate hardware and un-comment
 
         paddle = new Paddle(hardwareMap.get(Servo.class, "paddleServo"));
         paddle.setDown();

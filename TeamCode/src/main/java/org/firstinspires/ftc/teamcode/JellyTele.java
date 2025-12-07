@@ -12,8 +12,8 @@ public class JellyTele extends BaseOpMode {
     private final double STRAFE_ADJUSTMENT_FACTOR = (14.0 / 13.0);
     private double SPINDEXER_DELAY = 0.55*1000; // in millis
 
-    private boolean isOuttakingGreen = false;
-    private boolean isOuttakingPurple = false;
+    private boolean isSpinningOut = false;
+    private boolean isSpinningIn = false;
     private long spindexerStartTime = 0;
 
     
@@ -23,12 +23,13 @@ public class JellyTele extends BaseOpMode {
         waitForStart();
         while (opModeIsActive()) {
             updateDrive(calculatePrecisionMultiplier());
-            updateIntake();
-            //updateOuttake();
+            updateIntake(); // temporary
+            //updateAux();
             telemetry.update();
         }
     }
     
+    // TODO: remove this once intake is fully integrated
     private void updateIntake() {
         if (controller.intake()) {
             intake.on();
@@ -37,46 +38,60 @@ public class JellyTele extends BaseOpMode {
         }
     }
 
-    private void updateOuttake() {
-        if(!isOuttakingGreen && !isOuttakingPurple) {
-            if (controller.outGreenPressed()) {
-                paddle.setDown();
-                outtake.outtakeOff();
-                outGreen();
+    private void updateAux() {
+        if(!isSpinningIn && !isSpinningOut && !paddle.getState()) {
+            if (controller.intakePressed()) {
+                spinIntake();
+            } else if (controller.outGreenPressed()) {
+                spinOuttake(1);
             } else if (controller.outPurplePressed()) {
-                paddle.setDown();
-                outtake.outtakeOff();
-                outPurple();
+                spinOuttake(2);
             }
-        }else{
+        } else if (isSpinningIn) {
             if(System.currentTimeMillis()-spindexerStartTime >= SPINDEXER_DELAY){
-                outtake.outtakeOn();
+                intake.on();
+                isSpinningIn = false;
+            }
+        } else if (isSpinningOut) {
+            if(System.currentTimeMillis()-spindexerStartTime >= SPINDEXER_DELAY){
+                outtake.on();
                 paddle.setUp();
 
-                isOuttakingGreen = false;
-                isOuttakingPurple = false;
+                isSpinningOut = false;
             }
         }
+        
+        telemetry.addLine();
+        telemetry.addLine("Aux:");
+        telemetry.addData("\tSpinningIn", isSpinningIn);
+        telemetry.addData("\tSpinningOut", isSpinningOut);
+        telemetry.addData("\tSpindexerPos", spindexer.getSlot());
+        telemetry.addData("\tIntakeOn", intake.isOn());
+        telemetry.addData("\tOuttakeOn", intake.isOn());
+        telemetry.addData("\tPaddleUp", paddle.getState());
     }
-
-    private void outGreen() {
+    
+    private void spinIntake() {
         for(int slot = 1; slot <= 3; slot++){
-            if(spindexer.getContents(slot)==1){
-                spindexer.setSlot(-slot);
+            if(spindexer.getContents(slot)==0){
+                paddle.setDown(); // backup safety
+                spindexer.setSlot(slot);
                 spindexerStartTime = System.currentTimeMillis();
-                isOuttakingGreen = true;
+                isSpinningIn = true;
                 return;
             }
         }
         controller.rumble(200);
     }
 
-    private void outPurple() {
-        for(int slot = 1; slot <= 3; slot++){
-            if(spindexer.getContents(slot)==2){
+    private void spinOuttake(int artifactID) {
+        for (int slot = 1; slot <= 3; slot++) {
+            if (spindexer.getContents(slot) == artifactID) {
+                paddle.setDown(); // backup safety
                 spindexer.setSlot(-slot);
+                spindexer.setContents(slot, 0);
                 spindexerStartTime = System.currentTimeMillis();
-                isOuttakingPurple = true;
+                isSpinningOut = true;
                 return;
             }
         }
