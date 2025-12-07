@@ -14,7 +14,7 @@ public class JellyTele extends BaseOpMode {
 
     private boolean isOuttakingGreen = false;
     private boolean isOuttakingPurple = false;
-    private double spindexerStartTime = 0;
+    private long spindexerStartTime = 0;
 
     @Override
     public void runOpMode() throws InterruptedException {
