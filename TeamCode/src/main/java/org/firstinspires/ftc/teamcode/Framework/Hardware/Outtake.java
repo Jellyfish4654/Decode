@@ -2,13 +2,17 @@ package org.firstinspires.ftc.teamcode.Framework.Hardware;
 
 import androidx.annotation.NonNull;
 
+import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.acmerobotics.roadrunner.Action;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 
+@Config
 public class Outtake {
     private final DcMotorEx outtake;
-    private final double DEFAULT_POWER = 1; // TODO: update this
+
+    //can config via dashboard
+    public static double DEFAULT_POWER = 1;
 
     public Outtake (DcMotorEx motor) {
         this.outtake = motor;

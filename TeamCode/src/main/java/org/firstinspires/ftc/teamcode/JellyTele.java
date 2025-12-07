@@ -40,13 +40,19 @@ public class JellyTele extends BaseOpMode {
     private void updateOuttake() {
         if(!isOuttakingGreen && !isOuttakingPurple) {
             if (controller.outGreenPressed()) {
+                paddle.setDown();
+                outtake.outtakeOff();
                 outGreen();
             } else if (controller.outPurplePressed()) {
+                paddle.setDown();
+                outtake.outtakeOff();
                 outPurple();
             }
         }else{
             if(System.currentTimeMillis()-spindexerStartTime >= SPINDEXER_DELAY){
                 outtake.outtakeOn();
+                paddle.setUp();
+
                 isOuttakingGreen = false;
                 isOuttakingPurple = false;
             }
