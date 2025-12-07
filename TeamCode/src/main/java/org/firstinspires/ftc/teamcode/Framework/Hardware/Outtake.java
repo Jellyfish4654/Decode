@@ -8,7 +8,7 @@ import com.qualcomm.robotcore.hardware.DcMotorEx;
 
 public class Outtake {
     private final DcMotorEx outtake;
-    private final double DEFAULT_POWER = 1;
+    private final double DEFAULT_POWER = 1; // TODO: update this
 
     public Outtake (DcMotorEx motor) {
         this.outtake = motor;

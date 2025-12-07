@@ -30,7 +30,7 @@ public abstract class BaseOpMode extends LinearOpMode {
     protected Controller controller;
     public void initHardware() {
 
-        // wheel motors (SAME ORDER IN HARDWARE CONFIG PLS)
+        // Drivetrain Motors (SAME ORDER IN HARDWARE CONFIG)
 
         DcMotor[] driveMotors = {
                 hardwareMap.get(DcMotor.class, "motorFL"),
@@ -47,6 +47,10 @@ public abstract class BaseOpMode extends LinearOpMode {
                 DcMotorSimple.Direction.REVERSE, // motorFR
                 DcMotorSimple.Direction.FORWARD  // motorBR
         });
+        
+        
+        // OTHER HARDWARE
+        // TODO: work on hardware and un-comment
 
         paddle = new Paddle(hardwareMap.get(Servo.class, "paddleServo"));
         paddle.setDown();
