@@ -40,7 +40,7 @@ public class JellyTele extends BaseOpMode {
 
     // TODO: adjust order to prioritze outtake or intake buttons when both pressed
     private void updateAux() {
-        if(!isSpinningIn && !isSpinningOut && !paddle.getState()) {
+        if (!isSpinningIn && !isSpinningOut && !paddle.getState()) {
             if (controller.intakePressed()) {
                 spinIntake();
             } else if (controller.outGreenPressed()) {
@@ -73,8 +73,8 @@ public class JellyTele extends BaseOpMode {
     }
     
     private void spinIntake() {
-        for(int slot = 1; slot <= 3; slot++){
-            if(spindexer.getContents(slot)==0){
+        for (int slot = 1; slot <= 3; slot++) {
+            if (spindexer.getContents(slot)==0) {
                 paddle.setDown(); // backup safety
                 spindexer.setSlot(slot);
                 spindexerStartTime = System.currentTimeMillis();
@@ -136,7 +136,7 @@ public class JellyTele extends BaseOpMode {
         double sum = ((Math.abs(y))+(Math.abs(x))+(Math.abs(r)));
         double denominator = Math.max(sum, 1);
 
-        return new double[]{
+        return new double[] {
                 (y + x + r)/denominator,
                 (y - x + r)/denominator,
                 (y - x - r)/denominator,
