@@ -45,12 +45,12 @@ public class PaddleTuner extends LinearOpMode
                 position += 0.0005;
             }
 
-            if (gamepad1.y)
+            if (gamepad1.triangle)
             {
                 paddle.setUp();
                 position = paddle.getCurrentPosition();
             }
-            else if (gamepad1.a)
+            else if (gamepad1.cross)
             {
                 paddle.setDown();
                 position = paddle.getCurrentPosition();
