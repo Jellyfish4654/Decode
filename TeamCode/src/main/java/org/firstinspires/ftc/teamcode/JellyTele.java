@@ -38,7 +38,7 @@ public class JellyTele extends BaseOpMode {
         }
     }
 
-    // TODO: adjust order to prioritze outtake or intake buttons when both pressed
+    // TODO: adjust order to prioritize outtake or intake buttons when both pressed
     private void updateAux() {
         if (!isSpinningIn && !isSpinningOut && !paddle.getState()) {
             if (controller.intakePressed()) {

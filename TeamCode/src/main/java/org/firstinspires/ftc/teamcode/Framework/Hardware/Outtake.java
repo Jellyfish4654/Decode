@@ -35,6 +35,8 @@ public class Outtake {
         return outtake.getPower() != 0;
     }
     
+    
+    // ↓ -------------- ↓ -------------- ↓ AUTO ACTIONS ↓ -------------- ↓ -------------- ↓
     public class OuttakeOn implements Action {
         @Override
         public boolean run(@NonNull TelemetryPacket packet) {

@@ -27,6 +27,8 @@ public class Intake {
         return intake.getPower() != 0;
     }
     
+    
+    // ↓ -------------- ↓ -------------- ↓ AUTO ACTIONS ↓ -------------- ↓ -------------- ↓
     public class IntakeOn implements Action {
         @Override
         public boolean run(@NonNull TelemetryPacket packet) {

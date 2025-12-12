@@ -92,7 +92,9 @@ public class Spindexer {
         }
         return slot;
     }
-
+    
+    
+    // ↓ -------------- ↓ -------------- ↓ AUTO ACTIONS ↓ -------------- ↓ -------------- ↓
     public class SlotIn implements Action {
         private SensorColor color;
 

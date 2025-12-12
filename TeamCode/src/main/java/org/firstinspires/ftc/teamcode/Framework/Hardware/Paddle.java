@@ -39,7 +39,9 @@ public class Paddle {
     public boolean getState() {
         return isUp;
     }
-
+    
+    
+    // ↓ -------------- ↓ -------------- ↓ AUTO ACTIONS ↓ -------------- ↓ -------------- ↓
     public class PaddleUp implements Action {
         @Override
         public boolean run(@NonNull TelemetryPacket packet) {
