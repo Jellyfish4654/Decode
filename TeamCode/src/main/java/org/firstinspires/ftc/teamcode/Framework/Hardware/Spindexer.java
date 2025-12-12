@@ -1,5 +1,9 @@
 package org.firstinspires.ftc.teamcode.Framework.Hardware;
 
+import androidx.annotation.NonNull;
+
+import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
+import com.acmerobotics.roadrunner.Action;
 import com.qualcomm.robotcore.hardware.Servo;
 
 public class Spindexer {
@@ -79,4 +83,54 @@ public class Spindexer {
         }
     }
 
+    public int findSlot (int search) {
+        int slot = 0;
+        for (int i = 1; i <= 3; i++) {
+            if (getContents(i) == search) {
+                slot = i;
+            }
+        }
+        return slot;
+    }
+
+    public class SlotIn implements Action {
+        private SensorColor color;
+
+        SlotIn (SensorColor color) {
+            this.color = color;
+        }
+        @Override
+        public boolean run(@NonNull TelemetryPacket packet) {
+            int slot = findSlot(0);
+            setSlotIn(slot);
+            return (getSlot() == slot);
+        }
+    }
+    public Action slotIn(SensorColor color) {
+        return new SlotIn(color);
+    }
+
+    public class GreenOut implements Action {
+        @Override
+        public boolean run(@NonNull TelemetryPacket packet) {
+            int slot = findSlot(1);
+            setSlotOut(slot);
+            return (getSlot() == slot);
+        }
+    }
+    public Action greenOut() {
+        return new GreenOut();
+    }
+
+    public class PurpleOut implements Action {
+        @Override
+        public boolean run(@NonNull TelemetryPacket packet) {
+            int slot = findSlot(1);
+            setSlotOut(slot);
+            return (getSlot() == slot);
+        }
+    }
+    public Action purpleOut() {
+        return new PurpleOut();
+    }
 }
