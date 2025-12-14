@@ -29,7 +29,7 @@ public class JellyTele extends BaseOpMode {
         }
     }
     
-    // TODO: remove this once intake is fully integrated
+    // TODO: temp -- remove this once intake is fully integrated and no longer needed
     private void updateIntake() {
         if (controller.intake()) {
             intake.on();
@@ -38,7 +38,7 @@ public class JellyTele extends BaseOpMode {
         }
     }
 
-    // TODO: adjust order to prioritize outtake or intake buttons when both pressed
+    // TODO: add more components while managing/stopping components with more delays
     private void updateAux() {
         boolean ready = System.currentTimeMillis()-spindexerStartTime >= SPINDEXER_DELAY;
         if (isSpinningIn && ready) {
