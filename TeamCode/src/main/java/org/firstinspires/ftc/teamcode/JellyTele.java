@@ -40,7 +40,15 @@ public class JellyTele extends BaseOpMode {
 
     // TODO: adjust order to prioritize outtake or intake buttons when both pressed
     private void updateAux() {
-        if (!isSpinningIn && !isSpinningOut && !paddle.getState()) {
+        boolean ready = System.currentTimeMillis()-spindexerStartTime >= SPINDEXER_DELAY;
+        if (isSpinningIn && ready) {
+            intake.on();
+            isSpinningIn = false;
+        } else if (isSpinningOut && ready) {
+            outtake.on();
+            paddle.setUp();
+            isSpinningOut = false;
+        } else if (!paddle.getState()) { // check that paddle is down for redundancy
             if (controller.intakePressed()) {
                 spinIntake();
             } else if (controller.outGreenPressed()) {
@@ -48,55 +56,41 @@ public class JellyTele extends BaseOpMode {
             } else if (controller.outPurplePressed()) {
                 spinOuttake(2);
             }
-        } else if (isSpinningIn) {
-            if(System.currentTimeMillis()-spindexerStartTime >= SPINDEXER_DELAY){
-                intake.on();
-                isSpinningIn = false;
-            }
-        } else if (isSpinningOut) {
-            if(System.currentTimeMillis()-spindexerStartTime >= SPINDEXER_DELAY){
-                outtake.on();
-                paddle.setUp();
-
-                isSpinningOut = false;
-            }
         }
         
         telemetry.addLine();
         telemetry.addLine("Aux:");
         telemetry.addData("\tSpinningIn", isSpinningIn);
         telemetry.addData("\tSpinningOut", isSpinningOut);
-        telemetry.addData("\tSpindexerPos", spindexer.getSlot());
+        telemetry.addData("\tSpindexerPos", spindexer.getCurrentSlot());
         telemetry.addData("\tIntakeOn", intake.isOn());
         telemetry.addData("\tOuttakeOn", intake.isOn());
         telemetry.addData("\tPaddleUp", paddle.getState());
     }
     
     private void spinIntake() {
-        for (int slot = 1; slot <= 3; slot++) {
-            if (spindexer.getContents(slot)==0) {
-                paddle.setDown(); // backup safety
-                spindexer.setSlot(slot);
-                spindexerStartTime = System.currentTimeMillis();
-                isSpinningIn = true;
-                return;
-            }
+        int slot = spindexer.findSlot(0);
+        if (slot == 0) {
+            controller.rumble(200);
+            return;
         }
-        controller.rumble(200);
+        paddle.setDown(); // backup safety
+        spindexer.setSlotIn(slot);
+        spindexerStartTime = System.currentTimeMillis();
+        isSpinningIn = true;
     }
 
     private void spinOuttake(int artifactID) {
-        for (int slot = 1; slot <= 3; slot++) {
-            if (spindexer.getContents(slot) == artifactID) {
-                paddle.setDown(); // backup safety
-                spindexer.setSlot(-slot);
-                spindexer.setContents(slot, 0);
-                spindexerStartTime = System.currentTimeMillis();
-                isSpinningOut = true;
-                return;
-            }
+        int slot = spindexer.findSlot(artifactID);
+        if (slot == 0) {
+            controller.rumble(200);
+            return;
         }
-        controller.rumble(200);
+        paddle.setDown(); // backup safety
+        spindexer.setSlotOut(slot);
+        spindexer.setContents(slot, 0);
+        spindexerStartTime = System.currentTimeMillis();
+        isSpinningOut = true;
     }
     
     

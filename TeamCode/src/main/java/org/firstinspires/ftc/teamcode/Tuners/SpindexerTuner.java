@@ -30,7 +30,7 @@ public class SpindexerTuner extends LinearOpMode
         while (opModeIsActive())
         {
             telemetry.addData("position", spindexer.getCurrentPosition());
-            telemetry.addData("last slot", spindexer.getSlot());
+            telemetry.addData("last slot", spindexer.getCurrentSlot());
             telemetry.update();
             
             spindexer.changePosition(position);
@@ -46,22 +46,22 @@ public class SpindexerTuner extends LinearOpMode
             // gamepad buttons for slots clockwise from bottom (1=cross, 2=square, 3=triangle)
             // hold right bumper for outtake positions, otherwise intake
             if (gamepad1.cross && gamepad1.right_bumper) {
-                spindexer.setSlot(-1);
+                spindexer.setSlotOut(1);
                 position = spindexer.getCurrentPosition();
             } else if (gamepad1.square && gamepad1.right_bumper) {
-                spindexer.setSlot(-2);
+                spindexer.setSlotOut(2);
                 position = spindexer.getCurrentPosition();
             } else if (gamepad1.triangle && gamepad1.right_bumper) {
-                spindexer.setSlot(-3);
+                spindexer.setSlotOut(3);
                 position = spindexer.getCurrentPosition();
             } else if (gamepad1.cross) {
-                spindexer.setSlot(1);
+                spindexer.setSlotIn(1);
                 position = spindexer.getCurrentPosition();
             } else if (gamepad1.square) {
-                spindexer.setSlot(2);
+                spindexer.setSlotIn(2);
                 position = spindexer.getCurrentPosition();
             } else if (gamepad1.triangle) {
-                spindexer.setSlot(3);
+                spindexer.setSlotIn(3);
                 position = spindexer.getCurrentPosition();
             }
         }

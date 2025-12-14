@@ -20,38 +20,38 @@ public class Spindexer {
     private int currentSlot;
     
     // artifacts in slots
-    // 0=empty 1=green 2=purple
+    // IDs: 0=empty 1=green 2=purple
     private int[] contents = new int[3];
 
     public Spindexer (Servo servo) {
         this.spindexer = servo;
     }
     
+    // DON'T USE -- unless its easier after getCurrentSlot()
     // combined, parameter directly matches slot variable above
-    public void setSlot(int newSlot) {
-        int posIndex = Math.abs(newSlot) - 1;
-        if (posIndex >= 0 && posIndex <= 2) {
-            if (newSlot > 0) {
-                changePosition(POSITIONS_IN[posIndex]);
-            } else if (newSlot < 0) {
-                changePosition(POSITIONS_OUT[posIndex]);
-            }
-            this.currentSlot = newSlot;
+    public void setSlot(int newSlotPlusMinus) {
+        if (newSlotPlusMinus > 0) {
+                setSlotIn(newSlotPlusMinus);
+        } else if (newSlotPlusMinus < 0) {
+                setSlotOut(newSlotPlusMinus);
         }
     }
     
     // separated methods with positive for both, 1 to 3
+    // abs to minimize errors
     public void setSlotIn (int newSlot) {
-        if (newSlot >= 1 && newSlot <= 3) {
-            changePosition(POSITIONS_IN[newSlot - 1]);
-            this.currentSlot = newSlot;
+        int newSlotAbs = Math.abs(newSlot);
+        if (newSlotAbs >= 1 && newSlotAbs <= 3) {
+            changePosition(POSITIONS_IN[newSlotAbs - 1]);
+            this.currentSlot = newSlotAbs;
         }
     }
 
     public void setSlotOut (int newSlot) {
-        if (newSlot >= 1 && newSlot <= 3) {
-            changePosition(POSITIONS_OUT[newSlot - 1]);
-            this.currentSlot = -newSlot;
+        int newSlotAbs = Math.abs(newSlot);
+        if (newSlotAbs >= 1 && newSlotAbs <= 3) {
+            changePosition(POSITIONS_OUT[newSlotAbs - 1]);
+            this.currentSlot = -newSlotAbs;
         }
     }
     
@@ -65,7 +65,7 @@ public class Spindexer {
         return position;
     }
     
-    public int getSlot() {
+    public int getCurrentSlot() {
         return currentSlot;
     }
     
@@ -83,14 +83,13 @@ public class Spindexer {
         }
     }
 
-    public int findSlot (int search) {
-        int slot = 0;
-        for (int i = 1; i <= 3; i++) {
-            if (getContents(i) == search) {
-                slot = i;
+    public int findSlot (int contents) {
+        for (int slot = 1; slot <= 3; slot++) {
+            if (getContents(slot) == contents) {
+                return slot;
             }
         }
-        return slot;
+        return 0;
     }
     
     
@@ -105,7 +104,7 @@ public class Spindexer {
         public boolean run(@NonNull TelemetryPacket packet) {
             int slot = findSlot(0);
             setSlotIn(slot);
-            return (getSlot() == slot);
+            return (getCurrentSlot() == slot);
         }
     }
     public Action slotIn(SensorColor color) {
@@ -117,7 +116,7 @@ public class Spindexer {
         public boolean run(@NonNull TelemetryPacket packet) {
             int slot = findSlot(1);
             setSlotOut(slot);
-            return (getSlot() == slot);
+            return (getCurrentSlot() == slot);
         }
     }
     public Action greenOut() {
@@ -129,7 +128,7 @@ public class Spindexer {
         public boolean run(@NonNull TelemetryPacket packet) {
             int slot = findSlot(1);
             setSlotOut(slot);
-            return (getSlot() == slot);
+            return (getCurrentSlot() == slot);
         }
     }
     public Action purpleOut() {
