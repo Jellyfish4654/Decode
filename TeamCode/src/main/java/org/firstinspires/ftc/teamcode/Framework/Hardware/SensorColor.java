@@ -17,9 +17,7 @@ public class SensorColor {
     }
 
     public NormalizedRGBA detectColors () {
-        NormalizedRGBA colors = colorSensor.getNormalizedColors();
-        Color.colorToHSV(colors.toColor(), hsvValues);
-        return colors;
+        return colorSensor.getNormalizedColors();
     }
 
 }
