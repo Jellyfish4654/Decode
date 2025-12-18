@@ -44,13 +44,13 @@ public class JellyTele extends BaseOpMode {
     private void updateAux() {
         boolean spindexerReady = System.currentTimeMillis()-spindexerStartTime >= SPINDEXER_DELAY;
         if (intake.isOn()) {
-//            if (colorSensor.isGreen()) {
-//                intake.off();
-//                spindexer.setContents(Spindexer.Content.GREEN);
-//            } else if (colorSensor.isPurple()) {
-//                intake.off();
-//                spindexer.setContents(Spindexer.Content.PURPLE);
-//            }
+            if (colorSensor.isGreen()) {
+                intake.off();
+                spindexer.setContents(Spindexer.Content.GREEN);
+            } else if (colorSensor.isPurple()) {
+                intake.off();
+                spindexer.setContents(Spindexer.Content.PURPLE);
+            }
         } else if (isSpinningIn && spindexerReady) {
             intake.on();
             isSpinningIn = false;
