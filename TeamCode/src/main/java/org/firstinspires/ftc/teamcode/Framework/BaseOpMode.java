@@ -1,10 +1,12 @@
 package org.firstinspires.ftc.teamcode.Framework;
 
 import com.qualcomm.hardware.rev.RevColorSensorV3;
+import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.hardware.IMU;
 import com.qualcomm.robotcore.hardware.Servo;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 
@@ -28,6 +30,8 @@ public abstract class BaseOpMode extends LinearOpMode {
     protected Vision vision;
 
     protected Controller controller;
+
+    protected IMU imuSensor;
     public void initHardware() {
 
         // Drivetrain Motors (SAME ORDER IN HARDWARE CONFIG)
@@ -69,5 +73,16 @@ public abstract class BaseOpMode extends LinearOpMode {
         //vision = new Vision(hardwareMap.get(WebcamName.class, "vision"));
 
         controller = new Controller(gamepad1);
+
+        imuSensor = initializeIMUSensor();
+    }
+    private IMU initializeIMUSensor()
+    {
+        IMU imu = hardwareMap.get(IMU.class, "imu");
+        IMU.Parameters parameters = new IMU.Parameters(new RevHubOrientationOnRobot(
+                RevHubOrientationOnRobot.LogoFacingDirection.LEFT,
+                RevHubOrientationOnRobot.UsbFacingDirection.UP));
+        imu.initialize(parameters);
+        return imu;
     }
 }

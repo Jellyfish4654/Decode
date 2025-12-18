@@ -15,7 +15,8 @@ enum Buttons {
     DPAD_LEFT,
     DPAD_RIGHT,
     LEFT_BUMPER,
-    RIGHT_BUMPER
+    RIGHT_BUMPER,
+    PLAYSTATION_LOGO
 }
 
 enum Joysticks {
@@ -29,6 +30,7 @@ public class Controller {
     Buttons outPurpleBtn;
     Buttons outGreenBtn;
     Buttons intakeBtn;
+    Buttons driveModeBtn;
 
     Joysticks turnStk;
     Joysticks moveStk;
@@ -40,6 +42,7 @@ public class Controller {
         this.outGreenBtn = Buttons.CIRCLE;
         this.outPurpleBtn = Buttons.SQUARE;
         this.intakeBtn = Buttons.CROSS;
+        this.driveModeBtn = Buttons.PLAYSTATION_LOGO;
 
         this.turnStk = Joysticks.RIGHT_JOYSTICK;
         this.moveStk = Joysticks.LEFT_JOYSTICK;
@@ -69,6 +72,8 @@ public class Controller {
                 return Gamepad.class.getField("left_bumper");
             case RIGHT_BUMPER:
                 return Gamepad.class.getField("right_bumper");
+            case PLAYSTATION_LOGO:
+                return Gamepad.class.getField("ps");
         }
 
         return null;
@@ -97,6 +102,9 @@ public class Controller {
                 return Gamepad.class.getMethod("leftBumperWasPressed");
             case RIGHT_BUMPER:
                 return Gamepad.class.getMethod("rightBumperWasPressed");
+            case PLAYSTATION_LOGO:
+                return Gamepad.class.getMethod("psWasPressed");
+
         }
 
         return null;
@@ -173,6 +181,14 @@ public class Controller {
         }
     }
 
+    public boolean driveMode() {
+        try {
+            return this.getField(this.driveModeBtn).getBoolean(this.gamepad);
+        }catch (Exception e){
+            return false;
+        }
+    }
+
     public boolean lowPrecision() {
         try {
             return this.getField(this.lowPrecisionBtn).getBoolean(this.gamepad);
@@ -208,6 +224,14 @@ public class Controller {
     public boolean outGreenPressed() {
         try {
             return (boolean)this.getMethod(this.outGreenBtn).invoke(this.gamepad);
+        }catch (Exception e){
+            return false;
+        }
+    }
+
+    public boolean driveModePressed() {
+        try {
+            return (boolean)this.getMethod(this.driveModeBtn).invoke(this.gamepad);
         }catch (Exception e){
             return false;
         }
