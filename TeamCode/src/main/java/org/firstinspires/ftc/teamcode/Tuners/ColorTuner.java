@@ -20,17 +20,16 @@ public class ColorTuner extends LinearOpMode
         sensor = hardwareMap.get(RevColorSensorV3.class, "colorSensor");
 
         SensorColor color = new SensorColor(sensor);
-        NormalizedRGBA detectedColor;
-
-        double power;
+        double[] detectedColors;
 
         waitForStart();
 
         while (opModeIsActive()) {
-            detectedColor = color.detectColors();
-            telemetry.addData("R", detectedColor.red);
-            telemetry.addData("G", detectedColor.green);
-            telemetry.addData("B", detectedColor.blue);
+            detectedColors = color.scaleRGBA();
+            telemetry.addData("R", detectedColors[0]);
+            telemetry.addData("G", detectedColors[1]);
+            telemetry.addData("B", detectedColors[2]);
+            telemetry.addData("A", detectedColors[3]);
             telemetry.update();
         }
     }

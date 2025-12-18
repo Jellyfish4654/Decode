@@ -64,7 +64,7 @@ public abstract class BaseOpMode extends LinearOpMode {
         spindexer = new Spindexer(hardwareMap.get(Servo.class, "spindexerServo"));
         spindexer.setSlotIn(1);
 
-        //colorSensor = new SensorColor (hardwareMap.get(RevColorSensorV3.class, "colorSensor"));
+        colorSensor = new SensorColor (hardwareMap.get(RevColorSensorV3.class, "colorSensor"));
 
         //vision = new Vision(hardwareMap.get(WebcamName.class, "vision"));
 
