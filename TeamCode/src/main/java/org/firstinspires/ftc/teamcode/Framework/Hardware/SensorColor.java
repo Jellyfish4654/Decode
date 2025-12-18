@@ -9,7 +9,10 @@ public class SensorColor {
     private final RevColorSensorV3 colorSensor;
     public static float GAIN = 2.5F;
 
-    private final float[] hsvValues = new float[3];
+    public static float[] minPurple = {30,10,33};
+    public static float[] maxPurple = {255,234,255};
+    public static float[] minGreen = {3,57,117};
+    public static float[] maxGreen = {255,255,232};
 
     public SensorColor (RevColorSensorV3 sensor) {
         colorSensor = sensor;
@@ -20,6 +23,17 @@ public class SensorColor {
         return colorSensor.getNormalizedColors();
     }
 
+    public boolean isGreen(){
+        double[] color = scaleRGBA();
+        return color[0] >= minGreen[0] && color[1] >= minGreen[1] && color[2] >= minGreen[2] &&
+                color[0] <= maxGreen[0] && color[1] <= maxGreen[1] && color[2] <= maxGreen[2];
+    }
+
+    public boolean isPurple(){
+        double[] color = scaleRGBA();
+        return color[0] >= minPurple[0] && color[1] >= minPurple[1] && color[2] >= minPurple[2] &&
+                color[0] <= maxPurple[0] && color[1] <= maxPurple[1] && color[2] <= maxPurple[2];
+    }
     public double[] scaleRGBA () {
         colorSensor.setGain(GAIN);
         NormalizedRGBA raw = detectColors();
