@@ -4,6 +4,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.teamcode.Framework.BaseOpMode;
+import org.firstinspires.ftc.teamcode.Framework.Hardware.Spindexer;
 
 @TeleOp(name = "JellyTele", group = "1-OpMode")
 public class JellyTele extends BaseOpMode {
@@ -41,11 +42,19 @@ public class JellyTele extends BaseOpMode {
 
     // TODO: add more components while managing/stopping components with more delays
     private void updateAux() {
-        boolean ready = System.currentTimeMillis()-spindexerStartTime >= SPINDEXER_DELAY;
-        if (isSpinningIn && ready) {
+        boolean spindexerReady = System.currentTimeMillis()-spindexerStartTime >= SPINDEXER_DELAY;
+        if (intake.isOn()) {
+//            if (colorSensor.isGreen()) {
+//                intake.off();
+//                spindexer.setContents(Spindexer.Content.GREEN);
+//            } else if (colorSensor.isPurple()) {
+//                intake.off();
+//                spindexer.setContents(Spindexer.Content.PURPLE);
+//            }
+        } else if (isSpinningIn && spindexerReady) {
             intake.on();
             isSpinningIn = false;
-        } else if (isSpinningOut && ready) {
+        } else if (isSpinningOut && spindexerReady) {
             outtake.on();
             paddle.setUp();
             isSpinningOut = false;
@@ -53,9 +62,9 @@ public class JellyTele extends BaseOpMode {
             if (controller.intakePressed()) {
                 spinIntake();
             } else if (controller.outGreenPressed()) {
-                spinOuttake(1);
+                spinOuttake(Spindexer.Content.GREEN);
             } else if (controller.outPurplePressed()) {
-                spinOuttake(2);
+                spinOuttake(Spindexer.Content.PURPLE);
             }
         }
         
@@ -70,7 +79,7 @@ public class JellyTele extends BaseOpMode {
     }
     
     private void spinIntake() {
-        int slot = spindexer.findSlot(0);
+        int slot = spindexer.findSlot(Spindexer.Content.EMPTY);
         if (slot == 0) {
             controller.rumble(200);
             return;
@@ -81,15 +90,15 @@ public class JellyTele extends BaseOpMode {
         isSpinningIn = true;
     }
 
-    private void spinOuttake(int artifactID) {
-        int slot = spindexer.findSlot(artifactID);
+    private void spinOuttake(Spindexer.Content artifact) {
+        int slot = spindexer.findSlot(artifact);
         if (slot == 0) {
             controller.rumble(200);
             return;
         }
         paddle.setDown(); // backup safety
         spindexer.setSlotOut(slot);
-        spindexer.setContents(slot, 0);
+        spindexer.setContents(Spindexer.Content.EMPTY);
         spindexerStartTime = System.currentTimeMillis();
         isSpinningOut = true;
     }

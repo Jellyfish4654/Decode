@@ -20,8 +20,12 @@ public class Spindexer {
     private int currentSlot;
     
     // artifacts in slots
-    // IDs: 0=empty 1=green 2=purple
-    private int[] contents = new int[3];
+    public enum Content {
+        EMPTY,
+        GREEN,
+        PURPLE
+    }
+    private Content[] contents = {Content.EMPTY, Content.EMPTY, Content.EMPTY};
 
     public Spindexer (Servo servo) {
         this.spindexer = servo;
@@ -69,23 +73,29 @@ public class Spindexer {
         return currentSlot;
     }
     
-    public void setContents(int slot, int newContents) {
-        if (slot >= 1 && slot <= 3 && newContents >= 0 && newContents <= 2) {
-            this.contents[slot - 1] = newContents;
+    public void setContents(Content newContents) {
+        int slotAbs = Math.abs(currentSlot);
+        this.contents[slotAbs - 1] = newContents;
+    }
+    
+    public void setContents(int slot, Content newContents) {
+        int slotAbs = Math.abs(slot);
+        if (slotAbs >= 1 && slotAbs <= 3) {
+            this.contents[slotAbs - 1] = newContents;
         }
     }
     
-    public int getContents(int slot) {
+    public Content getContents(int slot) {
         if (slot >= 1 && slot <= 3) {
             return this.contents[slot - 1];
         } else {
-            return 0;
+            return Content.EMPTY;
         }
     }
 
-    public int findSlot (int contents) {
+    public int findSlot (Content content) {
         for (int slot = 1; slot <= 3; slot++) {
-            if (getContents(slot) == contents) {
+            if (getContents(slot) == content) {
                 return slot;
             }
         }
@@ -102,7 +112,7 @@ public class Spindexer {
         }
         @Override
         public boolean run(@NonNull TelemetryPacket packet) {
-            int slot = findSlot(0);
+            int slot = findSlot(Content.EMPTY);
             setSlotIn(slot);
             return (getCurrentSlot() == slot);
         }
@@ -114,7 +124,7 @@ public class Spindexer {
     public class GreenOut implements Action {
         @Override
         public boolean run(@NonNull TelemetryPacket packet) {
-            int slot = findSlot(1);
+            int slot = findSlot(Content.GREEN);
             setSlotOut(slot);
             return (getCurrentSlot() == slot);
         }
@@ -126,7 +136,7 @@ public class Spindexer {
     public class PurpleOut implements Action {
         @Override
         public boolean run(@NonNull TelemetryPacket packet) {
-            int slot = findSlot(1);
+            int slot = findSlot(Content.PURPLE);
             setSlotOut(slot);
             return (getCurrentSlot() == slot);
         }
