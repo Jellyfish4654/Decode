@@ -20,12 +20,12 @@ public class Spindexer {
     private int currentSlot;
     
     // artifacts in slots
-    public enum Content {
+    public enum Artifact {
         EMPTY,
         GREEN,
         PURPLE
     }
-    private Content[] contents = {Content.EMPTY, Content.EMPTY, Content.EMPTY};
+    private Artifact[] contents = {Artifact.EMPTY, Artifact.EMPTY, Artifact.EMPTY};
 
     public Spindexer (Servo servo) {
         this.spindexer = servo;
@@ -73,27 +73,27 @@ public class Spindexer {
         return currentSlot;
     }
     
-    public void setContents(Content newContents) {
+    public void setContents(Artifact newContents) {
         int slotAbs = Math.abs(currentSlot);
         this.contents[slotAbs - 1] = newContents;
     }
     
-    public void setContents(int slot, Content newContents) {
+    public void setContents(int slot, Artifact newContents) {
         int slotAbs = Math.abs(slot);
         if (slotAbs >= 1 && slotAbs <= 3) {
             this.contents[slotAbs - 1] = newContents;
         }
     }
     
-    public Content getContents(int slot) {
+    public Artifact getContents(int slot) {
         if (slot >= 1 && slot <= 3) {
             return this.contents[slot - 1];
         } else {
-            return Content.EMPTY;
+            return Artifact.EMPTY;
         }
     }
 
-    public int findSlot (Content content) {
+    public int findSlot (Artifact content) {
         for (int slot = 1; slot <= 3; slot++) {
             if (getContents(slot) == content) {
                 return slot;
@@ -112,7 +112,7 @@ public class Spindexer {
         }
         @Override
         public boolean run(@NonNull TelemetryPacket packet) {
-            int slot = findSlot(Content.EMPTY);
+            int slot = findSlot(Artifact.EMPTY);
             setSlotIn(slot);
             return (getCurrentSlot() == slot);
         }
@@ -124,7 +124,7 @@ public class Spindexer {
     public class GreenOut implements Action {
         @Override
         public boolean run(@NonNull TelemetryPacket packet) {
-            int slot = findSlot(Content.GREEN);
+            int slot = findSlot(Artifact.GREEN);
             setSlotOut(slot);
             return (getCurrentSlot() == slot);
         }
@@ -136,7 +136,7 @@ public class Spindexer {
     public class PurpleOut implements Action {
         @Override
         public boolean run(@NonNull TelemetryPacket packet) {
-            int slot = findSlot(Content.PURPLE);
+            int slot = findSlot(Artifact.PURPLE);
             setSlotOut(slot);
             return (getCurrentSlot() == slot);
         }

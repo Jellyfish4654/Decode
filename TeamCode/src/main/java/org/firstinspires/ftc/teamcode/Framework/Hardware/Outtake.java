@@ -10,9 +10,8 @@ import com.qualcomm.robotcore.hardware.DcMotorEx;
 @Config
 public class Outtake {
     private final DcMotorEx outtake;
-
-    //can config via dashboard
-    public static double DEFAULT_POWER = 1;
+    
+    public static double DEFAULT_POWER = 1; // can config via dashboard
 
     public Outtake (DcMotorEx motor) {
         this.outtake = motor;
