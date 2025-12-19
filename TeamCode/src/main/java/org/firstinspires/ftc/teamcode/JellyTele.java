@@ -46,10 +46,10 @@ public class JellyTele extends BaseOpMode {
         if (intake.isOn()) {
             if (colorSensor.isGreen()) {
                 intake.off();
-                spindexer.setContents(Spindexer.Content.GREEN);
+                spindexer.setContents(Spindexer.Artifact.GREEN);
             } else if (colorSensor.isPurple()) {
                 intake.off();
-                spindexer.setContents(Spindexer.Content.PURPLE);
+                spindexer.setContents(Spindexer.Artifact.PURPLE);
             }
         } else if (isSpinningIn && spindexerReady) {
             intake.on();
@@ -62,9 +62,9 @@ public class JellyTele extends BaseOpMode {
             if (controller.intakePressed()) {
                 spinIntake();
             } else if (controller.outGreenPressed()) {
-                spinOuttake(Spindexer.Content.GREEN);
+                spinOuttake(Spindexer.Artifact.GREEN);
             } else if (controller.outPurplePressed()) {
-                spinOuttake(Spindexer.Content.PURPLE);
+                spinOuttake(Spindexer.Artifact.PURPLE);
             }
         }
         
@@ -79,7 +79,7 @@ public class JellyTele extends BaseOpMode {
     }
     
     private void spinIntake() {
-        int slot = spindexer.findSlot(Spindexer.Content.EMPTY);
+        int slot = spindexer.findSlot(Spindexer.Artifact.EMPTY);
         if (slot == 0) {
             controller.rumble(200);
             return;
@@ -90,7 +90,7 @@ public class JellyTele extends BaseOpMode {
         isSpinningIn = true;
     }
 
-    private void spinOuttake(Spindexer.Content artifact) {
+    private void spinOuttake(Spindexer.Artifact artifact) {
         int slot = spindexer.findSlot(artifact);
         if (slot == 0) {
             controller.rumble(200);
@@ -98,7 +98,7 @@ public class JellyTele extends BaseOpMode {
         }
         paddle.setDown(); // backup safety
         spindexer.setSlotOut(slot);
-        spindexer.setContents(Spindexer.Content.EMPTY);
+        spindexer.setContents(Spindexer.Artifact.EMPTY);
         spindexerStartTime = System.currentTimeMillis();
         isSpinningOut = true;
     }
@@ -110,7 +110,7 @@ public class JellyTele extends BaseOpMode {
         MECANUM,
         FIELDCENTRIC
     }
-    protected DriveMode driveMode = DriveMode.MECANUM;
+    private DriveMode driveMode = DriveMode.MECANUM;
     private void updateDrive(double precisionMultiplier) {
         if (controller.driveModePressed()) {
             if (driveMode == DriveMode.MECANUM) {
