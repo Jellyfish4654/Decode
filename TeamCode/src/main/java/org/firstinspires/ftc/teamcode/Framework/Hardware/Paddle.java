@@ -36,7 +36,7 @@ public class Paddle {
         return position;
     }
     
-    public boolean getState() {
+    public boolean isUp() {
         return isUp;
     }
     
@@ -46,7 +46,7 @@ public class Paddle {
         @Override
         public boolean run(@NonNull TelemetryPacket packet) {
             setUp();
-            return getState();
+            return isUp();
         }
     }
     public Action paddleUp() {
@@ -57,7 +57,7 @@ public class Paddle {
         @Override
         public boolean run(@NonNull TelemetryPacket packet) {
             setDown();
-            return !getState();
+            return !isUp();
         }
     }
     public Action paddleDown() {
