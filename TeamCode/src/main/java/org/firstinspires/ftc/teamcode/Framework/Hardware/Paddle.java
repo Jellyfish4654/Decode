@@ -8,8 +8,8 @@ import com.qualcomm.robotcore.hardware.Servo;
 
 public class Paddle {
     private final Servo paddle;
-    private final double POS_UP = 0.3415;
-    private final double POS_DOWN = 0.130;
+    private final double POS_UP = 0.0245;
+    private final double POS_DOWN = 0.219;
     private double position;
     private boolean isUp;
 
