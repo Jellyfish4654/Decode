@@ -66,18 +66,17 @@ public class JellyTele extends BaseOpMode {
                 spinState = SpinState.STANDBY;
             }
         } else if (spinState == SpinState.OUTTAKING && outtakeCompleted) {
-            spinState = SpinState.STANDBY;
-            spindexer.setContents(Spindexer.Artifact.EMPTY);
             outtake.off();
+            spindexer.setContents(Spindexer.Artifact.EMPTY);
+            spinState = SpinState.STANDBY;
         } else if (spinState == SpinState.SPIN_INTAKE && spinCompleted) {
             intake.on();
             spinState = SpinState.INTAKING;
         } else if (spinState == SpinState.SPIN_OUTTAKE && spinCompleted) {
             outtake.on();
             paddle.setUp();
-
-            spinState = SpinState.OUTTAKING;
             outtakeStartTime = System.currentTimeMillis();
+            spinState = SpinState.OUTTAKING;
         } else if (spinState == SpinState.STANDBY) {
             if (controller.intakePressed()) {
                 spinIntake();
