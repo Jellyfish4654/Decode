@@ -13,6 +13,7 @@ public class JellyTele extends BaseOpMode {
     private final double DEADBAND_VALUE = 0.02;
     private final double STRAFE_ADJUSTMENT_FACTOR = (14.0 / 13.0);
     private double SPINDEXER_DELAY = 0.55*1000; // in millis
+    private double OUTTAKE_DELAY = 0.5*1000;
 
     private enum SpinState {
         STANDBY,
@@ -23,6 +24,7 @@ public class JellyTele extends BaseOpMode {
     }
     private SpinState spinState = SpinState.STANDBY;
     private long spindexerStartTime = 0;
+    private long outtakeStartTime = 0;
 
     
     @Override
@@ -31,20 +33,20 @@ public class JellyTele extends BaseOpMode {
         waitForStart();
         while (opModeIsActive()) {
             updateDrive(calculatePrecisionMultiplier());
-            updateIntake(); // temporary
-            //updateAux();
+            //updateIntake(); // temporary
+            updateAux();
             telemetry.update();
         }
     }
     
     // TODO: temp -- remove this once intake is fully integrated and no longer needed
-    private void updateIntake() {
+    /*private void updateIntake() {
         if (controller.intake()) {
             intake.on();
         } else if (intake.isOn()) {
             intake.off();
         }
-    }
+    }*/
 
     // TODO: add more components while managing/stopping components with more delays
     private void updateAux() {
@@ -60,14 +62,19 @@ public class JellyTele extends BaseOpMode {
                 spinState = SpinState.STANDBY;
             }
         } else if (spinState == SpinState.OUTTAKING) {
-            assert true; // placeholder so android studio doesn't show yellow
+            if(System.currentTimeMillis()-outtakeStartTime >= OUTTAKE_DELAY){
+                spinState = SpinState.STANDBY;
+                spindexer.setContents(Spindexer.Artifact.EMPTY);
+            }
         } else if (spinState == SpinState.SPIN_INTAKE && spinCompleted) {
             intake.on();
             spinState = SpinState.INTAKING;
         } else if (spinState == SpinState.SPIN_OUTTAKE && spinCompleted) {
             outtake.on();
             paddle.setUp();
+
             spinState = SpinState.OUTTAKING;
+            outtakeStartTime = System.currentTimeMillis();
         } else if (spinState == SpinState.STANDBY) {
             if (controller.intakePressed()) {
                 spinIntake();
@@ -83,7 +90,7 @@ public class JellyTele extends BaseOpMode {
         telemetry.addData("\tSpinState", spinState);
         telemetry.addData("\tSpindexerSlot", spindexer.getCurrentSlot());
         telemetry.addData("\tIntakeOn", intake.isOn());
-        telemetry.addData("\tOuttakeOn", intake.isOn());
+        telemetry.addData("\tOuttakeOn", outtake.isOn());
         telemetry.addData("\tPaddleUp", paddle.isUp());
     }
     

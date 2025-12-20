@@ -62,8 +62,8 @@ public abstract class BaseOpMode extends LinearOpMode {
         intake = new Intake(hardwareMap.get(DcMotorEx.class, "intakeMotor"));
         intake.off();
 
-//        outtake = new Outtake(hardwareMap.get(DcMotorEx.class, "outtakeMotor"));
-//        outtake.off();
+        outtake = new Outtake(hardwareMap.get(DcMotorEx.class, "outtakeMotor"));
+        outtake.off();
 
         spindexer = new Spindexer(hardwareMap.get(Servo.class, "spindexerServo"));
         spindexer.setSlotIn(1);
