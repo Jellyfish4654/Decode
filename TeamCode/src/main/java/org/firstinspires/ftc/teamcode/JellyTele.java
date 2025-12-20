@@ -12,8 +12,10 @@ public class JellyTele extends BaseOpMode {
     private final double PRECISION_MULTIPLIER_HIGH = 0.2;
     private final double DEADBAND_VALUE = 0.02;
     private final double STRAFE_ADJUSTMENT_FACTOR = (14.0 / 13.0);
-    private double SPINDEXER_DELAY = 0.55*1000; // in millis
+
     private double OUTTAKE_DELAY = 0.5*1000;
+    private double IMU_OFFSET = 0;
+    private final double SPINDEXER_DELAY = 0.55*1000; // in millis
 
     private enum SpinState {
         STANDBY,
@@ -30,6 +32,7 @@ public class JellyTele extends BaseOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
         initHardware();
+        IMU_OFFSET = imuSensor.getRobotYawPitchRollAngles().getYaw(AngleUnit.RADIANS);
         waitForStart();
         while (opModeIsActive()) {
             updateDrive(calculatePrecisionMultiplier());
@@ -175,7 +178,7 @@ public class JellyTele extends BaseOpMode {
     }
 
     private double[] FieldCentricDrive() {
-        double botHeading = imuSensor.getRobotYawPitchRollAngles().getYaw(AngleUnit.RADIANS);
+        double botHeading = imuSensor.getRobotYawPitchRollAngles().getYaw(AngleUnit.RADIANS) - IMU_OFFSET;
 
         double r = applyDeadband(controller.turnStickX());
         double x = applyDeadband(controller.moveStickX()) * STRAFE_ADJUSTMENT_FACTOR;
@@ -185,11 +188,12 @@ public class JellyTele extends BaseOpMode {
         double rotY = x * Math.sin(-botHeading) + y * Math.cos(-botHeading);
 
         telemetry.addLine("Drivetrain:");
+        telemetry.addData("\tDriveR", r);
         telemetry.addData("\tDriveX", x);
         telemetry.addData("\tDriveY", y);
+        telemetry.addData("\tBotHeading", (botHeading/Math.PI*180));
         telemetry.addData("\tDriveRotX", rotX);
         telemetry.addData("\tDriveRotY", rotY);
-        telemetry.addData("\tDriveR", r);
 
         double denominator = Math.max(Math.abs(rotY) + Math.abs(rotX) + Math.abs(r), 1);
 
