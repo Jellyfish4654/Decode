@@ -54,6 +54,7 @@ public class JellyTele extends BaseOpMode {
     // TODO: add more components while managing/stopping components with more delays
     private void updateAux() {
         boolean spinCompleted = System.currentTimeMillis()-spindexerStartTime >= SPINDEXER_DELAY;
+        boolean outtakeCompleted = System.currentTimeMillis()-outtakeStartTime >= OUTTAKE_DELAY;
         if (spinState == SpinState.INTAKING) {
             if (colorSensor.isGreen()) {
                 intake.off();
@@ -65,9 +66,10 @@ public class JellyTele extends BaseOpMode {
                 spinState = SpinState.STANDBY;
             }
         } else if (spinState == SpinState.OUTTAKING) {
-            if(System.currentTimeMillis()-outtakeStartTime >= OUTTAKE_DELAY){
+            if(outtakeCompleted){
                 spinState = SpinState.STANDBY;
                 spindexer.setContents(Spindexer.Artifact.EMPTY);
+                spindexer.off();
             }
         } else if (spinState == SpinState.SPIN_INTAKE && spinCompleted) {
             intake.on();
