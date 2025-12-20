@@ -27,6 +27,7 @@ public class JellyTele extends BaseOpMode {
     private SpinState spinState = SpinState.STANDBY;
     private long spindexerStartTime = 0;
     private long outtakeStartTime = 0;
+    private double aimRotation = 0;
 
     
     @Override
@@ -55,6 +56,7 @@ public class JellyTele extends BaseOpMode {
     private void updateAux() {
         boolean spinCompleted = System.currentTimeMillis()-spindexerStartTime >= SPINDEXER_DELAY;
         boolean outtakeCompleted = System.currentTimeMillis()-outtakeStartTime >= OUTTAKE_DELAY;
+        aimRotation = 0;
         if (spinState == SpinState.INTAKING) {
             if (colorSensor.isGreen()) {
                 intake.off();
@@ -72,11 +74,15 @@ public class JellyTele extends BaseOpMode {
         } else if (spinState == SpinState.SPIN_INTAKE && spinCompleted) {
             intake.on();
             spinState = SpinState.INTAKING;
-        } else if (spinState == SpinState.SPIN_OUTTAKE && spinCompleted) {
-            outtake.on();
-            paddle.setUp();
-            outtakeStartTime = System.currentTimeMillis();
-            spinState = SpinState.OUTTAKING;
+        } else if (spinState == SpinState.SPIN_OUTTAKE) {
+            if (spinCompleted) {
+                outtake.on();
+                paddle.setUp();
+                outtakeStartTime = System.currentTimeMillis();
+                spinState = SpinState.OUTTAKING;
+            } else {
+                //aimRotation = vision.getBearing(Goal.BLUE/RED); TODO: how can know which alliance?
+            }
         } else if (spinState == SpinState.STANDBY) {
             if (controller.intakePressed()) {
                 spinIntake();
@@ -156,7 +162,7 @@ public class JellyTele extends BaseOpMode {
     }
 
     private double[] MecanumDrive() {
-        double r = applyDeadband(controller.turnStickX());
+        double r = applyDeadband(controller.turnStickX()) + aimRotation; // outtake aim rotation
         double x = applyDeadband(controller.moveStickX()) * STRAFE_ADJUSTMENT_FACTOR;
         double y = applyDeadband(controller.moveStickY());
 
@@ -179,7 +185,7 @@ public class JellyTele extends BaseOpMode {
     private double[] FieldCentricDrive() {
         double botHeading = imuSensor.getRobotYawPitchRollAngles().getYaw(AngleUnit.RADIANS) - IMU_OFFSET;
 
-        double r = applyDeadband(controller.turnStickX());
+        double r = applyDeadband(controller.turnStickX()) + aimRotation; // outtake aim rotation
         double x = applyDeadband(controller.moveStickX()) * STRAFE_ADJUSTMENT_FACTOR;
         double y = applyDeadband(controller.moveStickY());
 
