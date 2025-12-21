@@ -11,19 +11,20 @@ import com.qualcomm.robotcore.hardware.DcMotorEx;
 public class Outtake {
     private final DcMotorEx outtake;
     
-    public static double DEFAULT_POWER = 1; // can config via dashboard
+    // can config via dashboard
+    public static double NEAR_POWER = 1;
+    public static double FAR_POWER = 1;
 
     public Outtake (DcMotorEx motor) {
         this.outtake = motor;
     }
 
-    public void on() {
-        outtake.setPower(DEFAULT_POWER);
+    public void onNear() {
+        outtake.setPower(NEAR_POWER);
     }
     
-    // variable power depending on launch distance
-    public void on(double power) {
-        outtake.setPower(power);
+    public void onFar() {
+        outtake.setPower(FAR_POWER);
     }
 
     public void off() {
@@ -36,15 +37,26 @@ public class Outtake {
     
     
     // ↓ -------------- ↓ -------------- ↓ AUTO ACTIONS ↓ -------------- ↓ -------------- ↓
-    public class OuttakeOn implements Action {
+    public class OuttakeOnNear implements Action {
         @Override
         public boolean run(@NonNull TelemetryPacket packet) {
-            on();
+            onNear();
             return isOn();
         }
     }
-    public Action outtakeOn() {
-        return new OuttakeOn();
+    public Action outtakeOnNear() {
+        return new OuttakeOnNear();
+    }
+    
+    public class OuttakeOnFar implements Action {
+        @Override
+        public boolean run(@NonNull TelemetryPacket packet) {
+            onFar();
+            return isOn();
+        }
+    }
+    public Action outtakeOnFar() {
+        return new OuttakeOnFar();
     }
 
     public class OuttakeOff implements Action {

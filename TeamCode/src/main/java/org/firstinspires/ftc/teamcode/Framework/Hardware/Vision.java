@@ -168,7 +168,7 @@ public class Vision {
     /**
      * Gets bearing of alliance's goal if in frame and greater than deadband value
      * @param alliance current alliance as Vision.Alliance enum
-     * @return double of the given alliance's goal. If goal is
+     * @return double of the given alliance's goal's bearing. If goal is
      * not in frame or bearing is less than deadband value, returns 0
      */
     public double getGoalBearing(Alliance alliance) {
@@ -185,6 +185,27 @@ public class Vision {
                     bearing = 0;
                 }
                 return bearing;
+            }
+        }
+        return 0;
+    }
+    
+    /**
+     * Gets distance of alliance's goal
+     * @param alliance current alliance as Vision.Alliance enum
+     * @return double of the given alliance's goal's distance in inches. If goal is
+     * not in frame, returns 0
+     */
+    public double getGoalDistance(Alliance alliance) {
+        int goalTagID = 20;
+        if (alliance == Alliance.RED) {
+            goalTagID = 24;
+        }
+        
+        AprilTagDetection[] allTags = (AprilTagDetection[]) getTags();
+        for (AprilTagDetection tag : allTags) {
+            if (tag.id == goalTagID) {
+                return getTagNav(tag)[0];
             }
         }
         return 0;

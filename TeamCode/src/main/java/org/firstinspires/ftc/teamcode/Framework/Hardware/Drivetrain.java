@@ -4,12 +4,10 @@ import static android.icu.util.UniversalTimeScale.MAX_SCALE;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
-import com.qualcomm.robotcore.hardware.VoltageSensor;
 
 public class Drivetrain {
 
     DcMotor[] driveMotors;
-    private VoltageSensor voltageSensor;
 
     public Drivetrain(DcMotor[] dcMotors) {
         this.driveMotors = dcMotors;
