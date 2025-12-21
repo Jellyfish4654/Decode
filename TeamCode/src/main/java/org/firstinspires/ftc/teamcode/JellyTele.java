@@ -57,7 +57,7 @@ public class JellyTele extends BaseOpMode {
 //        }
 //    }
 
-    // TODO: add more components while managing/stopping components with more delays
+    // main auxiliary logic for intake, spindexer, outtake, and vision integrations
     private void updateAux() {
         boolean spinCompleted = System.currentTimeMillis()-spindexerStartTime >= SPINDEXER_DELAY;
         boolean outtakeCompleted = System.currentTimeMillis()-outtakeStartTime >= OUTTAKE_DELAY;
@@ -110,6 +110,12 @@ public class JellyTele extends BaseOpMode {
         telemetry.addData("\tIntakeOn", intake.isOn());
         telemetry.addData("\tOuttakeOn", outtake.isOn());
         telemetry.addData("\tPaddleUp", paddle.isUp());
+        
+        telemetry.addLine();
+        telemetry.addLine("Vision:");
+        telemetry.addData("\tAlliance", alliance);
+        telemetry.addData("\tGoalBearing", vision.getGoalBearing(alliance));
+        telemetry.addData("\tGoalDistance", vision.getGoalDistance(alliance));
     }
     
     private void spinIntake() {

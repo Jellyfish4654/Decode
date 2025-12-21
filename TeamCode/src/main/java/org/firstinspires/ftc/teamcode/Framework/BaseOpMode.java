@@ -54,7 +54,6 @@ public abstract class BaseOpMode extends LinearOpMode {
         
         
         // OTHER HARDWARE
-        // TODO: integrate hardware and un-comment
 
         paddle = new Paddle(hardwareMap.get(Servo.class, "paddleServo"));
         paddle.setDown();
@@ -70,7 +69,7 @@ public abstract class BaseOpMode extends LinearOpMode {
 
         colorSensor = new SensorColor (hardwareMap.get(RevColorSensorV3.class, "colorSensor"));
 
-        //vision = new Vision(hardwareMap.get(WebcamName.class, "vision"));
+        vision = new Vision(hardwareMap.get(WebcamName.class, "vision"));
 
         controller = new Controller(gamepad1);
 
