@@ -4,7 +4,8 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.teamcode.Framework.BaseOpMode;
-import org.firstinspires.ftc.teamcode.Framework.Hardware.Spindexer;
+import org.firstinspires.ftc.teamcode.Framework.Hardware.Spindexer.Artifact;
+import org.firstinspires.ftc.teamcode.Framework.Hardware.Vision.Alliance;
 
 @TeleOp(name = "JellyTele", group = "1-OpMode")
 public class JellyTele extends BaseOpMode {
@@ -14,8 +15,11 @@ public class JellyTele extends BaseOpMode {
     private final double STRAFE_ADJUSTMENT_FACTOR = (14.0 / 13.0);
 
     private double OUTTAKE_DELAY = 0.5*1000;
-    private double IMU_OFFSET = 0;
     private final double SPINDEXER_DELAY = 0.55*1000; // in millis
+    
+    private double imuOffset = 0;
+    private Alliance alliance = Alliance.RED;
+    
 
     private enum SpinState {
         STANDBY,
@@ -33,24 +37,25 @@ public class JellyTele extends BaseOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
         initHardware();
-        IMU_OFFSET = imuSensor.getRobotYawPitchRollAngles().getYaw(AngleUnit.RADIANS);
+        imuOffset = imuSensor.getRobotYawPitchRollAngles().getYaw(AngleUnit.RADIANS);
         waitForStart();
         while (opModeIsActive()) {
             updateDrive(calculatePrecisionMultiplier());
-            //updateIntake(); // temporary
+            //updateIntake(); // testing only
             updateAux();
+            updateParameters();
             telemetry.update();
         }
     }
     
-    // TODO: temp -- remove this once intake is fully integrated and no longer needed
-    /*private void updateIntake() {
-        if (controller.intake()) {
-            intake.on();
-        } else if (intake.isOn()) {
-            intake.off();
-        }
-    }*/
+    // testing only -- keep this commented for normal use
+//    private void updateIntake() {
+//        if (controller.intake()) {
+//            intake.on();
+//        } else if (intake.isOn()) {
+//            intake.off();
+//        }
+//    }
 
     // TODO: add more components while managing/stopping components with more delays
     private void updateAux() {
@@ -60,16 +65,16 @@ public class JellyTele extends BaseOpMode {
         if (spinState == SpinState.INTAKING) {
             if (colorSensor.isGreen()) {
                 intake.off();
-                spindexer.setContents(Spindexer.Artifact.GREEN);
+                spindexer.setContents(Artifact.GREEN);
                 spinState = SpinState.STANDBY;
             } else if (colorSensor.isPurple()) {
                 intake.off();
-                spindexer.setContents(Spindexer.Artifact.PURPLE);
+                spindexer.setContents(Artifact.PURPLE);
                 spinState = SpinState.STANDBY;
             }
         } else if (spinState == SpinState.OUTTAKING && outtakeCompleted) {
             outtake.off();
-            spindexer.setContents(Spindexer.Artifact.EMPTY);
+            spindexer.setContents(Artifact.EMPTY);
             spinState = SpinState.STANDBY;
         } else if (spinState == SpinState.SPIN_INTAKE && spinCompleted) {
             intake.on();
@@ -81,15 +86,15 @@ public class JellyTele extends BaseOpMode {
                 outtakeStartTime = System.currentTimeMillis();
                 spinState = SpinState.OUTTAKING;
             } else {
-                //aimRotation = vision.getBearing(Goal.BLUE/RED); TODO: how can know which alliance?
+                aimRotation = vision.getGoalBearing(alliance);
             }
         } else if (spinState == SpinState.STANDBY) {
             if (controller.intakePressed()) {
                 spinIntake();
             } else if (controller.outGreenPressed()) {
-                spinOuttake(Spindexer.Artifact.GREEN);
+                spinOuttake(Artifact.GREEN);
             } else if (controller.outPurplePressed()) {
-                spinOuttake(Spindexer.Artifact.PURPLE);
+                spinOuttake(Artifact.PURPLE);
             }
         }
         
@@ -103,7 +108,7 @@ public class JellyTele extends BaseOpMode {
     }
     
     private void spinIntake() {
-        int slot = spindexer.findSlot(Spindexer.Artifact.EMPTY);
+        int slot = spindexer.findSlot(Artifact.EMPTY);
         if (slot == 0) {
             controller.rumble(200);
             return;
@@ -114,7 +119,7 @@ public class JellyTele extends BaseOpMode {
         spinState = SpinState.SPIN_INTAKE;
     }
 
-    private void spinOuttake(Spindexer.Artifact artifact) {
+    private void spinOuttake(Artifact artifact) {
         int slot = spindexer.findSlot(artifact);
         if (slot == 0) {
             controller.rumble(200);
@@ -122,9 +127,19 @@ public class JellyTele extends BaseOpMode {
         }
         paddle.setDown(); // backup safety
         spindexer.setSlotOut(slot);
-        spindexer.setContents(Spindexer.Artifact.EMPTY);
+        spindexer.setContents(Artifact.EMPTY);
         spindexerStartTime = System.currentTimeMillis();
         spinState = SpinState.SPIN_OUTTAKE;
+    }
+    
+    // updates parameters like current alliance from gamepad2
+    // TODO: switch this to controller2 with more controller mapping?
+    private void updateParameters() {
+        if (gamepad2.square) {
+            alliance = Alliance.RED;
+        } else if (gamepad2.circle) {
+            alliance = Alliance.BlUE;
+        }
     }
     
     
@@ -183,7 +198,7 @@ public class JellyTele extends BaseOpMode {
     }
 
     private double[] FieldCentricDrive() {
-        double botHeading = imuSensor.getRobotYawPitchRollAngles().getYaw(AngleUnit.RADIANS) - IMU_OFFSET;
+        double botHeading = imuSensor.getRobotYawPitchRollAngles().getYaw(AngleUnit.RADIANS) - imuOffset;
 
         double r = applyDeadband(controller.turnStickX()) + aimRotation; // outtake aim rotation
         double x = applyDeadband(controller.moveStickX()) * STRAFE_ADJUSTMENT_FACTOR;

@@ -5,25 +5,26 @@ import com.qualcomm.robotcore.hardware.Gamepad;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 
-enum Buttons {
-    TRIANGLE,
-    CIRCLE,
-    SQUARE,
-    CROSS,
-    DPAD_UP,
-    DPAD_DOWN,
-    DPAD_LEFT,
-    DPAD_RIGHT,
-    LEFT_BUMPER,
-    RIGHT_BUMPER,
-    PLAYSTATION_LOGO
-}
-
-enum Joysticks {
-    LEFT_JOYSTICK,
-    RIGHT_JOYSTICK
-}
 public class Controller {
+    enum Buttons {
+        TRIANGLE,
+        CIRCLE,
+        SQUARE,
+        CROSS,
+        DPAD_UP,
+        DPAD_DOWN,
+        DPAD_LEFT,
+        DPAD_RIGHT,
+        LEFT_BUMPER,
+        RIGHT_BUMPER,
+        PLAYSTATION_LOGO
+    }
+    
+    enum Joysticks {
+        LEFT_JOYSTICK,
+        RIGHT_JOYSTICK
+    }
+    
     private final Gamepad gamepad;
     Buttons lowPrecisionBtn;
     Buttons highPrecisionBtn;

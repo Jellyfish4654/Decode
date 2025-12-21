@@ -40,6 +40,8 @@ public class Vision {
      */
     public static int GAIN = 150;
     public static long EXPOSURE = 30;
+    
+    public static double GOAL_BEARING_DEADBAND = 0; // +- degrees that aim correction is not applied
 
 
     private CameraName name;
@@ -57,6 +59,11 @@ public class Vision {
     
     private GainControl gainControl;
     private ExposureControl exposureControl;
+    
+    public enum Alliance {
+        RED,
+        BlUE
+    }
 
 
     /**
@@ -141,7 +148,7 @@ public class Vision {
     /**
      * Gets essential pose info about an AprilTag
      * @param tag AprilTagDetection
-     * @return double[] with the distance to the tag the bearing angle to the tag,
+     * @return double[] with the distance to the tag, the bearing angle to the tag,
      *          the elevation angle to the tag, and the yaw in that order
      */
     public double[] getTagNav(AprilTagDetection tag){
@@ -156,6 +163,31 @@ public class Vision {
         double poseBearing = tag.ftcPose.bearing;
         double poseElevation = tag.ftcPose.elevation;
         return new double[] {poseRange, poseBearing, poseElevation, poseYaw};
+    }
+    
+    /**
+     * Gets bearing of alliance's goal if in frame and greater than deadband value
+     * @param alliance current alliance as Vision.Alliance enum
+     * @return double of the given alliance's goal. If goal is
+     * not in frame or bearing is less than deadband value, returns 0
+     */
+    public double getGoalBearing(Alliance alliance) {
+        int goalTagID = 20;
+        if (alliance == Alliance.RED) {
+            goalTagID = 24;
+        }
+        
+        AprilTagDetection[] allTags = (AprilTagDetection[]) getTags();
+        for (AprilTagDetection tag : allTags) {
+            if (tag.id == goalTagID) {
+                double bearing = -getTagNav(tag)[1];
+                if (Math.abs(bearing) < GOAL_BEARING_DEADBAND) {
+                    bearing = 0;
+                }
+                return bearing;
+            }
+        }
+        return 0;
     }
 
     /**
