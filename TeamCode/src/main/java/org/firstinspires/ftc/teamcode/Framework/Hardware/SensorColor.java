@@ -19,24 +19,21 @@ public class SensorColor {
 
     }
 
-    public NormalizedRGBA detectColors () {
-        return colorSensor.getNormalizedColors();
-    }
-
-    public boolean isGreen(){
-        double[] color = scaleRGBA();
+    public boolean isGreen() {
+        double[] color = detectRGBA();
         return color[0] >= minGreen[0] && color[1] >= minGreen[1] && color[2] >= minGreen[2] &&
                 color[0] <= maxGreen[0] && color[1] <= maxGreen[1] && color[2] <= maxGreen[2];
     }
 
-    public boolean isPurple(){
-        double[] color = scaleRGBA();
+    public boolean isPurple() {
+        double[] color = detectRGBA();
         return color[0] >= minPurple[0] && color[1] >= minPurple[1] && color[2] >= minPurple[2] &&
                 color[0] <= maxPurple[0] && color[1] <= maxPurple[1] && color[2] <= maxPurple[2];
     }
-    public double[] scaleRGBA () {
+    
+    public double[] detectRGBA() {
         colorSensor.setGain(GAIN);
-        NormalizedRGBA raw = detectColors();
+        NormalizedRGBA raw = colorSensor.getNormalizedColors();
 
         return new double[] {
                 Math.min(255, (raw.red*255*1000)),

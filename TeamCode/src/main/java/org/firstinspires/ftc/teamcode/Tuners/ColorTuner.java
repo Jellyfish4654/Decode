@@ -25,7 +25,7 @@ public class ColorTuner extends LinearOpMode
         waitForStart();
 
         while (opModeIsActive()) {
-            detectedColors = color.scaleRGBA();
+            detectedColors = color.detectRGBA();
             telemetry.addData("R", detectedColors[0]);
             telemetry.addData("G", detectedColors[1]);
             telemetry.addData("B", detectedColors[2]);
