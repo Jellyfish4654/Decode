@@ -218,7 +218,7 @@ public class JellyTele extends BaseOpMode {
         double rotX = x * Math.cos(-botHeading) - y * Math.sin(-botHeading);
         double rotY = x * Math.sin(-botHeading) + y * Math.cos(-botHeading);
 
-        telemetry.addLine("Drivetrain:");
+        telemetry.addLine("Drivetrain (Field Centric):");
         telemetry.addData("\tDriveR", r);
         telemetry.addData("\tDriveX", x);
         telemetry.addData("\tDriveY", y);
