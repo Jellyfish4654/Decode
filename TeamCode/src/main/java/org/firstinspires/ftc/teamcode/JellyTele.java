@@ -112,10 +112,12 @@ public class JellyTele extends BaseOpMode {
         telemetry.addData("\tPaddleUp", paddle.isUp());
         
         telemetry.addLine();
-        telemetry.addLine("Vision:");
+        telemetry.addLine("Vision & Color:");
         telemetry.addData("\tAlliance", alliance);
         telemetry.addData("\tGoalBearing", vision.getGoalBearing(alliance));
         telemetry.addData("\tGoalDistance", vision.getGoalDistance(alliance));
+        telemetry.addData("\tColorGreen", colorSensor.isGreen());
+        telemetry.addData("\tColorPurple", colorSensor.isPurple());
     }
     
     private void spinIntake() {
