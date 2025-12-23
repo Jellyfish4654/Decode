@@ -9,10 +9,10 @@ public class SensorColor {
     private final RevColorSensorV3 colorSensor;
     public static float GAIN = 2.5F;
 
-    public static float[] minPurple = {81, 50, 55};
-    public static float[] maxPurple = {255, 234, 255};
-    public static float[] minGreen = {50, 106, 60};
-    public static float[] maxGreen = {80, 140, 100};
+    public static float[] minPurple = {100,0,128};//{81, 50, 55};
+    public static float[] maxPurple = {255,215,255};//{255, 234, 255};
+    public static float[] minGreen = {0,106,0};//{50, 106, 60};
+    public static float[] maxGreen = {140,255,120};//{80, 140, 100};
 
     public SensorColor (RevColorSensorV3 sensor) {
         colorSensor = sensor;
