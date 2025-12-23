@@ -6,6 +6,7 @@ import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.acmerobotics.roadrunner.Action;
 import com.qualcomm.robotcore.hardware.Servo;
 
+// TODO: create separate PaddleMotor class with PIDF
 public class Paddle {
     private final Servo paddle;
     private final double POS_UP = 0.0245;
