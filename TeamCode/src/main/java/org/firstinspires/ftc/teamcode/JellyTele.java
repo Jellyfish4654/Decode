@@ -40,7 +40,7 @@ public class JellyTele extends BaseOpMode {
         imuOffset = imuSensor.getRobotYawPitchRollAngles().getYaw(AngleUnit.RADIANS);
         waitForStart();
         while (opModeIsActive()) {
-            updateDrive(calculatePrecisionMultiplier());
+            updateDrive();
             //updateIntake(); // testing only
             updateAux();
             updateParameters();
@@ -163,7 +163,7 @@ public class JellyTele extends BaseOpMode {
         FIELDCENTRIC
     }
     private DriveMode driveMode = DriveMode.MECANUM;
-    private void updateDrive(double precisionMultiplier) {
+    private void updateDrive() {
         if (controller.driveModePressed()) {
             if (driveMode == DriveMode.MECANUM) {
                 driveMode = DriveMode.FIELDCENTRIC;
@@ -171,11 +171,7 @@ public class JellyTele extends BaseOpMode {
                 driveMode = DriveMode.MECANUM;
             }
         }
-        updateDriveMode(precisionMultiplier);
-    }
-
-    private void updateDriveMode(double precisionMultiplier)
-    {
+        
         double[] motorSpeeds = null;
         switch (driveMode)
         {
@@ -186,7 +182,7 @@ public class JellyTele extends BaseOpMode {
                 motorSpeeds = FieldCentricDrive();
                 break;
         }
-        drivetrain.setMotorSpeeds(precisionMultiplier, motorSpeeds);
+        drivetrain.setMotorSpeeds(getPrecisionMultiplier(), motorSpeeds);
     }
 
     private double[] MecanumDrive() {
@@ -246,7 +242,7 @@ public class JellyTele extends BaseOpMode {
         }
     }
 
-    private double calculatePrecisionMultiplier() {
+    private double getPrecisionMultiplier() {
         if (controller.lowPrecision()) {
             return PRECISION_MULTIPLIER_LOW;
         } else if (controller.highPrecision()) {
