@@ -19,12 +19,57 @@ import org.firstinspires.ftc.vision.opencv.ColorBlobLocatorProcessor;
 import org.firstinspires.ftc.vision.opencv.ColorRange;
 import org.firstinspires.ftc.vision.opencv.ImageRegion;
 
+// should be stuff only for FTC Dashboard
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
+import com.acmerobotics.dashboard.FtcDashboard;
+import java.util.concurrent.atomic.AtomicReference;
+import org.firstinspires.ftc.robotcore.external.function.Consumer;
+import org.firstinspires.ftc.robotcore.external.function.Continuation;
+import org.firstinspires.ftc.robotcore.external.stream.CameraStreamSource;
+import org.firstinspires.ftc.robotcore.internal.camera.calibration.CameraCalibration;
+import org.firstinspires.ftc.vision.VisionProcessor;
+import org.opencv.android.Utils;
+import org.opencv.core.Mat;
 
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 @Config
 public class Vision {
+    // FTC Dashboard livestream processor class -- don't touch lol
+    // Everything related is labeled with a comment that includes "FTC Dashboard livestream"
+    public static class CameraStreamProcessor implements VisionProcessor, CameraStreamSource {
+        private final AtomicReference<Bitmap> lastFrame =
+                new AtomicReference<>(Bitmap.createBitmap(1, 1, Bitmap.Config.RGB_565));
+        
+        @Override
+        public void init(int width, int height, CameraCalibration calibration) {
+            lastFrame.set(Bitmap.createBitmap(width, height, Bitmap.Config.RGB_565));
+        }
+        
+        @Override
+        public Object processFrame(Mat frame, long captureTimeNanos) {
+            Bitmap b = Bitmap.createBitmap(frame.width(), frame.height(), Bitmap.Config.RGB_565);
+            Utils.matToBitmap(frame, b);
+            lastFrame.set(b);
+            return null;
+        }
+        
+        @Override
+        public void onDrawFrame(Canvas canvas, int onscreenWidth, int onscreenHeight,
+                                float scaleBmpPxToCanvasPx, float scaleCanvasDensity,
+                                Object userContext) {
+            // do nothing
+        }
+        
+        @Override
+        public void getFrameBitmap(Continuation<? extends Consumer<Bitmap>> continuation) {
+            continuation.dispatch(bitmapConsumer -> bitmapConsumer.accept(lastFrame.get()));
+        }
+    }
+    
+    
     //"Constants" that can be changed by FTC Dashboard
     public static double FOCAL_LENGTH = 617;
     public static double DENSITY_MIN = 0.2;
@@ -50,6 +95,7 @@ public class Vision {
     private ColorBlobLocatorProcessor.Builder artifactDetectorBuilder;
     private ColorBlobLocatorProcessor greenArtifactDetector;
     private ColorBlobLocatorProcessor purpleArtifactDetector;
+    private CameraStreamProcessor dashboardProcessor; // FTC Dashboard livestream
 
     //change these units depending on what we need -- currently inches and degrees
     private DistanceUnit distanceUnit = DistanceUnit.INCH;
@@ -99,11 +145,13 @@ public class Vision {
                 .setTargetColorRange(ColorRange.ARTIFACT_GREEN)
                 .setCircleFitColor(Color.rgb(255, 255, 0)) //draw circlefit with a color of yellow
                 .build();
+        this.dashboardProcessor = new CameraStreamProcessor(); // FTC Dashboard livestream
         this.visionPortal = new VisionPortal.Builder()
                 .setCamera(cameraName)
                 .addProcessor(this.aprilTag)
                 .addProcessor(this.purpleArtifactDetector)
                 .addProcessor(this.greenArtifactDetector)
+                .addProcessor(dashboardProcessor) // FTC Dashboard livestream
                 //lower resolution possibly might make code faster if possible (ex 320, 240)
                 //however, camera will need to be calibrated and itll probably be a pain
                 .setCameraResolution(new Size(camWidth, camHeight))
@@ -111,16 +159,14 @@ public class Vision {
                 .enableLiveView(true)
                 .setAutoStopLiveView(true)
                 .build();
-        while(visionPortal.getCameraState()!= VisionPortal.CameraState.STREAMING){}
+        //while(visionPortal.getCameraState()!= VisionPortal.CameraState.STREAMING){} // not sure what this does so feel free to un-comment this
         this.gainControl = visionPortal.getCameraControl(GainControl.class);
         this.exposureControl = visionPortal.getCameraControl(ExposureControl.class);
         exposureControl.setMode(ExposureControl.Mode.Manual);
         gainControl.setGain(GAIN);
         exposureControl.setExposure(EXPOSURE,TimeUnit.MILLISECONDS);
-
-
-
-
+        
+        FtcDashboard.getInstance().startCameraStream(dashboardProcessor, 15); // FTC Dashboard livestream
     }
 
     private void exposureUpdate(){
