@@ -39,10 +39,10 @@ public class PaddleMotor {
     }
 
     public void changePosition(int position) {
-        this.paddle.setTargetPosition(position);
         this.paddle.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
         this.paddle.setVelocityPIDFCoefficients(P, I, D, F);
         this.paddle.setVelocity(MAX_VEL);
+        this.paddle.setTargetPosition(position);
 
 
         this.position = position;

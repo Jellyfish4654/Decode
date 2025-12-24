@@ -252,7 +252,7 @@ public class JellyTele extends BaseOpMode {
     }
 
 
-    //Wrappers depending on which paddle type is used:
+    // ↓ Wrappers depending on which paddle type is used ↓ ------------------------------ ↓
     private void paddleUp(){
         if(PADDLE_MOTOR){
             paddleMotor.setUp();

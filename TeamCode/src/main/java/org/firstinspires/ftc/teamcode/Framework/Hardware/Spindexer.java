@@ -2,16 +2,18 @@ package org.firstinspires.ftc.teamcode.Framework.Hardware;
 
 import androidx.annotation.NonNull;
 
+import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.acmerobotics.roadrunner.Action;
 import com.qualcomm.robotcore.hardware.Servo;
 
+@Config
 public class Spindexer {
     private final Servo spindexer;
     
     // Servo positions for intake and outtake of slots
-    private final double[] POSITIONS_IN = {0.745, 0.382, 0};
-    private final double[] POSITIONS_OUT = {0.19, 0.93, 0.56};
+    public static double[] POSITIONS_IN = {0.745, 0.382, 0};
+    public static double[] POSITIONS_OUT = {0.19, 0.93, 0.56};
     
     private double position;
     

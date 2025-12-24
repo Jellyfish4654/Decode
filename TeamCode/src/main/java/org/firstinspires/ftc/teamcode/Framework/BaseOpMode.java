@@ -26,15 +26,13 @@ public abstract class BaseOpMode extends LinearOpMode {
     protected Intake intake;
     protected Outtake outtake;
     protected Spindexer spindexer;
-
     protected SensorColor colorSensor;
     protected Vision vision;
-
     protected Controller controller;
-
     protected IMU imuSensor;
 
     public final boolean PADDLE_MOTOR = false;
+    
     public void initHardware() {
 
         // Drivetrain Motors (SAME ORDER IN HARDWARE CONFIG)
@@ -57,6 +55,7 @@ public abstract class BaseOpMode extends LinearOpMode {
         
         
         // OTHER HARDWARE
+        
         if(!PADDLE_MOTOR){
             paddle = new Paddle(hardwareMap.get(Servo.class, "paddleServo"));
             paddle.setDown();
@@ -82,6 +81,7 @@ public abstract class BaseOpMode extends LinearOpMode {
 
         imuSensor = initializeIMUSensor();
     }
+    
     private IMU initializeIMUSensor()
     {
         IMU imu = hardwareMap.get(IMU.class, "imu");
