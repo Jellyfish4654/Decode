@@ -161,7 +161,7 @@ public class JellyTele extends BaseOpMode {
         
         // loops per sec experiment
         long currentTime = System.currentTimeMillis();
-        double loopsPerSec = 1000.0 / (currentTime - loopTime);
+        double loopsPerSec = 1000.0 / Math.max((currentTime - loopTime), 1);
         telemetry.addLine();
         telemetry.addData("Loops Per Sec", loopsPerSec);
         loopTime = currentTime;
