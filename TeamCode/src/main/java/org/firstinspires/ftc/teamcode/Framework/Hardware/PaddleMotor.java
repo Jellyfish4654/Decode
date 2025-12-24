@@ -49,7 +49,7 @@ public class PaddleMotor {
     }
 
     public int getCurrentPosition() {
-        return position;
+        return this.paddle.getCurrentPosition();
     }
 
     public boolean isUp() {
