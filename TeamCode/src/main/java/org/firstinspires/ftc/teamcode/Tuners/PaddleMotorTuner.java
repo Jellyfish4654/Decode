@@ -23,7 +23,7 @@ public class PaddleMotorTuner extends LinearOpMode
         PaddleMotor paddle = new PaddleMotor(paddleMotor);
 
         paddle.setDown();
-        double position = paddle.getCurrentPosition();
+        double position = paddle.getTargetPosition();
 
 
 
@@ -32,7 +32,7 @@ public class PaddleMotorTuner extends LinearOpMode
         while (opModeIsActive())
         {
             telemetry.addData("target position", (int)position);
-            telemetry.addData("position", paddle.getCurrentPosition());
+            telemetry.addData("real position", paddle.getRealPosition());
             telemetry.update();
             position = Math.max(0,position);
 
@@ -51,12 +51,12 @@ public class PaddleMotorTuner extends LinearOpMode
             if (gamepad1.triangle)
             {
                 paddle.setUp();
-                position = paddle.getCurrentPosition();
+                position = paddle.getTargetPosition();
             }
             else if (gamepad1.cross)
             {
                 paddle.setDown();
-                position = paddle.getCurrentPosition();
+                position = paddle.getTargetPosition();
             }
         }
     }

@@ -12,6 +12,7 @@ public class PaddleMotor {
     private final DcMotorEx paddle;
     
     // TODO: tune PIDF, MAX_VEL, and POS constants
+    public static double posP = 0;
     public static double P = 0;
     public static double I = 0;
     public static double D = 0;
@@ -26,6 +27,7 @@ public class PaddleMotor {
     public PaddleMotor(DcMotorEx motor) {
         this.paddle = motor;
         this.paddle.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
+        this.paddle.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
     }
 
     public void setUp() {
@@ -39,16 +41,19 @@ public class PaddleMotor {
     }
 
     public void changePosition(int position) {
-        this.paddle.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
+        this.paddle.setPositionPIDFCoefficients(posP);
         this.paddle.setVelocityPIDFCoefficients(P, I, D, F);
         this.paddle.setVelocity(MAX_VEL);
         this.paddle.setTargetPosition(position);
-
-
+        
         this.position = position;
     }
 
-    public int getCurrentPosition() {
+    public int getTargetPosition() {
+        return this.position;
+    }
+    
+    public int getRealPosition() {
         return this.paddle.getCurrentPosition();
     }
 

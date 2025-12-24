@@ -81,19 +81,18 @@ public class JellyTele extends BaseOpMode {
             spinState = SpinState.INTAKING;
         } else if (spinState == SpinState.SPIN_OUTTAKE) {
             if (spinCompleted) {
-                // TODO: move outtake on to else whille waiting for spindexer
-                // TODO: add positionP to paddleMotor.java (i cant edit multiple files in one commit lol)
+                paddleUp();
+                outtakeStartTime = System.currentTimeMillis();
+                spinState = SpinState.OUTTAKING;
+            } else {
+                aimRotation = vision.getGoalBearing(alliance);
+                // power up outtake early
                 double distance = vision.getGoalDistance(alliance);
                 if (distance > 10 && distance < 20) {
                     outtake.onFar();
                 } else {
                     outtake.onNear();
                 }
-                paddleUp();
-                outtakeStartTime = System.currentTimeMillis();
-                spinState = SpinState.OUTTAKING;
-            } else {
-                aimRotation = vision.getGoalBearing(alliance);
             }
         } else if (spinState == SpinState.STANDBY) {
             if (controller.intakePressed()) {
