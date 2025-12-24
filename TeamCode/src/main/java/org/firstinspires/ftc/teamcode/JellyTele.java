@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode;
 
+import com.acmerobotics.dashboard.FtcDashboard;
+import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
@@ -20,6 +22,7 @@ public class JellyTele extends BaseOpMode {
     private double imuOffset = 0;
     private Alliance alliance = Alliance.RED;
     
+    private long loopTime = 0;
 
     private enum SpinState {
         STANDBY,
@@ -36,6 +39,7 @@ public class JellyTele extends BaseOpMode {
     
     @Override
     public void runOpMode() throws InterruptedException {
+        telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
         initHardware();
         imuOffset = imuSensor.getRobotYawPitchRollAngles().getYaw(AngleUnit.RADIANS);
         waitForStart();
@@ -154,6 +158,14 @@ public class JellyTele extends BaseOpMode {
         } else if (gamepad2.circle) {
             alliance = Alliance.BlUE;
         }
+        
+        // loops per sec experiment
+        long currentTime = System.currentTimeMillis();
+        double loopsPerSec = 1000.0 / (currentTime - loopTime);
+        telemetry.addLine();
+        telemetry.addData("Loops Per Sec", loopsPerSec);
+        loopTime = currentTime;
+        
     }
     
     
