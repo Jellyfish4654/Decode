@@ -31,20 +31,21 @@ public class PaddleMotorTuner extends LinearOpMode
 
         while (opModeIsActive())
         {
-            telemetry.addData("target position", position);
+            telemetry.addData("target position", (int)position);
             telemetry.addData("position", paddle.getCurrentPosition());
             telemetry.update();
+            position = Math.max(0,position);
 
 
             paddle.changePosition((int)position);
 
             if (gamepad1.dpad_left)
             {
-                position -= 0.0005;
+                position -= 0.05;
             }
             if (gamepad1.dpad_right)
             {
-                position += 0.0005;
+                position += 0.05;
             }
 
             if (gamepad1.triangle)
