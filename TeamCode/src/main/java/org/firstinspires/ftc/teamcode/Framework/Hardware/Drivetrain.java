@@ -30,12 +30,12 @@ public class Drivetrain {
             powers[i] *= multiplier;
         }
         
+        // apply scale to prevent values over 1 while keeping proportionality
         double maxPower = findMaxPower(powers);
         double scale = 1.0;
         if (maxPower > 1) {
             scale = 1.0 / maxPower;
         }
-
         for (int i = 0; i < powers.length; i++) {
             powers[i] *= scale;
         }
@@ -48,6 +48,7 @@ public class Drivetrain {
             driveMotors[i].setPower(powers[i]);
         }
     }
+    
 //    public double applyVoltageCompensation(DcMotor motor, double power) {
 //        double voltageCompensation = 13.2/voltageSensor.getVoltage();
 //        power *= voltageCompensation;
