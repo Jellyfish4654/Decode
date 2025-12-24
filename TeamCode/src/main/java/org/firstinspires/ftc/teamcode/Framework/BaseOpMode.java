@@ -4,8 +4,6 @@ import com.qualcomm.hardware.rev.RevColorSensorV3;
 import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorEx;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.IMU;
 import com.qualcomm.robotcore.hardware.Servo;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
@@ -45,11 +43,11 @@ public abstract class BaseOpMode extends LinearOpMode {
         drivetrain = new Drivetrain(driveMotors);
 
 
-        drivetrain.setMotorDirections(new DcMotorSimple.Direction[]{
-                DcMotorSimple.Direction.REVERSE, // motorFL
-                DcMotorSimple.Direction.REVERSE, // motorBL
-                DcMotorSimple.Direction.REVERSE, // motorFR
-                DcMotorSimple.Direction.FORWARD  // motorBR
+        drivetrain.setMotorDirections(new DcMotor.Direction[]{
+                DcMotor.Direction.REVERSE, // motorFL
+                DcMotor.Direction.REVERSE, // motorBL
+                DcMotor.Direction.REVERSE, // motorFR
+                DcMotor.Direction.FORWARD  // motorBR
         });
         
         
@@ -58,10 +56,10 @@ public abstract class BaseOpMode extends LinearOpMode {
         paddle = new Paddle(hardwareMap.get(Servo.class, "paddleServo"));
         paddle.setDown();
 
-        intake = new Intake(hardwareMap.get(DcMotorEx.class, "intakeMotor"));
+        intake = new Intake(hardwareMap.get(DcMotor.class, "intakeMotor"));
         intake.off();
 
-        outtake = new Outtake(hardwareMap.get(DcMotorEx.class, "outtakeMotor"));
+        outtake = new Outtake(hardwareMap.get(DcMotor.class, "outtakeMotor"));
         outtake.off();
 
         spindexer = new Spindexer(hardwareMap.get(Servo.class, "spindexerServo"));

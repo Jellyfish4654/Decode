@@ -3,7 +3,6 @@ package org.firstinspires.ftc.teamcode.Framework.Hardware;
 import static android.icu.util.UniversalTimeScale.MAX_SCALE;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
 public class Drivetrain {
 
@@ -13,9 +12,10 @@ public class Drivetrain {
         this.driveMotors = dcMotors;
     }
 
-    public void setMotorDirections(DcMotorSimple.Direction[] directions) {
+    public void setMotorDirections(DcMotor.Direction[] directions) {
         for (int i = 0; i < driveMotors.length; i++) {
             driveMotors[i].setDirection(directions[i]);
+            driveMotors[i].setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
         }
     }
 

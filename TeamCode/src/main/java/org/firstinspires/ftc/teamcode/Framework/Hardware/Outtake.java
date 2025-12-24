@@ -5,18 +5,21 @@ import androidx.annotation.NonNull;
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.acmerobotics.roadrunner.Action;
-import com.qualcomm.robotcore.hardware.DcMotorEx;
+import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
 @Config
 public class Outtake {
-    private final DcMotorEx outtake;
+    private final DcMotor outtake;
     
     // can config via dashboard
     public static double NEAR_POWER = 1;
     public static double FAR_POWER = 1;
 
-    public Outtake (DcMotorEx motor) {
+    public Outtake (DcMotor motor) {
         this.outtake = motor;
+        outtake.setDirection(DcMotorSimple.Direction.FORWARD);
+        outtake.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
     }
 
     public void onNear() {

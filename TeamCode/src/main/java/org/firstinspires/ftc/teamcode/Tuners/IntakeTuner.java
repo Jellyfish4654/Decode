@@ -7,12 +7,6 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 
-/*
-|---------------------------------------------|
-|        Copy this tuner for outtake!         |
-|---------------------------------------------|
- */
-
 @TeleOp(name = "Intake Tuner", group = "2-Tuner")
 public class IntakeTuner extends LinearOpMode
 {

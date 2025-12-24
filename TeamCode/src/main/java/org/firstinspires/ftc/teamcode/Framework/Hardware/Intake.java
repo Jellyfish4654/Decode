@@ -2,17 +2,20 @@ package org.firstinspires.ftc.teamcode.Framework.Hardware;
 
 import androidx.annotation.NonNull;
 
+import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.acmerobotics.roadrunner.Action;
-import com.qualcomm.robotcore.hardware.DcMotorEx;
+import com.qualcomm.robotcore.hardware.DcMotor;
 
+@Config
 public class Intake {
-    private final DcMotorEx intake;
-    private final double DEFAULT_POWER = 1;
+    private final DcMotor intake;
+    private static double DEFAULT_POWER = 1; // can config via dashboard
     
-    public Intake (DcMotorEx motor) {
+    public Intake (DcMotor motor) {
         this.intake = motor;
-        intake.setDirection(DcMotorEx.Direction.REVERSE);
+        intake.setDirection(DcMotor.Direction.REVERSE);
+        intake.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
     }
 
     public void on() {
