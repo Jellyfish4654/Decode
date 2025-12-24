@@ -87,7 +87,7 @@ public class JellyTele extends BaseOpMode {
                 } else {
                     outtake.onNear();
                 }
-                paddle.setUp();
+                paddleUp();
                 outtakeStartTime = System.currentTimeMillis();
                 spinState = SpinState.OUTTAKING;
             } else {
@@ -109,7 +109,7 @@ public class JellyTele extends BaseOpMode {
         telemetry.addData("\tSpindexerSlot", spindexer.getCurrentSlot());
         telemetry.addData("\tIntakeOn", intake.isOn());
         telemetry.addData("\tOuttakeOn", outtake.isOn());
-        telemetry.addData("\tPaddleUp", paddle.isUp());
+        telemetry.addData("\tPaddleUp", paddleIsUp());
         
         telemetry.addLine();
         telemetry.addLine("Vision & Color:");
@@ -126,7 +126,7 @@ public class JellyTele extends BaseOpMode {
             controller.rumble(200);
             return;
         }
-        paddle.setDown(); // backup safety
+        paddleDown(); // backup safety
         spindexer.setSlotIn(slot);
         spindexerStartTime = System.currentTimeMillis();
         spinState = SpinState.SPIN_INTAKE;
@@ -138,7 +138,7 @@ public class JellyTele extends BaseOpMode {
             controller.rumble(200);
             return;
         }
-        paddle.setDown(); // backup safety
+        paddleDown(); // backup safety
         spindexer.setSlotOut(slot);
         spindexer.setContents(Artifact.EMPTY);
         spindexerStartTime = System.currentTimeMillis();
@@ -249,5 +249,31 @@ public class JellyTele extends BaseOpMode {
             return PRECISION_MULTIPLIER_HIGH;
         }
         return 1;
+    }
+
+
+    //Wrappers depending on which paddle type is used:
+    private void paddleUp(){
+        if(PADDLE_MOTOR){
+            paddleMotor.setUp();
+        }else{
+            paddle.setUp();
+        }
+    }
+
+    private void paddleDown(){
+        if(PADDLE_MOTOR){
+            paddleMotor.setDown();
+        }else{
+            paddle.setDown();
+        }
+    }
+
+    private boolean paddleIsUp(){
+        if(PADDLE_MOTOR){
+            return paddleMotor.isUp();
+        }else{
+            return paddle.isUp();
+        }
     }
 }

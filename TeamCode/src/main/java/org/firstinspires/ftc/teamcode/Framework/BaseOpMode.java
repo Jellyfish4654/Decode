@@ -4,6 +4,7 @@ import com.qualcomm.hardware.rev.RevColorSensorV3;
 import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.IMU;
 import com.qualcomm.robotcore.hardware.Servo;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
@@ -13,6 +14,7 @@ import org.firstinspires.ftc.teamcode.Framework.Hardware.Drivetrain;
 import org.firstinspires.ftc.teamcode.Framework.Hardware.Paddle;
 import org.firstinspires.ftc.teamcode.Framework.Hardware.Intake;
 import org.firstinspires.ftc.teamcode.Framework.Hardware.Outtake;
+import org.firstinspires.ftc.teamcode.Framework.Hardware.PaddleMotor;
 import org.firstinspires.ftc.teamcode.Framework.Hardware.SensorColor;
 import org.firstinspires.ftc.teamcode.Framework.Hardware.Spindexer;
 import org.firstinspires.ftc.teamcode.Framework.Hardware.Vision;
@@ -20,6 +22,8 @@ import org.firstinspires.ftc.teamcode.Framework.Hardware.Vision;
 public abstract class BaseOpMode extends LinearOpMode {
     protected Drivetrain drivetrain;
     protected Paddle paddle;
+
+    protected PaddleMotor paddleMotor;
     protected Intake intake;
     protected Outtake outtake;
     protected Spindexer spindexer;
@@ -30,6 +34,8 @@ public abstract class BaseOpMode extends LinearOpMode {
     protected Controller controller;
 
     protected IMU imuSensor;
+
+    public final boolean PADDLE_MOTOR = false;
     public void initHardware() {
 
         // Drivetrain Motors (SAME ORDER IN HARDWARE CONFIG)
@@ -52,9 +58,13 @@ public abstract class BaseOpMode extends LinearOpMode {
         
         
         // OTHER HARDWARE
-
-        paddle = new Paddle(hardwareMap.get(Servo.class, "paddleServo"));
-        paddle.setDown();
+        if(!PADDLE_MOTOR){
+            paddle = new Paddle(hardwareMap.get(Servo.class, "paddleServo"));
+            paddle.setDown();
+        }else{
+            paddleMotor = new PaddleMotor(hardwareMap.get(DcMotorEx.class,"paddleMotor"));
+            paddleMotor.setDown();
+        }
 
         intake = new Intake(hardwareMap.get(DcMotor.class, "intakeMotor"));
         intake.off();
