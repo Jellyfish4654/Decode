@@ -1,7 +1,5 @@
 package org.firstinspires.ftc.teamcode.Framework.Hardware;
 
-import static android.icu.util.UniversalTimeScale.MAX_SCALE;
-
 import com.qualcomm.robotcore.hardware.DcMotor;
 
 public class Drivetrain {
@@ -27,12 +25,16 @@ public class Drivetrain {
         return max;
     }
     private void applyPrecisionAndScale(double multiplier, double[] powers) {
+        // precision math
         for (int i = 0; i < powers.length; i++) {
             powers[i] *= multiplier;
         }
-
+        
         double maxPower = findMaxPower(powers);
-        double scale = maxPower > MAX_SCALE ? MAX_SCALE / maxPower : 1.0;
+        double scale = 1.0;
+        if (maxPower > 1) {
+            scale = 1.0 / maxPower;
+        }
 
         for (int i = 0; i < powers.length; i++) {
             powers[i] *= scale;
