@@ -22,7 +22,6 @@ import org.firstinspires.ftc.teamcode.Framework.Hardware.Vision;
 public abstract class BaseOpMode extends LinearOpMode {
     protected Drivetrain drivetrain;
     protected Paddle paddle;
-
     protected PaddleMotor paddleMotor;
     protected Intake intake;
     protected Outtake outtake;

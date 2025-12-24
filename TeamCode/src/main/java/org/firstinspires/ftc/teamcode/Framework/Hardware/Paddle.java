@@ -2,15 +2,16 @@ package org.firstinspires.ftc.teamcode.Framework.Hardware;
 
 import androidx.annotation.NonNull;
 
+import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.acmerobotics.roadrunner.Action;
 import com.qualcomm.robotcore.hardware.Servo;
 
-// TODO: create separate PaddleMotor class with PIDF
+@Config
 public class Paddle {
     private final Servo paddle;
-    private final double POS_UP = 0.0245;
-    private final double POS_DOWN = 0.219;
+    public static double POS_UP = 0.0245;
+    public static double POS_DOWN = 0.219;
     private double position;
     private boolean isUp;
 

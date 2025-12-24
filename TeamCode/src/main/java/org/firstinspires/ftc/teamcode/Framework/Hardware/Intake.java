@@ -10,7 +10,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 @Config
 public class Intake {
     private final DcMotor intake;
-    private static double DEFAULT_POWER = 1; // can config via dashboard
+    public static double DEFAULT_POWER = 1; // can config via dashboard
     
     public Intake (DcMotor motor) {
         this.intake = motor;

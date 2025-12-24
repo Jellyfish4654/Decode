@@ -5,20 +5,21 @@ import androidx.annotation.NonNull;
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.acmerobotics.roadrunner.Action;
-import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 
 @Config
 public class PaddleMotor {
+    private final DcMotorEx paddle;
+    
+    // TODO: tune PIDF, MAX_VEL, and POS constants
     public static double P = 0;
     public static double I = 0;
     public static double D = 0;
     public static double F = 0;
-
     public static double MAX_VEL = 200;
-    private final DcMotorEx paddle;
     public static int POS_UP = 1;
     public static int POS_DOWN = 0;
+    
     private int position;
     private boolean isUp;
 
@@ -39,7 +40,7 @@ public class PaddleMotor {
 
     public void changePosition(int position) {
         this.paddle.setTargetPosition(position);
-        this.paddle.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        this.paddle.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
         this.paddle.setVelocityPIDFCoefficients(P, I, D, F);
         this.paddle.setVelocity(MAX_VEL);
 
