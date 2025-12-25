@@ -9,6 +9,7 @@ public class SensorColor {
     private final RevColorSensorV3 colorSensor;
     public static float GAIN = 2.5F;
 
+    // TODO: tune color sensor at mounted position
     public static float[] minPurple = {100,0,128};//{81, 50, 55};
     public static float[] maxPurple = {255,215,255};//{255, 234, 255};
     public static float[] minGreen = {0,106,0};//{50, 106, 60};

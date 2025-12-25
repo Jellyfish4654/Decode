@@ -16,7 +16,7 @@ public class JellyTele extends BaseOpMode {
     private final double DEADBAND_VALUE = 0.02;
     private final double STRAFE_ADJUSTMENT_FACTOR = (14.0 / 13.0);
 
-    private double OUTTAKE_DELAY = 0.5*1000;
+    private double OUTTAKE_DELAY = 0.5*1000; // in millis -- TODO: adjust outtake delay (maybe spindexer also)
     private final double SPINDEXER_DELAY = 0.55*1000; // in millis
     
     private double imuOffset = 0;
@@ -92,9 +92,9 @@ public class JellyTele extends BaseOpMode {
                 aimRotation = vision.getGoalBearing(alliance);
                 // power up outtake early
                 double distance = vision.getGoalDistance(alliance);
-                if (distance > 10 && distance < 20) {
+                if (distance > 10 && distance < 20) { // TODO: adjust near and far distances and test, test aim rotation
                     outtake.onFar();
-                } else {
+                } else { // near is default if goal isn't recognized or distance is unrealistic
                     outtake.onNear();
                 }
             }

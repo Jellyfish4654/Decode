@@ -12,13 +12,13 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 public class Outtake {
     private final DcMotor outtake;
     
-    // can config via dashboard
+    // TODO: tune near and far power
     public static double NEAR_POWER = 1;
     public static double FAR_POWER = 1;
 
     public Outtake (DcMotor motor) {
         this.outtake = motor;
-        outtake.setDirection(DcMotorSimple.Direction.FORWARD);
+        outtake.setDirection(DcMotorSimple.Direction.FORWARD); // TODO: check outtake motor direction
         outtake.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
     }
 
