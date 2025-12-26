@@ -26,6 +26,8 @@ public class PaddleMotor {
 
     public PaddleMotor(DcMotorEx motor) {
         this.paddle = motor;
+        this.paddle.setDirection(DcMotorEx.Direction.FORWARD);
+        this.paddle.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
         this.paddle.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
         this.paddle.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
     }
@@ -59,6 +61,18 @@ public class PaddleMotor {
 
     public boolean isUp() {
         return isUp;
+    }
+    
+    public void energize() {
+        this.paddle.setMotorEnable();
+    }
+    
+    public void deenergize() {
+        this.paddle.setMotorDisable();
+    }
+    
+    public boolean isEnergized() {
+        return this.paddle.isMotorEnabled();
     }
 
 
