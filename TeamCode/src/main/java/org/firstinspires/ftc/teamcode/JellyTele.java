@@ -246,10 +246,23 @@ public class JellyTele extends BaseOpMode {
                 (rotY + rotX - r) / denominator
         };
     }
-
+    
+    // Old deadband: output jumps from 0 to DEADBAND_VALUE rather than increasing linearly from 0
+//    private double applyDeadband(double stick) {
+//        if (Math.abs(stick) > DEADBAND_VALUE) {
+//            return stick;
+//        } else {
+//            return 0;
+//        }
+//    }
+    
+    // linear rescaled deadband: lowers inputs to start at 0 and scales up to reach 1
     private double applyDeadband(double stick) {
         if (Math.abs(stick) > DEADBAND_VALUE) {
-            return stick;
+            double loweredStick = Math.abs(stick) - DEADBAND_VALUE;
+            double rangeAfterDeadband = 1.0 - DEADBAND_VALUE;
+            // divide the lowered stick by the range remaining to stretch it back to 0 - 1
+            return Math.copySign((loweredStick / rangeAfterDeadband), stick); // finish by copying the sign
         } else {
             return 0;
         }
