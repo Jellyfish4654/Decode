@@ -160,7 +160,7 @@ public class Vision {
                 .enableLiveView(true)
                 .setAutoStopLiveView(true)
                 .build();
-        //while(visionPortal.getCameraState()!= VisionPortal.CameraState.STREAMING){} // not sure what this does so feel free to un-comment this
+        while(visionPortal.getCameraState()!= VisionPortal.CameraState.STREAMING){} // not sure what this does so feel free to un-comment this
         this.gainControl = visionPortal.getCameraControl(GainControl.class);
         this.exposureControl = visionPortal.getCameraControl(ExposureControl.class);
         exposureControl.setMode(ExposureControl.Mode.Manual);

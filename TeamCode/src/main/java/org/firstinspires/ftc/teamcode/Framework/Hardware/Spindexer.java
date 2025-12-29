@@ -13,8 +13,8 @@ public class Spindexer {
     
     // Servo positions for intake and outtake of slots
     // TODO: check positions
-    public static double[] POSITIONS_IN = {0.745, 0.382, 0};
-    public static double[] POSITIONS_OUT = {0.19, 0.93, 0.56};
+    public static double[] POSITIONS_IN = {0.913, 0.5455, 0.1685};
+    public static double[] POSITIONS_OUT = {0.3535, 0, 0.715};
     
     private double position;
     
@@ -93,6 +93,24 @@ public class Spindexer {
             return this.contents[slot - 1];
         } else {
             return Artifact.EMPTY;
+        }
+    }
+
+    public String getContentsString(int slot) {
+        Artifact content;
+
+        if (slot >= 1 && slot <= 3) {
+            content = this.contents[slot - 1];
+        } else {
+            content =  Artifact.EMPTY;
+        }
+
+        if (content == Artifact.GREEN){
+            return "Green";
+        }else if (content == Artifact.PURPLE){
+            return "Purple";
+        }else{
+            return "Empty";
         }
     }
 
