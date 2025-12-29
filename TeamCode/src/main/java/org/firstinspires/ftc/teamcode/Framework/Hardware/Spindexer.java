@@ -96,24 +96,6 @@ public class Spindexer {
         }
     }
 
-    public String getContentsString(int slot) {
-        Artifact content;
-
-        if (slot >= 1 && slot <= 3) {
-            content = this.contents[slot - 1];
-        } else {
-            content =  Artifact.EMPTY;
-        }
-
-        if (content == Artifact.GREEN){
-            return "Green";
-        }else if (content == Artifact.PURPLE){
-            return "Purple";
-        }else{
-            return "Empty";
-        }
-    }
-
     public int findSlot (Artifact content) {
         for (int slot = 1; slot <= 3; slot++) {
             if (getContents(slot) == content) {

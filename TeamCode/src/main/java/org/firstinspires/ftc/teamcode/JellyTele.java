@@ -44,14 +44,11 @@ public class JellyTele extends BaseOpMode {
         imuOffset = imuSensor.getRobotYawPitchRollAngles().getYaw(AngleUnit.RADIANS);
         waitForStart();
         while (opModeIsActive()) {
-
             updateDrive();
-            //updateIntake(); // testing only
             updateAux();
             updateParameters();
             telemetry.update();
         }
-        return;
     }
     
     // testing only -- keep this commented for normal use
@@ -120,9 +117,9 @@ public class JellyTele extends BaseOpMode {
         telemetry.addLine();
         telemetry.addLine("Spindexer:");
         telemetry.addData("\tSpindexerSlot", spindexer.getCurrentSlot());
-        telemetry.addData("\tSlot 1",spindexer.getContentsString(1));
-        telemetry.addData("\tSlot 2",spindexer.getContentsString(2));
-        telemetry.addData("\tSlot 3",spindexer.getContentsString(3));
+        telemetry.addData("\tSlot 1", spindexer.getContents(1));
+        telemetry.addData("\tSlot 2", spindexer.getContents(2));
+        telemetry.addData("\tSlot 3", spindexer.getContents(3));
         
         telemetry.addLine();
         telemetry.addLine("Vision & Color:");
@@ -175,7 +172,6 @@ public class JellyTele extends BaseOpMode {
         telemetry.addData("Millis Per Loop", millisPerLoop);
         telemetry.addData("Loops Per Sec", loopsPerSec);
         loopTime = currentTime;
-        
     }
     
     
