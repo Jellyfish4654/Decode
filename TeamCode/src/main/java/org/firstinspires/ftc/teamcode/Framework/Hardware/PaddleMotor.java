@@ -11,7 +11,7 @@ import com.qualcomm.robotcore.hardware.DcMotorEx;
 public class PaddleMotor {
     private final DcMotorEx paddle;
     
-    // TODO: tune PIDF, MAX_VEL, and POS constants
+    //_TODO: tune PIDF, MAX_VEL, and POS constants
     public static double posP = 0;
     public static double P = 0;
     public static double I = 0;

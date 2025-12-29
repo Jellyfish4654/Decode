@@ -118,6 +118,7 @@ public class JellyTele extends BaseOpMode {
         telemetry.addLine();
         telemetry.addLine("Spindexer:");
         telemetry.addData("\tSpindexerSlot", spindexer.getCurrentSlot());
+        // TODO: check if telemetry is showing contents correctly
         telemetry.addData("\tSlot 1", spindexer.getContents(1));
         telemetry.addData("\tSlot 2", spindexer.getContents(2));
         telemetry.addData("\tSlot 3", spindexer.getContents(3));
