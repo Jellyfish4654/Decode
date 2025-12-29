@@ -77,6 +77,7 @@ public class JellyTele extends BaseOpMode {
             }
         } else if (spinState == SpinState.OUTTAKING && outtakeCompleted) {
             outtake.off();
+            paddleDown();
             spindexer.setContents(Artifact.EMPTY);
             spinState = SpinState.STANDBY;
         } else if (spinState == SpinState.SPIN_INTAKE && spinCompleted) {
