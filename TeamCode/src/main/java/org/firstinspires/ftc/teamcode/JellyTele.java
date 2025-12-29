@@ -16,8 +16,8 @@ public class JellyTele extends BaseOpMode {
     private final double DEADBAND_VALUE = 0.02;
     private final double STRAFE_ADJUSTMENT_FACTOR = (14.0 / 13.0);
 
-    private double OUTTAKE_DELAY = 0.5*1000; // in millis -- TODO: adjust outtake delay (maybe spindexer also)
-    private final double SPINDEXER_DELAY = 0.55*1000; // in millis
+    private long OUTTAKE_DELAY = 500; // in millis -- TODO: adjust outtake delay (maybe spindexer also)
+    private final long SPINDEXER_DELAY = 550; // in millis
     
     private double imuOffset = 0;
     private Alliance alliance = Alliance.RED;
@@ -161,8 +161,10 @@ public class JellyTele extends BaseOpMode {
         
         // loops per sec experiment
         long currentTime = System.currentTimeMillis();
-        double loopsPerSec = 1000.0 / Math.max((currentTime - loopTime), 1);
+        long millisPerLoop = currentTime - loopTime;
+        double loopsPerSec = 1000.0 / Math.max(millisPerLoop, 1L);
         telemetry.addLine();
+        telemetry.addData("Millis Per Loop", millisPerLoop);
         telemetry.addData("Loops Per Sec", loopsPerSec);
         loopTime = currentTime;
         
