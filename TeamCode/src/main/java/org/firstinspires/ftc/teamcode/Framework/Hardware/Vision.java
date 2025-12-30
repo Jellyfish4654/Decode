@@ -35,6 +35,9 @@ import org.opencv.core.Mat;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
+import org.firstinspires.ftc.teamcode.Framework.Match.Alliance;
+import org.firstinspires.ftc.teamcode.Framework.Match.Motif;
+
 @Config
 public class Vision {
     // FTC Dashboard livestream processor class -- don't touch lol
@@ -106,11 +109,6 @@ public class Vision {
     
     private GainControl gainControl;
     private ExposureControl exposureControl;
-    
-    public enum Alliance {
-        RED,
-        BlUE
-    }
 
 
     /**

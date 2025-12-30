@@ -33,6 +33,7 @@ public class ColorTuner extends LinearOpMode
 
             telemetry.addData("Is green?",color.isGreen());
             telemetry.addData("Is purple?",color.isPurple());
+            telemetry.addData("Artifact", color.getArtifact());
             telemetry.update();
         }
     }

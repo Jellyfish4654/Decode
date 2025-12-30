@@ -1,26 +1,30 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.acmerobotics.dashboard.FtcDashboard;
+import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.teamcode.Framework.BaseOpMode;
-import org.firstinspires.ftc.teamcode.Framework.Hardware.Spindexer.Artifact;
-import org.firstinspires.ftc.teamcode.Framework.Hardware.Vision.Alliance;
+
+import org.firstinspires.ftc.teamcode.Framework.Match;
+import org.firstinspires.ftc.teamcode.Framework.Match.Alliance;
+import org.firstinspires.ftc.teamcode.Framework.Match.Motif;
+import org.firstinspires.ftc.teamcode.Framework.Match.Artifact;
 
 @TeleOp(name = "JellyTele", group = "1-OpMode")
+@Config
 public class JellyTele extends BaseOpMode {
-    private final double PRECISION_MULTIPLIER_LOW = 0.35;
-    private final double PRECISION_MULTIPLIER_HIGH = 0.2;
-    private final double DEADBAND_VALUE = 0.02;
-    private final double STRAFE_ADJUSTMENT_FACTOR = (14.0 / 13.0);
+    public static double PRECISION_MULTIPLIER_LOW = 0.35;
+    public static double PRECISION_MULTIPLIER_HIGH = 0.2;
+    public static double DEADBAND_VALUE = 0.02;
+    public static double STRAFE_ADJUSTMENT_FACTOR = (14.0 / 13.0);
 
-    private long OUTTAKE_DELAY = 500; // in millis -- TODO: adjust outtake delay (maybe spindexer also)
-    private final long SPINDEXER_DELAY = 550; // in millis
+    public static long OUTTAKE_DELAY = 500; // in millis -- TODO: adjust outtake delay (maybe spindexer also)
+    public static long SPINDEXER_DELAY = 550; // in millis
     
     private double imuOffset = 0;
-    private Alliance alliance = Alliance.RED;
     
     private long loopTime = 0;
 
@@ -67,19 +71,16 @@ public class JellyTele extends BaseOpMode {
         boolean outtakeCompleted = System.currentTimeMillis()-outtakeStartTime >= OUTTAKE_DELAY;
         aimRotation = 0;
         if (spinState == SpinState.INTAKING) {
-            if (colorSensor.isGreen()) {
+            Artifact detectedArtifact = colorSensor.getArtifact();
+            if (detectedArtifact != Artifact.NONE) {
                 intake.off();
-                spindexer.setContents(Artifact.GREEN);
-                spinState = SpinState.STANDBY;
-            } else if (colorSensor.isPurple()) {
-                intake.off();
-                spindexer.setContents(Artifact.PURPLE);
+                spindexer.setContents(detectedArtifact);
                 spinState = SpinState.STANDBY;
             }
         } else if (spinState == SpinState.OUTTAKING && outtakeCompleted) {
             outtake.off();
             paddleDown();
-            spindexer.setContents(Artifact.EMPTY);
+            spindexer.setContents(Artifact.NONE);
             spinState = SpinState.STANDBY;
         } else if (spinState == SpinState.SPIN_INTAKE && spinCompleted) {
             intake.on();
@@ -90,9 +91,9 @@ public class JellyTele extends BaseOpMode {
                 outtakeStartTime = System.currentTimeMillis();
                 spinState = SpinState.OUTTAKING;
             } else {
-                aimRotation = vision.getGoalBearing(alliance);
+                aimRotation = vision.getGoalBearing(Match.alliance);
                 // power up outtake early
-                double distance = vision.getGoalDistance(alliance);
+                double distance = vision.getGoalDistance(Match.alliance);
                 if (distance > 10 && distance < 20) { // TODO: adjust near and far distances and test, test aim rotation
                     outtake.onFar();
                 } else { // near is default if goal isn't recognized or distance is unrealistic
@@ -126,15 +127,13 @@ public class JellyTele extends BaseOpMode {
         
         telemetry.addLine();
         telemetry.addLine("Vision & Color:");
-        telemetry.addData("\tAlliance", alliance);
-        telemetry.addData("\tGoalBearing", vision.getGoalBearing(alliance));
-        telemetry.addData("\tGoalDistance", vision.getGoalDistance(alliance));
-        telemetry.addData("\tColorGreen", colorSensor.isGreen());
-        telemetry.addData("\tColorPurple", colorSensor.isPurple());
+        telemetry.addData("\tGoalBearing", vision.getGoalBearing(Match.alliance)); // potentially heavy
+        telemetry.addData("\tGoalDistance", vision.getGoalDistance(Match.alliance)); // potentially heavy
+        telemetry.addData("\tColorSensor", colorSensor.getArtifact());
     }
     
     private void spinIntake() {
-        int slot = spindexer.findSlot(Artifact.EMPTY);
+        int slot = spindexer.findSlot(Artifact.NONE);
         if (slot == 0) {
             controller.rumble(200);
             return;
@@ -153,7 +152,7 @@ public class JellyTele extends BaseOpMode {
         }
         paddleDown(); // backup safety
         spindexer.setSlotOut(slot);
-        spindexer.setContents(Artifact.EMPTY);
+        spindexer.setContents(Artifact.NONE);
         spindexerStartTime = System.currentTimeMillis();
         spinState = SpinState.SPIN_OUTTAKE;
     }
@@ -161,10 +160,15 @@ public class JellyTele extends BaseOpMode {
     // updates parameters like current alliance from gamepad2
     private void updateParameters() {
         if (gamepad2.square) {
-            alliance = Alliance.RED;
+            Match.alliance = Alliance.RED;
         } else if (gamepad2.circle) {
-            alliance = Alliance.BlUE;
+            Match.alliance = Alliance.BlUE;
         }
+        
+        telemetry.addLine();
+        telemetry.addLine("Match:");
+        telemetry.addData("\tAlliance", Match.alliance);
+        telemetry.addData("\tMotif", Match.motif);
         
         // loops per sec experiment
         long currentTime = System.nanoTime();

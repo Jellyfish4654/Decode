@@ -7,6 +7,8 @@ import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.acmerobotics.roadrunner.Action;
 import com.qualcomm.robotcore.hardware.Servo;
 
+import org.firstinspires.ftc.teamcode.Framework.Match.Artifact;
+
 @Config
 public class Spindexer {
     private final Servo spindexer;
@@ -22,13 +24,7 @@ public class Spindexer {
     // absolute value and minus 1 for position indexes
     private int currentSlot;
     
-    // artifacts in slots
-    public enum Artifact {
-        EMPTY,
-        GREEN,
-        PURPLE
-    }
-    private Artifact[] contents = {Artifact.EMPTY, Artifact.EMPTY, Artifact.EMPTY};
+    private Artifact[] contents = {Artifact.NONE, Artifact.NONE, Artifact.NONE};
 
     public Spindexer (Servo servo) {
         this.spindexer = servo;
@@ -92,7 +88,7 @@ public class Spindexer {
         if (slot >= 1 && slot <= 3) {
             return this.contents[slot - 1];
         } else {
-            return Artifact.EMPTY;
+            return Artifact.NONE;
         }
     }
 
@@ -115,7 +111,7 @@ public class Spindexer {
         }
         @Override
         public boolean run(@NonNull TelemetryPacket packet) {
-            int slot = findSlot(Artifact.EMPTY);
+            int slot = findSlot(Artifact.NONE);
             setSlotIn(slot);
             return (getCurrentSlot() == slot);
         }

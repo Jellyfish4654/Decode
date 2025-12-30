@@ -4,6 +4,8 @@ import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.hardware.rev.RevColorSensorV3;
 import com.qualcomm.robotcore.hardware.NormalizedRGBA;
 
+import org.firstinspires.ftc.teamcode.Framework.Match.Artifact;
+
 @Config
 public class SensorColor {
     private final RevColorSensorV3 colorSensor;
@@ -17,7 +19,19 @@ public class SensorColor {
         colorSensor = sensor;
 
     }
-
+    
+    public double[] detectRGBA() {
+        colorSensor.setGain(GAIN);
+        NormalizedRGBA raw = colorSensor.getNormalizedColors();
+        
+        return new double[] {
+                Math.min(255, (raw.red*255*1000)),
+                Math.min(255, (raw.green*255*1000)),
+                Math.min(255, (raw.blue*255*1000)),
+                Math.min(255, (raw.alpha*255*1000))
+        };
+    }
+    
     private boolean isInRange(double[] color, double[] low, double[] high){
         return color[0] >= low[0] && color[1] >= low[1] && color[2] >= low[2] &&
                 color[0] <= high[0] && color[1] <= high[1] && color[2] <= high[2];
@@ -43,16 +57,13 @@ public class SensorColor {
         return false;
     }
     
-    public double[] detectRGBA() {
-        colorSensor.setGain(GAIN);
-        NormalizedRGBA raw = colorSensor.getNormalizedColors();
-
-        return new double[] {
-                Math.min(255, (raw.red*255*1000)),
-                Math.min(255, (raw.green*255*1000)),
-                Math.min(255, (raw.blue*255*1000)),
-                Math.min(255, (raw.alpha*255*1000))
-        };
+    public Artifact getArtifact() {
+        if (isGreen()) {
+            return Artifact.GREEN;
+        } else if (isPurple()) {
+            return Artifact.PURPLE;
+        } else {
+            return Artifact.NONE;
+        }
     }
-
 }
