@@ -9,7 +9,6 @@ import com.qualcomm.robotcore.hardware.IMU;
 import com.qualcomm.robotcore.hardware.Servo;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 
-import org.firstinspires.ftc.teamcode.Framework.Hardware.Controller;
 import org.firstinspires.ftc.teamcode.Framework.Hardware.Drivetrain;
 import org.firstinspires.ftc.teamcode.Framework.Hardware.Paddle;
 import org.firstinspires.ftc.teamcode.Framework.Hardware.Intake;

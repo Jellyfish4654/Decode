@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.Framework.Hardware;
+package org.firstinspires.ftc.teamcode.Framework;
 
 
 import com.qualcomm.robotcore.hardware.Gamepad;
