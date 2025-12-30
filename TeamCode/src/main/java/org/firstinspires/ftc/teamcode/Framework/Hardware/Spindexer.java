@@ -12,7 +12,6 @@ public class Spindexer {
     private final Servo spindexer;
     
     // Servo positions for intake and outtake of slots
-    // TODO: check positions
     public static double[] POSITIONS_IN = {0.913, 0.5455, 0.1685};
     public static double[] POSITIONS_OUT = {0.3535, 0, 0.715};
     

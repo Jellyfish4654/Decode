@@ -158,7 +158,6 @@ public class JellyTele extends BaseOpMode {
     }
     
     // updates parameters like current alliance from gamepad2
-    // TODO: switch this to controller2 with more controller mapping?
     private void updateParameters() {
         if (gamepad2.square) {
             alliance = Alliance.RED;

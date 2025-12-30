@@ -171,7 +171,6 @@ public class Vision {
     }
 
     private void exposureUpdate(){
-        //TODO: DELETE THIS AFTER FINDING OPTIMAL EXPOSURE
         this.gainControl = visionPortal.getCameraControl(GainControl.class);
         this.exposureControl = visionPortal.getCameraControl(ExposureControl.class);
 
@@ -186,7 +185,7 @@ public class Vision {
      * @return Object[] of AprilTags (can be cast to AprilTagDetection)
      */
     public Object[] getTags(){
-        exposureUpdate();
+        //exposureUpdate();
         List<AprilTagDetection> detectionsList;
         detectionsList = this.aprilTag.getDetections();
         return detectionsList.toArray(new AprilTagDetection[0]);
@@ -263,7 +262,7 @@ public class Vision {
      * @return Object[] of Blobs (can be cast to ColorBlobLocatorProcessor.Blob)
      */
     public Object[] getGreenArtifacts(){
-        exposureUpdate();
+        //exposureUpdate();
         List<ColorBlobLocatorProcessor.Blob> blobs;
         blobs = this.greenArtifactDetector.getBlobs();
 
@@ -284,7 +283,7 @@ public class Vision {
      * @return Object[] of Blobs (can be cast to ColorBlobLocatorProcessor.Blob)
      */
     public Object[] getPurpleArtifacts(){
-        exposureUpdate();
+        //exposureUpdate();
         List<ColorBlobLocatorProcessor.Blob> blobs;
         blobs = this.purpleArtifactDetector.getBlobs();
 
