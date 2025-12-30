@@ -70,7 +70,7 @@ public class JellyTele extends BaseOpMode {
         boolean spinCompleted = System.currentTimeMillis()-spindexerStartTime >= SPINDEXER_DELAY;
         boolean outtakeCompleted = System.currentTimeMillis()-outtakeStartTime >= OUTTAKE_DELAY;
         aimRotation = 0;
-        if (spinState == SpinState.INTAKING) {
+        if (spinState == SpinState.INTAKING && spindexer.findSlot(Artifact.NONE) != 0) {
             Artifact detectedArtifact = colorSensor.getArtifact();
             if (detectedArtifact != Artifact.NONE) {
                 intake.off();
@@ -100,12 +100,12 @@ public class JellyTele extends BaseOpMode {
                 }
             }
         } else if (spinState == SpinState.STANDBY) {
-            if (controller.intake()/*Pressed()*/) {
+            if (controller.intake()/*Pressed()*/ && spindexer.findSlot(Artifact.NONE) != 0) {
                 if(spindexer.getContents(spindexer.getCurrentSlot()) == Artifact.NONE) {
                     intake.on();
                     spinState = SpinState.INTAKING;
                 }
-                else{
+                else if (spindexer.findSlot(Artifact.NONE) == 0){
                     controller.rumble(200);
                 }
             } else if (controller.outGreen()/*Pressed()*/) {

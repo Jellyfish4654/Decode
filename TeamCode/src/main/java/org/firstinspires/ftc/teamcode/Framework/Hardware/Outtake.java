@@ -20,10 +20,10 @@ public class Outtake {
     public Outtake (DcMotor outtake, DcMotor guiding) {
         this.outtake = outtake;
         this.guiding = guiding;
-        outtake.setDirection(DcMotorSimple.Direction.REVERSE); // TODO: check outtake motor direction
+        outtake.setDirection(DcMotorSimple.Direction.FORWARD); // TODO: check outtake motor direction
         outtake.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
 
-        guiding.setDirection(DcMotorSimple.Direction.REVERSE);
+        guiding.setDirection(DcMotorSimple.Direction.FORWARD);
         guiding.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
     }
 
