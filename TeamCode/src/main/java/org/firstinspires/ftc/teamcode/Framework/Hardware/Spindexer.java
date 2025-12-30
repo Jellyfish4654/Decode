@@ -7,7 +7,7 @@ import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.acmerobotics.roadrunner.Action;
 import com.qualcomm.robotcore.hardware.Servo;
 
-import org.firstinspires.ftc.teamcode.Framework.Match.Artifact;
+import org.firstinspires.ftc.teamcode.Framework.Params.Artifact;
 
 @Config
 public class Spindexer {

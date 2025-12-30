@@ -8,10 +8,10 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.teamcode.Framework.BaseOpMode;
 
-import org.firstinspires.ftc.teamcode.Framework.Match;
-import org.firstinspires.ftc.teamcode.Framework.Match.Alliance;
-import org.firstinspires.ftc.teamcode.Framework.Match.Motif;
-import org.firstinspires.ftc.teamcode.Framework.Match.Artifact;
+import org.firstinspires.ftc.teamcode.Framework.Params;
+import org.firstinspires.ftc.teamcode.Framework.Params.Alliance;
+import org.firstinspires.ftc.teamcode.Framework.Params.Motif;
+import org.firstinspires.ftc.teamcode.Framework.Params.Artifact;
 
 @TeleOp(name = "JellyTele", group = "1-OpMode")
 @Config
@@ -91,9 +91,9 @@ public class JellyTele extends BaseOpMode {
                 outtakeStartTime = System.currentTimeMillis();
                 spinState = SpinState.OUTTAKING;
             } else {
-                aimRotation = vision.getGoalBearing(Match.alliance);
+                aimRotation = vision.getGoalBearing(Params.alliance);
                 // power up outtake early
-                double distance = vision.getGoalDistance(Match.alliance);
+                double distance = vision.getGoalDistance(Params.alliance);
                 if (distance > 10 && distance < 20) { // TODO: adjust near and far distances and test, test aim rotation
                     outtake.onFar();
                 } else { // near is default if goal isn't recognized or distance is unrealistic
@@ -127,8 +127,8 @@ public class JellyTele extends BaseOpMode {
         
         telemetry.addLine();
         telemetry.addLine("Vision & Color:");
-        telemetry.addData("\tGoalBearing", vision.getGoalBearing(Match.alliance)); // potentially heavy
-        telemetry.addData("\tGoalDistance", vision.getGoalDistance(Match.alliance)); // potentially heavy
+        telemetry.addData("\tGoalBearing", vision.getGoalBearing(Params.alliance)); // potentially heavy
+        telemetry.addData("\tGoalDistance", vision.getGoalDistance(Params.alliance)); // potentially heavy
         telemetry.addData("\tColorSensor", colorSensor.getArtifact());
     }
     
@@ -160,15 +160,15 @@ public class JellyTele extends BaseOpMode {
     // updates parameters like current alliance from gamepad2
     private void updateParameters() {
         if (gamepad2.square) {
-            Match.alliance = Alliance.RED;
+            Params.alliance = Alliance.RED;
         } else if (gamepad2.circle) {
-            Match.alliance = Alliance.BlUE;
+            Params.alliance = Alliance.BlUE;
         }
         
         telemetry.addLine();
         telemetry.addLine("Match:");
-        telemetry.addData("\tAlliance", Match.alliance);
-        telemetry.addData("\tMotif", Match.motif);
+        telemetry.addData("\tAlliance", Params.alliance);
+        telemetry.addData("\tMotif", Params.motif);
         
         // loops per sec experiment
         long currentTime = System.nanoTime();

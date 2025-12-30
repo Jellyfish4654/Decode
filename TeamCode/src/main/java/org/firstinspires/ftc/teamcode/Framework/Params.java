@@ -1,6 +1,6 @@
 package org.firstinspires.ftc.teamcode.Framework;
 
-public class Match {
+public class Params {
     
     // set both in auto for use in auto and teleop
     public static Alliance alliance = Alliance.RED;

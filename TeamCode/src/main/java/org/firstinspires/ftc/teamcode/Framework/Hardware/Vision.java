@@ -35,8 +35,8 @@ import org.opencv.core.Mat;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
-import org.firstinspires.ftc.teamcode.Framework.Match.Alliance;
-import org.firstinspires.ftc.teamcode.Framework.Match.Motif;
+import org.firstinspires.ftc.teamcode.Framework.Params.Alliance;
+import org.firstinspires.ftc.teamcode.Framework.Params.Motif;
 
 @Config
 public class Vision {

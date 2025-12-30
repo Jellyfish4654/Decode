@@ -4,7 +4,7 @@ import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.hardware.rev.RevColorSensorV3;
 import com.qualcomm.robotcore.hardware.NormalizedRGBA;
 
-import org.firstinspires.ftc.teamcode.Framework.Match.Artifact;
+import org.firstinspires.ftc.teamcode.Framework.Params.Artifact;
 
 @Config
 public class SensorColor {
