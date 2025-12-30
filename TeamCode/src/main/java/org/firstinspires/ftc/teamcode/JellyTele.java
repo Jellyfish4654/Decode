@@ -48,6 +48,7 @@ public class JellyTele extends BaseOpMode {
             updateAux();
             updateParameters();
             telemetry.update();
+            //idle(); // potential fix for not stopping (or after loop), BUT could slow loop
         }
     }
     
@@ -166,11 +167,16 @@ public class JellyTele extends BaseOpMode {
         }
         
         // loops per sec experiment
-        long currentTime = System.currentTimeMillis();
-        long millisPerLoop = currentTime - loopTime;
-        double loopsPerSec = 1000.0 / Math.max(millisPerLoop, 1L);
+        long currentTime = System.nanoTime();
+        long nanoPerLoop = currentTime - loopTime;
+        
+        double loopsPerSec = 0;
+        if (nanoPerLoop > 0) {
+            loopsPerSec = 1e9 / nanoPerLoop;
+        }
+        
         telemetry.addLine();
-        telemetry.addData("Millis Per Loop", millisPerLoop);
+        telemetry.addData("Millis Per Loop", (nanoPerLoop / 1e6));
         telemetry.addData("Loops Per Sec", loopsPerSec);
         loopTime = currentTime;
     }
