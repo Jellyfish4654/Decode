@@ -19,7 +19,7 @@ public class JellyTele extends BaseOpMode {
     public static double PRECISION_MULTIPLIER_LOW = 0.35;
     public static double PRECISION_MULTIPLIER_HIGH = 0.2;
     public static double DEADBAND_VALUE = 0.02;
-    public static double STRAFE_ADJUSTMENT_FACTOR = (14.0 / 13.0);
+    public static double STRAFE_ADJUSTMENT_FACTOR = 1.08;
     public static long SPIN_INTAKE_DELAY = 550; // in millis // TODO: remove this and rework system if analog pos is used
     public static long SPIN_OUTTAKE_DELAY = 1000; // TODO: adjust with higher RPM outtake motor
     public static long OUTTAKE_DELAY = 500; // in millis -- TODO: adjust outtake delay (maybe spindexer also)
