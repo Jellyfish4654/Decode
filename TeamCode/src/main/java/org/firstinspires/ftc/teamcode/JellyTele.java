@@ -182,6 +182,7 @@ public class JellyTele extends BaseOpMode {
         telemetry.addData("\tAlliance", Params.alliance);
         telemetry.addData("\tMotif", Params.motif);
         
+        
         // loops per sec experiment
         long currentTime = System.nanoTime();
         long nanoPerLoop = currentTime - loopTime;

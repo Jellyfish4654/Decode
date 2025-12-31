@@ -13,28 +13,29 @@ public class Outtake {
     private final DcMotor outtake;
     private final DcMotor guiding;
     
-    // TODO: tune near and far power
+    // TODO: tune near and far power (also guiding)
     public static double NEAR_POWER = 1;
     public static double FAR_POWER = 1;
+    public static double GUIDING_POWER = 1;
     
     public Outtake (DcMotor outtake, DcMotor guiding) {
         this.outtake = outtake;
         this.guiding = guiding;
-        outtake.setDirection(DcMotorSimple.Direction.FORWARD); // TODO: check outtake motors direction
+        outtake.setDirection(DcMotorSimple.Direction.FORWARD); // TODO: check outtake motors direction (keep guiding braked?)
         outtake.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
         
         guiding.setDirection(DcMotorSimple.Direction.FORWARD);
-        guiding.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+        guiding.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
     }
     
     public void onNear() {
         outtake.setPower(NEAR_POWER);
-        guiding.setPower(NEAR_POWER);
+        guiding.setPower(GUIDING_POWER);
     }
     
     public void onFar() {
         outtake.setPower(FAR_POWER);
-        guiding.setPower(FAR_POWER);
+        guiding.setPower(GUIDING_POWER);
     }
     
     public void off() {

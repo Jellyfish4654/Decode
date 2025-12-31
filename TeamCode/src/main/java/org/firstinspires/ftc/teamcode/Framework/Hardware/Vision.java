@@ -254,6 +254,27 @@ public class Vision {
         }
         return 0;
     }
+    
+    /**
+     * Gets the motif for the match, based on the first Obelisk AprilTag recognized.
+     * WARNING: robot must be in a position where only the correct
+     * Obelisk AprilTag can be read.
+     * @return Params.Motif of the recognized Obelisk motif.
+     * If Obelisk tag is not in frame, returns null
+     */
+    public Motif getObeliskMotif() {
+        AprilTagDetection[] allTags = (AprilTagDetection[]) getTags();
+        for (AprilTagDetection tag : allTags) {
+            if (tag.id == 21) {
+                return Motif.GPP;
+            } else if (tag.id == 22) {
+                return Motif.PGP;
+            } else if (tag.id == 23) {
+                return Motif.PPG;
+            }
+        }
+        return null;
+    }
 
     /**
      * Get Green-colored Blobs (likely Green Artifacts) detected by the camera

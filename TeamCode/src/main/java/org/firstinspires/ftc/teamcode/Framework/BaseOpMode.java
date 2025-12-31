@@ -55,6 +55,7 @@ public abstract class BaseOpMode extends LinearOpMode {
         
         // OTHER HARDWARE
         
+        // TODO: remove all paddleMotor stuff soon, once confirmed we are not using it
         if(!PADDLE_MOTOR){
             paddle = new Paddle(hardwareMap.get(Servo.class, "paddleServo"));
             paddle.setDown();
