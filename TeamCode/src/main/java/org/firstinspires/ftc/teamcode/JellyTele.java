@@ -20,9 +20,9 @@ public class JellyTele extends BaseOpMode {
     public static double PRECISION_MULTIPLIER_HIGH = 0.2;
     public static double DEADBAND_VALUE = 0.02;
     public static double STRAFE_ADJUSTMENT_FACTOR = (14.0 / 13.0);
-
+    public static long SPIN_INTAKE_DELAY = 550; // in millis // TODO: remove this and rework system if analog pos is used
+    public static long SPIN_OUTTAKE_DELAY = 1000; // TODO: adjust with higher RPM outtake motor
     public static long OUTTAKE_DELAY = 500; // in millis -- TODO: adjust outtake delay (maybe spindexer also)
-    public static long SPINDEXER_DELAY = 550; // in millis
     
     private double imuOffset = 0;
     
@@ -67,30 +67,33 @@ public class JellyTele extends BaseOpMode {
 
     // main auxiliary logic for intake, spindexer, outtake, and vision integrations
     private void updateAux() {
-        boolean spinCompleted = System.currentTimeMillis()-spindexerStartTime >= SPINDEXER_DELAY;
+        boolean spinInCompleted = System.currentTimeMillis()-spindexerStartTime >= SPIN_INTAKE_DELAY;
+        boolean spinOutCompleted = System.currentTimeMillis()-spindexerStartTime >= SPIN_OUTTAKE_DELAY;
         boolean outtakeCompleted = System.currentTimeMillis()-outtakeStartTime >= OUTTAKE_DELAY;
         aimRotation = 0;
-        if (spinState == SpinState.INTAKING && spindexer.findSlot(Artifact.NONE) != 0) {
+        if (spinState == SpinState.INTAKING) {
             Artifact detectedArtifact = colorSensor.getArtifact();
             if (detectedArtifact != Artifact.NONE) {
                 intake.off();
                 spindexer.setContents(detectedArtifact);
-                spinIntake();
+                spinState = SpinState.STANDBY;
+                spinPostIntake(); // TODO: consider if necessary, doesn't currently save time
             }
         } else if (spinState == SpinState.OUTTAKING && outtakeCompleted) {
             outtake.off();
             paddleDown();
             spindexer.setContents(Artifact.NONE);
             spinState = SpinState.STANDBY;
-        } else if (spinState == SpinState.SPIN_INTAKE && spinCompleted) {
-            spinState = SpinState.STANDBY;
+        } else if (spinState == SpinState.SPIN_INTAKE && spinInCompleted) {
+            intake.on();
+            spinState = SpinState.INTAKING;
         } else if (spinState == SpinState.SPIN_OUTTAKE) {
-            if (spinCompleted) {
+            if (spinOutCompleted) {
                 paddleUp();
                 outtakeStartTime = System.currentTimeMillis();
                 spinState = SpinState.OUTTAKING;
             } else {
-                //aimRotation = vision.getGoalBearing(Params.alliance);
+                // aimRotation = vision.getGoalBearing(Params.alliance) / 90; // TODO: uncomment this? and adjust division?
                 // power up outtake early
                 double distance = vision.getGoalDistance(Params.alliance);
                 if (distance > 10 && distance < 20) { // TODO: adjust near and far distances and test, test aim rotation
@@ -100,14 +103,8 @@ public class JellyTele extends BaseOpMode {
                 }
             }
         } else if (spinState == SpinState.STANDBY) {
-            if (controller.intake()/*Pressed()*/ && spindexer.findSlot(Artifact.NONE) != 0) {
-                if(spindexer.getContents(spindexer.getCurrentSlot()) == Artifact.NONE) {
-                    intake.on();
-                    spinState = SpinState.INTAKING;
-                }
-                else if (spindexer.findSlot(Artifact.NONE) == 0){
-                    controller.rumble(200);
-                }
+            if (controller.intake()/*Pressed()*/) { // TODO: drivers prefer pressed or normal?
+                spinIntake();
             } else if (controller.outGreen()/*Pressed()*/) {
                 spinOuttake(Artifact.GREEN);
             } else if (controller.outPurple()/*Pressed()*/) {
@@ -138,9 +135,9 @@ public class JellyTele extends BaseOpMode {
     }
     
     private void spinIntake() {
-        int slot = spindexer.getContents(spindexer.getCurrentSlot()) == Artifact.NONE ? spindexer.getCurrentSlot() : spindexer.findSlot(Artifact.NONE);
+        int slot = spindexer.findSlot(Artifact.NONE);
         if (slot == 0) {
-            spinState = SpinState.STANDBY;
+            controller.rumble(200);
             return;
         }
         paddleDown(); // backup safety
@@ -153,7 +150,6 @@ public class JellyTele extends BaseOpMode {
         int slot = spindexer.findSlot(artifact);
         if (slot == 0) {
             controller.rumble(200);
-            spinState = SpinState.STANDBY;
             return;
         }
         paddleDown(); // backup safety
@@ -163,7 +159,17 @@ public class JellyTele extends BaseOpMode {
         spinState = SpinState.SPIN_OUTTAKE;
     }
     
-    // updates parameters lik e current alliance from gamepad2
+    private void spinPostIntake() {
+        paddleDown(); // backup safety
+        int slot = spindexer.findSlot(Artifact.NONE);
+        if (slot == 0) {
+            spindexer.setSlotOut(1);
+        } else {
+            spindexer.setSlotIn(slot);
+        }
+    }
+    
+    // updates parameters like current alliance from gamepad2
     private void updateParameters() {
         if (gamepad2.square) {
             Params.alliance = Alliance.RED;
@@ -222,7 +228,7 @@ public class JellyTele extends BaseOpMode {
     }
 
     private double[] MecanumDrive() {
-        double r = applyDeadband(controller.turnStickX()) + aimRotation/90; // outtake aim rotation
+        double r = applyDeadband(controller.turnStickX()) + aimRotation; // outtake aim rotation
         double x = applyDeadband(controller.moveStickX()) * STRAFE_ADJUSTMENT_FACTOR;
         double y = applyDeadband(controller.moveStickY());
 
@@ -245,7 +251,7 @@ public class JellyTele extends BaseOpMode {
     private double[] FieldCentricDrive() {
         double botHeading = imuSensor.getRobotYawPitchRollAngles().getYaw(AngleUnit.RADIANS) - imuOffset;
 
-        double r = applyDeadband(controller.turnStickX()) + aimRotation/90; // outtake aim rotation
+        double r = applyDeadband(controller.turnStickX()) + aimRotation; // outtake aim rotation
         double x = applyDeadband(controller.moveStickX()) * STRAFE_ADJUSTMENT_FACTOR;
         double y = applyDeadband(controller.moveStickY());
 

@@ -16,17 +16,17 @@ public class Outtake {
     // TODO: tune near and far power
     public static double NEAR_POWER = 1;
     public static double FAR_POWER = 1;
-
+    
     public Outtake (DcMotor outtake, DcMotor guiding) {
         this.outtake = outtake;
         this.guiding = guiding;
-        outtake.setDirection(DcMotorSimple.Direction.FORWARD); // TODO: check outtake motor direction
+        outtake.setDirection(DcMotorSimple.Direction.FORWARD); // TODO: check outtake motors direction
         outtake.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
-
+        
         guiding.setDirection(DcMotorSimple.Direction.FORWARD);
         guiding.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
     }
-
+    
     public void onNear() {
         outtake.setPower(NEAR_POWER);
         guiding.setPower(NEAR_POWER);
@@ -36,7 +36,7 @@ public class Outtake {
         outtake.setPower(FAR_POWER);
         guiding.setPower(FAR_POWER);
     }
-
+    
     public void off() {
         outtake.setPower(0);
         guiding.setPower(0);
@@ -69,7 +69,7 @@ public class Outtake {
     public Action outtakeOnFar() {
         return new OuttakeOnFar();
     }
-
+    
     public class OuttakeOff implements Action {
         @Override
         public boolean run (@NonNull TelemetryPacket packet) {

@@ -90,7 +90,7 @@ public class Vision {
     public static long EXPOSURE = 30;
     
     // TODO: adjust bearing deadband
-    public static double GOAL_BEARING_DEADBAND = 2 ; // +- degrees that aim correction is not applied
+    public static double GOAL_BEARING_DEADBAND = 2; // +- degrees that aim correction is not applied
 
 
     private CameraName name;

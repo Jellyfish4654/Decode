@@ -65,7 +65,7 @@ public abstract class BaseOpMode extends LinearOpMode {
 
         intake = new Intake(hardwareMap.get(DcMotor.class, "intakeMotor"));
         intake.off();
-
+        
         outtake = new Outtake(
                 hardwareMap.get(DcMotor.class, "outtakeMotor"),
                 hardwareMap.get(DcMotor.class, "guidingMotor")
