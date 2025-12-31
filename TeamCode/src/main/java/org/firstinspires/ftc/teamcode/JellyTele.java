@@ -93,7 +93,7 @@ public class JellyTele extends BaseOpMode {
                 outtakeStartTime = System.currentTimeMillis();
                 spinState = SpinState.OUTTAKING;
             } else {
-                // aimRotation = vision.getGoalBearing(Params.alliance) / 90; // TODO: uncomment this? and adjust division?
+                aimRotation = vision.getGoalBearing(Params.alliance) / 90; // TODO: uncomment this? and adjust division?
                 // power up outtake early
                 double distance = vision.getGoalDistance(Params.alliance);
                 if (distance > 10 && distance < 20) { // TODO: adjust near and far distances and test, test aim rotation

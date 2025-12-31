@@ -9,11 +9,12 @@ import org.firstinspires.ftc.teamcode.Framework.Params.Artifact;
 @Config
 public class SensorColor {
     private final RevColorSensorV3 colorSensor;
-    public static float GAIN = 2.7F;
+    public static float GAIN = 2.12345F;
 
     // TODO: continue tuning color sensor with various lighting
-    public static double[][][] purpleRanges = {{{0,0,0},{80,40,100}},{{70,30,60},{150,80,150}},{{170,80,200},{255,180,230}},{{100,80,60},{170,120,150}}};
-    public static double[][][] greenRanges = {{{50,70,40},{65,100,100}},{{50,90,40},{90,150,110}},{{20,130,20},{110,255,140}}};
+    // current graph: https://www.desmos.com/3d/g1f8te9yqm
+    public static double[][][] purpleRanges = {{{0,0,0},{80,40,100}},{{70,30,60},{150,80,150}},{{170,80,150},{255,180,230}},{{100,80,60},{170,120,150}}};
+    public static double[][][] greenRanges = {{{20,70,40},{65,100,100}},{{20,90,40},{90,150,110}},{{20,130,20},{110,255,140}}};
 
     public SensorColor (RevColorSensorV3 sensor) {
         colorSensor = sensor;

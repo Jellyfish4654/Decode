@@ -150,7 +150,7 @@ public class Vision {
                 .addProcessor(this.aprilTag)
                 .addProcessor(this.purpleArtifactDetector)
                 .addProcessor(this.greenArtifactDetector)
-                .addProcessor(dashboardProcessor) // FTC Dashboard livestream
+                //.addProcessor(dashboardProcessor) // FTC Dashboard livestream
                 //lower resolution possibly might make code faster if possible (ex 320, 240)
                 //however, camera will need to be calibrated and itll probably be a pain
                 .setCameraResolution(new Size(camWidth, camHeight))
@@ -165,7 +165,7 @@ public class Vision {
         gainControl.setGain(GAIN);
         exposureControl.setExposure(EXPOSURE,TimeUnit.MILLISECONDS);
         
-        FtcDashboard.getInstance().startCameraStream(dashboardProcessor, 15); // FTC Dashboard livestream
+        //FtcDashboard.getInstance().startCameraStream(dashboardProcessor, 15); // FTC Dashboard livestream
     }
 
     private void exposureUpdate(){
