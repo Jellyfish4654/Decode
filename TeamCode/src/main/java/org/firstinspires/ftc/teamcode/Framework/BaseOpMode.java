@@ -80,7 +80,7 @@ public abstract class BaseOpMode extends LinearOpMode {
 
         vision = new Vision(hardwareMap.get(WebcamName.class, "vision"));
 
-        controller = new Controller(gamepad1);
+        controller = new Controller(gamepad1,gamepad2);
 
         imuSensor = initializeIMUSensor();
     }

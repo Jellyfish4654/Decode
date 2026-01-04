@@ -23,6 +23,8 @@ public class JellyTele extends BaseOpMode {
     public static long SPIN_INTAKE_DELAY = 550; // in millis // TODO: remove this and rework system if analog pos is used
     public static long SPIN_OUTTAKE_DELAY = 1000; // TODO: adjust with higher RPM outtake motor
     public static long OUTTAKE_DELAY = 500; // in millis -- TODO: adjust outtake delay (maybe spindexer also)
+    public static long DISTANCE_TOO_FAR = 20; // TODO: Adjust near/far distances
+    public static long DISTANCE_FAR = 10;
     
     private double imuOffset = 0;
     
@@ -36,6 +38,9 @@ public class JellyTele extends BaseOpMode {
         OUTTAKING
     }
     private SpinState spinState = SpinState.STANDBY;
+    private boolean motifOuttakeLock = false;
+    private Artifact[] currentMotifArtifacts;
+    private int motifOuttakeIndex = 0;
     private long spindexerStartTime = 0;
     private long outtakeStartTime = 0;
     private double aimRotation = 0;
@@ -77,7 +82,7 @@ public class JellyTele extends BaseOpMode {
                 intake.off();
                 spindexer.setContents(detectedArtifact);
                 spinState = SpinState.STANDBY;
-                spinPostIntake(); // TODO: consider if necessary, doesn't currently save time
+                spinPostIntake(); // TODO: tell noah to shhh and let me cook (consider if necessary, doesn't currently save time)
             }
         } else if (spinState == SpinState.OUTTAKING && outtakeCompleted) {
             outtake.off();
@@ -93,22 +98,33 @@ public class JellyTele extends BaseOpMode {
                 outtakeStartTime = System.currentTimeMillis();
                 spinState = SpinState.OUTTAKING;
             } else {
-                aimRotation = vision.getGoalBearing(Params.alliance) / 90; // TODO: uncomment this? and adjust division?
+                aimRotation = vision.getGoalBearing(Params.alliance) / 90; // TODO: comment this? and adjust division? and test
                 // power up outtake early
                 double distance = vision.getGoalDistance(Params.alliance);
-                if (distance > 10 && distance < 20) { // TODO: adjust near and far distances and test, test aim rotation
+                if (distance > DISTANCE_FAR && distance < DISTANCE_TOO_FAR) {
                     outtake.onFar();
                 } else { // near is default if goal isn't recognized or distance is unrealistic
                     outtake.onNear();
                 }
             }
-        } else if (spinState == SpinState.STANDBY) {
+        } else if (spinState == SpinState.STANDBY && !motifOuttakeLock) {
             if (controller.intake()/*Pressed()*/) { // TODO: drivers prefer pressed or normal?
                 spinIntake();
             } else if (controller.outGreen()/*Pressed()*/) {
                 spinOuttake(Artifact.GREEN);
             } else if (controller.outPurple()/*Pressed()*/) {
                 spinOuttake(Artifact.PURPLE);
+            } else if (controller.outMotifPressed()){
+                motifOuttakeLock = true;
+                currentMotifArtifacts = Params.motifArtifacts.get(Motif.GPP);
+                spinOuttake(currentMotifArtifacts[0]);
+                motifOuttakeIndex = 1;
+            }
+        }else if(motifOuttakeLock){
+            spinOuttake(currentMotifArtifacts[motifOuttakeIndex]);
+            motifOuttakeIndex += 1;
+            if(motifOuttakeIndex >= 3){
+                motifOuttakeLock = false;
             }
         }
         
@@ -118,11 +134,12 @@ public class JellyTele extends BaseOpMode {
         telemetry.addData("\tIntakeOn", intake.isOn());
         telemetry.addData("\tOuttakeOn", outtake.isOn());
         telemetry.addData("\tPaddleUp", paddleIsUp());
+        telemetry.addData("\tMotif Lock",motifOuttakeLock);
+
 
         telemetry.addLine();
         telemetry.addLine("Spindexer:");
         telemetry.addData("\tSpindexerSlot", spindexer.getCurrentSlot());
-        // TODO: check if telemetry is showing contents correctly
         telemetry.addData("\tSlot 1", spindexer.getContents(1));
         telemetry.addData("\tSlot 2", spindexer.getContents(2));
         telemetry.addData("\tSlot 3", spindexer.getContents(3));
@@ -137,7 +154,7 @@ public class JellyTele extends BaseOpMode {
     private void spinIntake() {
         int slot = spindexer.findSlot(Artifact.NONE);
         if (slot == 0) {
-            controller.rumble(200);
+            controller.rumble(200,false);
             return;
         }
         paddleDown(); // backup safety
@@ -149,7 +166,8 @@ public class JellyTele extends BaseOpMode {
     private void spinOuttake(Artifact artifact) {
         int slot = spindexer.findSlot(artifact);
         if (slot == 0) {
-            controller.rumble(200);
+            controller.rumble(200,false);
+            motifOuttakeLock = false;
             return;
         }
         paddleDown(); // backup safety
@@ -168,13 +186,20 @@ public class JellyTele extends BaseOpMode {
             spindexer.setSlotIn(slot);
         }
     }
-    
-    // updates parameters like current alliance from gamepad2
+
     private void updateParameters() {
-        if (gamepad2.square) {
+        if (controller.allianceRedPressed()) {
             Params.alliance = Alliance.RED;
-        } else if (gamepad2.circle) {
+        } else if (controller.allianceBluePressed()) {
             Params.alliance = Alliance.BlUE;
+        }
+
+        if (controller.motifGPPPressed()){
+            Params.motif = Motif.GPP;
+        }else if(controller.motifPGPPressed()){
+            Params.motif = Motif.PGP;
+        }else if(controller.motifPPGPressed()){
+            Params.motif = Motif.PPG;
         }
         
         telemetry.addLine();
