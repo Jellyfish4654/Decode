@@ -8,8 +8,8 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import org.firstinspires.ftc.teamcode.Framework.BaseOpMode;
 
 @Config
-@Autonomous(name = "audienceBlue", group = "Autonomous")
-public class AudienceAutoBlue extends BaseOpMode {
+@Autonomous(name = "Blue Audience", preselectTeleOp = "JellyTele")
+public class BlueAudienceAuto extends BaseOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
         initHardware();

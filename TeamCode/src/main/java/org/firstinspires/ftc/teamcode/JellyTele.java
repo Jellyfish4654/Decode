@@ -110,23 +110,25 @@ public class JellyTele extends BaseOpMode {
                     outtake.onNear();
                 }
             }
-        } else if (spinState == SpinState.STANDBY && !motifOuttakeLock) {
-            if (controller.intake()/*Pressed()*/) { // TODO: drivers prefer pressed or normal?
-                spinIntake();
-            } else if (controller.outGreen()/*Pressed()*/) {
-                spinOuttake(Artifact.GREEN);
-            } else if (controller.outPurple()/*Pressed()*/) {
-                spinOuttake(Artifact.PURPLE);
-            } else if (controller.outMotifPressed()){
-                motifOuttakeLock = true;
-                currentMotifArtifacts = Params.motifArtifacts.get(Motif.GPP);
-                motifOuttakeIndex = 0;
-            }
-        }else if(motifOuttakeLock){
-            spinOuttake(currentMotifArtifacts[motifOuttakeIndex]);
-            motifOuttakeIndex += 1;
-            if(motifOuttakeIndex >= 3){
-                motifOuttakeLock = false;
+        } else if (spinState == SpinState.STANDBY) {
+            if (!motifOuttakeLock) {
+                if (controller.intake()/*Pressed()*/) { // TODO: drivers prefer pressed or normal?
+                    spinIntake();
+                } else if (controller.outGreen()/*Pressed()*/) {
+                    spinOuttake(Artifact.GREEN);
+                } else if (controller.outPurple()/*Pressed()*/) {
+                    spinOuttake(Artifact.PURPLE);
+                } else if (controller.outMotifPressed()) {
+                    motifOuttakeLock = true;
+                    currentMotifArtifacts = Params.motifArtifacts.get(Motif.GPP);
+                    motifOuttakeIndex = 0;
+                }
+            } else { // Motif Outtake Logic ↓
+                spinOuttake(currentMotifArtifacts[motifOuttakeIndex]);
+                motifOuttakeIndex += 1;
+                if(motifOuttakeIndex >= 3){
+                    motifOuttakeLock = false;
+                }
             }
         }
         
@@ -137,7 +139,6 @@ public class JellyTele extends BaseOpMode {
         telemetry.addData("\tOuttakeOn", outtake.isOn());
         telemetry.addData("\tPaddleUp", paddleIsUp());
         telemetry.addData("\tMotif Lock",motifOuttakeLock);
-
 
         telemetry.addLine();
         telemetry.addLine("Spindexer:");
