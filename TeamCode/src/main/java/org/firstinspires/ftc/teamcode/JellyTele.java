@@ -103,7 +103,7 @@ public class JellyTele extends BaseOpMode {
                 double distance = vision.getGoalDistance(Params.alliance);
                 if (distance > DISTANCE_FAR && distance < DISTANCE_TOO_FAR) {
                     outtake.onFar();
-                } else { // near is default if goal isn't recognized or distance is unrealistic
+                } else { // TODO: should near or far be default if goal isn't recognized or distance is unrealistic?
                     outtake.onNear();
                 }
             }
@@ -117,8 +117,7 @@ public class JellyTele extends BaseOpMode {
             } else if (controller.outMotifPressed()){
                 motifOuttakeLock = true;
                 currentMotifArtifacts = Params.motifArtifacts.get(Motif.GPP);
-                spinOuttake(currentMotifArtifacts[0]);
-                motifOuttakeIndex = 1;
+                motifOuttakeIndex = 0;
             }
         }else if(motifOuttakeLock){
             spinOuttake(currentMotifArtifacts[motifOuttakeIndex]);

@@ -28,7 +28,7 @@ public class Params {
 
     public static final HashMap<Motif,Artifact[]> motifArtifacts = new HashMap<Motif,Artifact[]>(Map.of(
             Motif.GPP, new Artifact[]{Artifact.GREEN,Artifact.PURPLE,Artifact.PURPLE},
-            Motif.PPG, new Artifact[]{Artifact.PURPLE,Artifact.PURPLE,Artifact.GREEN},
-            Motif.PGP, new Artifact[]{Artifact.PURPLE,Artifact.GREEN,Artifact.PURPLE}
+            Motif.PGP, new Artifact[]{Artifact.PURPLE,Artifact.GREEN,Artifact.PURPLE},
+            Motif.PPG, new Artifact[]{Artifact.PURPLE,Artifact.PURPLE,Artifact.GREEN}
     ));
 }
