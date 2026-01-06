@@ -193,7 +193,7 @@ public class JellyTele extends BaseOpMode {
         if (controller.allianceRedPressed()) {
             Params.alliance = Alliance.RED;
         } else if (controller.allianceBluePressed()) {
-            Params.alliance = Alliance.BlUE;
+            Params.alliance = Alliance.BLUE;
         }
 
         if (controller.motifGPPPressed()){

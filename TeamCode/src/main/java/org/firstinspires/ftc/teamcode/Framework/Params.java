@@ -11,7 +11,7 @@ public class Params {
     
     public enum Alliance {
         RED,
-        BlUE
+        BLUE
     }
     
     public enum Motif {
