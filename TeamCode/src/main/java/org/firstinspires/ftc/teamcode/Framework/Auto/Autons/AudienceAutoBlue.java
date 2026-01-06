@@ -1,4 +1,4 @@
 package org.firstinspires.ftc.teamcode.Framework.Auto.Autons;
 
-public class GoalAuto {
+public class AudienceAutoBlue {
 }
