@@ -31,4 +31,5 @@ public class Params {
             Motif.PGP, new Artifact[]{Artifact.PURPLE,Artifact.GREEN,Artifact.PURPLE},
             Motif.PPG, new Artifact[]{Artifact.PURPLE,Artifact.PURPLE,Artifact.GREEN}
     ));
+    //merge conflict
 }
