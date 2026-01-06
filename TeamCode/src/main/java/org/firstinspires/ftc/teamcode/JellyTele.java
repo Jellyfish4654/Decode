@@ -20,11 +20,14 @@ public class JellyTele extends BaseOpMode {
     public static double PRECISION_MULTIPLIER_HIGH = 0.2;
     public static double DEADBAND_VALUE = 0.02;
     public static double STRAFE_ADJUSTMENT_FACTOR = 1.08;
+    
     public static long SPIN_INTAKE_DELAY = 550; // in millis // TODO: remove this and rework system if analog pos is used
     public static long SPIN_OUTTAKE_DELAY = 1000; // TODO: adjust with higher RPM outtake motor
     public static long OUTTAKE_DELAY = 500; // in millis -- TODO: adjust outtake delay (maybe spindexer also)
-    public static long DISTANCE_TOO_FAR = 20; // TODO: Adjust near/far distances
-    public static long DISTANCE_FAR = 10;
+    
+    public static double DISTANCE_TOO_FAR = 20; // TODO: Adjust near/far distances and rotation speed
+    public static double DISTANCE_FAR = 10;
+    public static double AIM_ROTATION_SPEED = 0.01;
     
     private double imuOffset = 0;
     
@@ -98,7 +101,7 @@ public class JellyTele extends BaseOpMode {
                 outtakeStartTime = System.currentTimeMillis();
                 spinState = SpinState.OUTTAKING;
             } else {
-                aimRotation = vision.getGoalBearing(Params.alliance) / 90; // TODO: comment this? and adjust division? and test
+                aimRotation = vision.getGoalBearing(Params.alliance) * AIM_ROTATION_SPEED;
                 // power up outtake early
                 double distance = vision.getGoalDistance(Params.alliance);
                 if (distance > DISTANCE_FAR && distance < DISTANCE_TOO_FAR) {
