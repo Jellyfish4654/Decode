@@ -20,7 +20,7 @@ public class VisionTuner extends LinearOpMode
     public void runOpMode() throws InterruptedException
     {
         telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
-        vision = new Vision(hardwareMap.get(WebcamName.class, "vision"));
+        vision = new Vision(hardwareMap.get(WebcamName.class, "vision"), this);
 
         boolean togglePressed = false;
         int mode = 1;

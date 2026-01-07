@@ -78,7 +78,7 @@ public abstract class BaseOpMode extends LinearOpMode {
 
         colorSensor = new SensorColor (hardwareMap.get(RevColorSensorV3.class, "colorSensor"));
 
-        vision = new Vision(hardwareMap.get(WebcamName.class, "vision"));
+        vision = new Vision(hardwareMap.get(WebcamName.class, "vision"), this);
 
         controller = new Controller(gamepad1,gamepad2);
 

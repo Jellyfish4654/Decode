@@ -23,6 +23,8 @@ import org.firstinspires.ftc.vision.opencv.ImageRegion;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import com.acmerobotics.dashboard.FtcDashboard;
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+
 import java.util.concurrent.atomic.AtomicReference;
 import org.firstinspires.ftc.robotcore.external.function.Consumer;
 import org.firstinspires.ftc.robotcore.external.function.Continuation;
@@ -116,7 +118,7 @@ public class Vision {
      * AprilTag detection.
      * @param cameraName the CameraName of a camera obtained through the HardwareMap
      */
-    public Vision(CameraName cameraName){
+    public Vision(CameraName cameraName, LinearOpMode opMode){
         this.name = cameraName;
         this.aprilTag = new AprilTagProcessor.Builder()
                 .setDrawAxes(true)
@@ -158,7 +160,11 @@ public class Vision {
                 .enableLiveView(true)
                 .setAutoStopLiveView(true)
                 .build();
-        while(visionPortal.getCameraState()!= VisionPortal.CameraState.STREAMING){} // waits until camera is initialized to attaching controls
+        while(visionPortal.getCameraState()!= VisionPortal.CameraState.STREAMING && !opMode.isStopRequested()){} // waits until camera is initialized before attaching controls
+        if (opMode.isStopRequested()) { // this and above line: quits if STOP is requested (prevents freezing on STOP if stream fails during testing)
+            return;
+        }
+        
         this.gainControl = visionPortal.getCameraControl(GainControl.class);
         this.exposureControl = visionPortal.getCameraControl(ExposureControl.class);
         exposureControl.setMode(ExposureControl.Mode.Manual);
