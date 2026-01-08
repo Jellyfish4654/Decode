@@ -112,13 +112,13 @@ public class JellyTele extends BaseOpMode {
             }
         } else if (spinState == SpinState.STANDBY) {
             if (!motifOuttakeLock) {
-                if (controller.intake()/*Pressed()*/) { // TODO: drivers prefer pressed or normal?
+                if (controller.intake()) {
                     spinIntake();
-                } else if (controller.outGreen()/*Pressed()*/) {
+                } else if (controller.outGreen()) {
                     spinOuttake(Artifact.GREEN);
-                } else if (controller.outPurple()/*Pressed()*/) {
+                } else if (controller.outPurple()) {
                     spinOuttake(Artifact.PURPLE);
-                } else if (controller.outMotifPressed()) {
+                } else if (controller.outMotif()) {
                     motifOuttakeLock = true;
                     currentMotifArtifacts = Params.motifArtifacts.get(Motif.GPP);
                     motifOuttakeIndex = 0;

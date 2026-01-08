@@ -7,6 +7,8 @@ import java.lang.reflect.Method;
 
 public class Controller {
     enum Button {
+        PRIMARY_RIGHT_TRIGGER_BUTTON,
+        PRIMARY_LEFT_TRIGGER_BUTTON,
         PRIMARY_TRIANGLE,
         PRIMARY_CIRCLE,
         PRIMARY_SQUARE,
@@ -18,6 +20,8 @@ public class Controller {
         PRIMARY_LEFT_BUMPER,
         PRIMARY_RIGHT_BUMPER,
         PRIMARY_PLAYSTATION_LOGO,
+        SECONDARY_RIGHT_TRIGGER_BUTTON,
+        SECONDARY_LEFT_TRIGGER_BUTTON,
         SECONDARY_TRIANGLE,
         SECONDARY_CIRCLE,
         SECONDARY_SQUARE,
@@ -37,9 +41,10 @@ public class Controller {
         SECONDARY_LEFT_JOYSTICK,
         SECONDARY_RIGHT_JOYSTICK
     }
-
+    
     private final Gamepad gamepad1;
     private final Gamepad gamepad2;
+    double TRIGGER_BUTTON_THRESHOLD;
     Button lowPrecisionBtn;
     Button highPrecisionBtn;
     Button outPurpleBtn;
@@ -56,15 +61,19 @@ public class Controller {
     Joystick turnStk;
     Joystick moveStk;
     public Controller(Gamepad gamepad1, Gamepad gamepad2) {
+        
+        
         this.gamepad1 = gamepad1;
         this.gamepad2 = gamepad2;
         //CHANGE BELOW TO CHANGE CONTROLLER CONFIG
+        
+        TRIGGER_BUTTON_THRESHOLD = 0.35;
 
         //Primary functions (intake, outtake, drivetrain)
         this.outGreenBtn = Button.PRIMARY_CIRCLE;
         this.outPurpleBtn = Button.PRIMARY_SQUARE;
-        this.outMotifBtn = Button.PRIMARY_TRIANGLE;
-        this.intakeBtn = Button.PRIMARY_CROSS;
+        this.outMotifBtn = Button.PRIMARY_CROSS;
+        this.intakeBtn = Button.PRIMARY_RIGHT_TRIGGER_BUTTON;
 
         this.lowPrecisionBtn = Button.PRIMARY_LEFT_BUMPER;
         this.highPrecisionBtn = Button.PRIMARY_RIGHT_BUMPER;
@@ -120,6 +129,12 @@ public class Controller {
             case PRIMARY_PLAYSTATION_LOGO:
             case SECONDARY_PLAYSTATION_LOGO:
                 return Gamepad.class.getField("ps");
+            case PRIMARY_LEFT_TRIGGER_BUTTON:
+            case SECONDARY_LEFT_TRIGGER_BUTTON:
+                return Gamepad.class.getField("left_trigger");
+            case PRIMARY_RIGHT_TRIGGER_BUTTON:
+            case SECONDARY_RIGHT_TRIGGER_BUTTON:
+                return Gamepad.class.getField("right_trigger");
         }
 
         return null;
@@ -185,6 +200,31 @@ public class Controller {
                 return this.gamepad1;
         }
     }
+    
+    private boolean buttonIsOn(Button btn){
+        try {
+            switch (btn) {
+                case PRIMARY_LEFT_TRIGGER_BUTTON:
+                case PRIMARY_RIGHT_TRIGGER_BUTTON:
+                case SECONDARY_LEFT_TRIGGER_BUTTON:
+                case SECONDARY_RIGHT_TRIGGER_BUTTON:
+                    return this.getField(btn).getFloat(chooseGamepad(btn)) >= this.TRIGGER_BUTTON_THRESHOLD;
+                default:
+                    return this.getField(btn).getBoolean(chooseGamepad(btn));
+            }
+        }catch (Exception e){
+            return false;
+        }
+    }
+
+    private boolean buttonPressed(Button btn){
+        try {
+            return (boolean)this.getMethod(btn).invoke(chooseGamepad(btn));
+        }catch (Exception e){
+            return false;
+        }
+    }
+    
     public double turnStickX(){
         switch (this.turnStk){
             case PRIMARY_LEFT_JOYSTICK:
@@ -233,195 +273,99 @@ public class Controller {
     }
 
     public boolean intake() {
-        try {
-            return this.getField(this.intakeBtn).getBoolean(chooseGamepad(this.intakeBtn));
-        }catch (Exception e){
-            return false;
-        }
+        return buttonIsOn(this.intakeBtn);
     }
 
     public boolean outPurple() {
-        try {
-            return this.getField(this.outPurpleBtn).getBoolean(chooseGamepad(this.outPurpleBtn));
-        }catch (Exception e){
-            return false;
-        }
+        return buttonIsOn(this.outPurpleBtn);
     }
 
     public boolean outGreen() {
-        try {
-            return this.getField(this.outGreenBtn).getBoolean(chooseGamepad(this.outGreenBtn));
-        }catch (Exception e){
-            return false;
-        }
+        return buttonIsOn(this.outGreenBtn);
     }
 
     public boolean outMotif(){
-        try {
-            return this.getField(this.outMotifBtn).getBoolean(chooseGamepad(this.outMotifBtn));
-        }catch (Exception e){
-            return false;
-        }
+        return buttonIsOn(this.outMotifBtn);
     }
 
     public boolean driveMode() {
-        try {
-            return this.getField(this.driveModeBtn).getBoolean(chooseGamepad(this.driveModeBtn));
-        }catch (Exception e){
-            return false;
-        }
+        return buttonIsOn(this.driveModeBtn);
     }
 
     public boolean lowPrecision() {
-        try {
-            return this.getField(this.lowPrecisionBtn).getBoolean(chooseGamepad(this.lowPrecisionBtn));
-        }catch (Exception e){
-            return false;
-        }
+        return buttonIsOn(this.lowPrecisionBtn);
     }
 
     public boolean highPrecision() {
-        try {
-            return this.getField(this.highPrecisionBtn).getBoolean(chooseGamepad(this.highPrecisionBtn));
-        }catch (Exception e){
-            return false;
-        }
+        return buttonIsOn(this.highPrecisionBtn);
     }
 
     public boolean allianceRed() {
-        try {
-            return this.getField(this.allianceRedBtn).getBoolean(chooseGamepad(this.allianceRedBtn));
-        }catch (Exception e){
-            return false;
-        }
+        return buttonIsOn(this.allianceRedBtn);
     }
 
     public boolean allianceBlue() {
-        try {
-            return this.getField(this.allianceBlueBtn).getBoolean(chooseGamepad(this.allianceBlueBtn));
-        }catch (Exception e){
-            return false;
-        }
+        return buttonIsOn(this.allianceBlueBtn);
     }
 
     public boolean motifGPP() {
-        try {
-            return this.getField(this.motifGPPBtn).getBoolean(chooseGamepad(this.motifGPPBtn));
-        }catch (Exception e){
-            return false;
-        }
+        return buttonIsOn(this.motifGPPBtn);
     }
 
     public boolean motifPGP() {
-        try {
-            return this.getField(this.motifPGPBtn).getBoolean(chooseGamepad(this.motifPGPBtn));
-        }catch (Exception e){
-            return false;
-        }
+        return buttonIsOn(this.motifPGPBtn);
     }
 
     public boolean motifPPG() {
-        try {
-            return this.getField(this.motifPPGBtn).getBoolean(chooseGamepad(this.motifPPGBtn));
-        }catch (Exception e){
-            return false;
-        }
+        return buttonIsOn(this.motifPPGBtn);
     }
 
     public boolean intakePressed() {
-        try {
-            return (boolean)this.getMethod(this.intakeBtn).invoke(chooseGamepad(this.intakeBtn));
-        }catch (Exception e){
-            return false;
-        }
+        return buttonPressed(this.intakeBtn);
     }
 
     public boolean outPurplePressed() {
-        try {
-            return (boolean)this.getMethod(this.outPurpleBtn).invoke(chooseGamepad(this.outPurpleBtn));
-        }catch (Exception e){
-            return false;
-        }
+        return buttonPressed(this.outPurpleBtn);
     }
 
     public boolean outGreenPressed() {
-        try {
-            return (boolean)this.getMethod(this.outGreenBtn).invoke(chooseGamepad(this.outGreenBtn));
-        }catch (Exception e){
-            return false;
-        }
+        return buttonPressed(this.outGreenBtn);
     }
 
     public boolean outMotifPressed(){
-        try {
-            return (boolean) this.getMethod(this.outMotifBtn).invoke(chooseGamepad(this.outMotifBtn));
-        }catch (Exception e){
-            return false;
-        }
+        return buttonPressed(this.outMotifBtn);
     }
 
     public boolean driveModePressed() {
-        try {
-            return (boolean)this.getMethod(this.driveModeBtn).invoke(chooseGamepad(this.driveModeBtn));
-        }catch (Exception e){
-            return false;
-        }
+        return buttonPressed(this.driveModeBtn);
     }
 
     public boolean lowPrecisionPressed() {
-        try {
-            return (boolean)this.getMethod(this.lowPrecisionBtn).invoke(chooseGamepad(this.lowPrecisionBtn));
-        }catch (Exception e){
-            return false;
-        }
+        return buttonPressed(this.lowPrecisionBtn);
     }
 
     public boolean highPrecisionPressed() {
-        try {
-            return (boolean)this.getMethod(this.highPrecisionBtn).invoke(chooseGamepad(this.highPrecisionBtn));
-        }catch (Exception e){
-            return false;
-        }
+        return buttonPressed(this.highPrecisionBtn);
     }
 
     public boolean allianceRedPressed() {
-        try {
-            return (boolean)this.getMethod(this.allianceRedBtn).invoke(chooseGamepad(this.allianceRedBtn));
-        }catch (Exception e){
-            return false;
-        }
+        return buttonPressed(this.allianceRedBtn);
     }
 
     public boolean allianceBluePressed() {
-        try {
-            return (boolean)this.getMethod(this.allianceBlueBtn).invoke(chooseGamepad(this.allianceBlueBtn));
-        }catch (Exception e){
-            return false;
-        }
+        return buttonPressed(this.allianceBlueBtn);
     }
 
     public boolean motifGPPPressed() {
-        try {
-            return (boolean)this.getMethod(this.motifGPPBtn).invoke(chooseGamepad(this.motifGPPBtn));
-        }catch (Exception e){
-            return false;
-        }
+        return buttonPressed(this.motifGPPBtn);
     }
 
     public boolean motifPGPPressed() {
-        try {
-            return (boolean)this.getMethod(this.motifPGPBtn).invoke(chooseGamepad(this.motifPGPBtn));
-        }catch (Exception e){
-            return false;
-        }
+        return buttonPressed(this.motifPGPBtn);
     }
 
     public boolean motifPPGPressed() {
-        try {
-            return (boolean)this.getMethod(this.motifPPGBtn).invoke(chooseGamepad(this.motifPPGBtn));
-        }catch (Exception e){
-            return false;
-        }
+        return buttonPressed(this.motifPPGBtn);
     }
 
     public void rumble(int durationMs, boolean rumbleSecondary){
