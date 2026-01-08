@@ -195,6 +195,8 @@ public class Controller {
             case SECONDARY_LEFT_BUMPER:
             case SECONDARY_RIGHT_BUMPER:
             case SECONDARY_PLAYSTATION_LOGO:
+            case SECONDARY_RIGHT_TRIGGER_BUTTON:
+            case SECONDARY_LEFT_TRIGGER_BUTTON:
                 return this.gamepad2;
             default:
                 return this.gamepad1;
