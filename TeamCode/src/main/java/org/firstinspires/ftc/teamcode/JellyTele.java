@@ -52,7 +52,7 @@ public class JellyTele extends BaseOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
         telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
-        initHardware();
+        initHardware(false);
         imuOffset = imuSensor.getRobotYawPitchRollAngles().getYaw(AngleUnit.RADIANS);
         waitForStart();
         while (opModeIsActive()) {

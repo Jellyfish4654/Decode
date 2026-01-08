@@ -35,7 +35,7 @@ public abstract class BaseOpMode extends LinearOpMode {
 
     public final boolean PADDLE_MOTOR = false;
     
-    public void initHardware() {
+    public void initHardware(boolean auto) {
 
         // Drivetrain Motors (SAME ORDER IN HARDWARE CONFIG)
 
@@ -78,6 +78,11 @@ public abstract class BaseOpMode extends LinearOpMode {
 
         spindexer = new Spindexer(hardwareMap.get(Servo.class, "spindexerServo"));
         spindexer.setSlotIn(1);
+        if (auto) { //change based on preload
+            spindexer.setContents(1, Params.Artifact.GREEN);
+            spindexer.setContents(1, Params.Artifact.PURPLE);
+            spindexer.setContents(1, Params.Artifact.PURPLE);
+        }
 
         colorSensor = new SensorColor (hardwareMap.get(RevColorSensorV3.class, "colorSensor"));
 
