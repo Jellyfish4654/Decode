@@ -1,5 +1,9 @@
 package org.firstinspires.ftc.teamcode.Framework;
 
+import androidx.annotation.NonNull;
+
+import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
+import com.acmerobotics.roadrunner.Action;
 import com.qualcomm.hardware.rev.RevColorSensorV3;
 import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
@@ -17,7 +21,6 @@ import org.firstinspires.ftc.teamcode.Framework.Hardware.PaddleMotor;
 import org.firstinspires.ftc.teamcode.Framework.Hardware.SensorColor;
 import org.firstinspires.ftc.teamcode.Framework.Hardware.Spindexer;
 import org.firstinspires.ftc.teamcode.Framework.Hardware.Vision;
-
 public abstract class BaseOpMode extends LinearOpMode {
     protected Drivetrain drivetrain;
     protected Paddle paddle;
@@ -94,4 +97,16 @@ public abstract class BaseOpMode extends LinearOpMode {
         imu.initialize(parameters);
         return imu;
     }
+
+
+    // ↓ -------------- ↓ -------------- ↓ EXTRA AUTO ACTIONS ↓ -------------- ↓ -------------- ↓
+    public class DetectArtifact implements Action {
+        @Override
+        public boolean run(@NonNull TelemetryPacket packet) {
+            Params.Artifact detected = colorSensor.getArtifact();
+            spindexer.setContents(detected);
+            return spindexer.getContents(spindexer.getCurrentSlot())!=null;
+        }
+    }
+    public Action detectArtifact() { return new DetectArtifact(); }
 }
