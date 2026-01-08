@@ -25,7 +25,6 @@ public class Spindexer {
     private int currentSlot;
     
     private Artifact[] contents = {Artifact.NONE, Artifact.NONE, Artifact.NONE};
-
     public Spindexer (Servo servo) {
         this.spindexer = servo;
     }
@@ -104,11 +103,6 @@ public class Spindexer {
     
     // ↓ -------------- ↓ -------------- ↓ AUTO ACTIONS ↓ -------------- ↓ -------------- ↓
     public class SlotIn implements Action {
-        private SensorColor color;
-
-        SlotIn (SensorColor color) {
-            this.color = color;
-        }
         @Override
         public boolean run(@NonNull TelemetryPacket packet) {
             int slot = findSlot(Artifact.NONE);
@@ -116,8 +110,8 @@ public class Spindexer {
             return (getCurrentSlot() == slot);
         }
     }
-    public Action slotIn(SensorColor color) {
-        return new SlotIn(color);
+    public Action slotIn() {
+        return new SlotIn();
     }
 
     public class GreenOut implements Action {
