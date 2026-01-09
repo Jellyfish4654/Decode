@@ -138,4 +138,60 @@ public class BlueGoalAuto extends BaseOpMode {
         }
     }
     public Action scanMotif() { return new ScanMotif(); }
+
+    public class VerifyPos implements Action {
+        private int posNum;
+        VerifyPos (int pos) {
+            posNum = pos;
+        }
+        @Override
+        public boolean run(@NonNull TelemetryPacket packet) {
+            double goalBearing = vision.getGoalBearing(Params.Alliance.BLUE);
+            double goalDistance = vision.getGoalDistance(Params.Alliance.BLUE);
+            double goalX = -58.5;
+            double goalY = -54.5;
+            double goalDirection = 223;
+            double webcamX = 0; //measure this
+            double webcamY = 0; //measure this
+            double xToGoal = 0;
+            double yToGoal = 0;
+
+            double botHeading;
+            double xPos = 0;
+            double yPos = 0;
+            if (goalBearing != 0 && goalDistance != 0) {
+                if (goalBearing > Math.toRadians(360)) {
+                    goalBearing -= Math.toRadians(360);
+                }
+                botHeading = Math.toRadians(goalDirection)+goalBearing;
+                if (botHeading < Math.toRadians(goalDirection)) {
+                    xToGoal = Math.sin(-goalBearing)*goalDistance;
+                    yToGoal = Math.cos(-goalBearing)*goalDistance;
+                } else if (botHeading > Math.toRadians(goalDirection)){
+                    xToGoal = Math.cos(-goalBearing)*goalDistance;
+                    yToGoal = Math.sin(-goalBearing)*goalDistance;
+                }
+
+                xPos = goalX-xToGoal-webcamX;
+                yPos = goalY-yToGoal-webcamY;
+                Pose2d calcPose = new Pose2d(xPos, yPos, botHeading);
+
+                if (posNum == 1) {
+                    scanPose = calcPose;
+                } else if (posNum == 2) {
+                    shootPose = calcPose;
+                } else if (posNum == 3) {
+                    gatePose = calcPose;
+                } else if (posNum == 4) {
+                    firstPose = calcPose;
+                } else if (posNum == 5) {
+                    secondPose = calcPose;
+                } else if (posNum == 6) {
+                    thirdPose = calcPose;
+                }
+            }
+            return true;
+        }
+    }
+    public Action verifyPos(int pos) { return new VerifyPos(pos); }
 }
