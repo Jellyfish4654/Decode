@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.Framework.Auto.Autons;
+package org.firstinspires.ftc.teamcode.Framework.Auto;
 
 import androidx.annotation.NonNull;
 
@@ -13,18 +13,18 @@ import com.acmerobotics.roadrunner.TrajectoryActionBuilder;
 import com.acmerobotics.roadrunner.ftc.Actions;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
-import org.firstinspires.ftc.teamcode.Framework.Auto.MecanumDrive;
+import org.firstinspires.ftc.teamcode.Framework.Auto.RoadRunner.MecanumDrive;
 import org.firstinspires.ftc.teamcode.Framework.BaseOpMode;
 import org.firstinspires.ftc.teamcode.Framework.Params;
 
 @Config
-@Autonomous(name = "Red Goal", preselectTeleOp = "JellyTele")
-public class RedGoalAuto extends BaseOpMode {
+@Autonomous(name = "Blue Goal", preselectTeleOp = "JellyTele")
+public class BlueGoalAuto extends BaseOpMode {
     private Params.Motif motif;
     @Override
     public void runOpMode() throws InterruptedException {
         initHardware(true);
-        Pose2d initialPose = new Pose2d(-61.5, 23.5, Math.toRadians(0));
+        Pose2d initialPose = new Pose2d(-61.5, -23.5, Math.toRadians(0));
         MecanumDrive drive = new MecanumDrive(hardwareMap, initialPose);
 
         // ↓ -------------- ↓ -------------- ↓ TRAJECTORIES ↓ -------------- ↓ -------------- ↓

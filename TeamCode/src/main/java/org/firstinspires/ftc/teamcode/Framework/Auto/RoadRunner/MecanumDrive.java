@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.Framework.Auto;
+package org.firstinspires.ftc.teamcode.Framework.Auto.RoadRunner;
 
 import androidx.annotation.NonNull;
 
@@ -50,12 +50,10 @@ import com.qualcomm.robotcore.hardware.VoltageSensor;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.YawPitchRollAngles;
-import org.firstinspires.ftc.teamcode.Framework.Auto.Drawing;
-import org.firstinspires.ftc.teamcode.Framework.Auto.Localizer;
-import org.firstinspires.ftc.teamcode.Framework.Auto.messages.DriveCommandMessage;
-import org.firstinspires.ftc.teamcode.Framework.Auto.messages.MecanumCommandMessage;
-import org.firstinspires.ftc.teamcode.Framework.Auto.messages.MecanumLocalizerInputsMessage;
-import org.firstinspires.ftc.teamcode.Framework.Auto.messages.PoseMessage;
+import org.firstinspires.ftc.teamcode.Framework.Auto.RoadRunner.messages.DriveCommandMessage;
+import org.firstinspires.ftc.teamcode.Framework.Auto.RoadRunner.messages.MecanumCommandMessage;
+import org.firstinspires.ftc.teamcode.Framework.Auto.RoadRunner.messages.MecanumLocalizerInputsMessage;
+import org.firstinspires.ftc.teamcode.Framework.Auto.RoadRunner.messages.PoseMessage;
 
 import java.util.Arrays;
 import java.util.LinkedList;
@@ -72,7 +70,7 @@ public final class MecanumDrive {
         public RevHubOrientationOnRobot.UsbFacingDirection usbFacingDirection =
                 RevHubOrientationOnRobot.UsbFacingDirection.LEFT;
 
-        // drive model parameters 
+        // drive model parameters
         public double inPerTick = 1;
         public double lateralInPerTick = inPerTick;
         public double trackWidthTicks = 0;

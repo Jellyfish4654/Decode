@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.Framework.Auto.Autons;
+package org.firstinspires.ftc.teamcode.Framework.Auto;
 
 import androidx.annotation.NonNull;
 
@@ -13,18 +13,18 @@ import com.acmerobotics.roadrunner.TrajectoryActionBuilder;
 import com.acmerobotics.roadrunner.ftc.Actions;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
-import org.firstinspires.ftc.teamcode.Framework.Auto.MecanumDrive;
+import org.firstinspires.ftc.teamcode.Framework.Auto.RoadRunner.MecanumDrive;
 import org.firstinspires.ftc.teamcode.Framework.BaseOpMode;
 import org.firstinspires.ftc.teamcode.Framework.Params;
 
 @Config
-@Autonomous(name = "Blue Goal", preselectTeleOp = "JellyTele")
-public class BlueGoalAuto extends BaseOpMode {
+@Autonomous(name = "Red Audience", preselectTeleOp = "JellyTele")
+public class RedAudienceAuto extends BaseOpMode {
     private Params.Motif motif;
     @Override
     public void runOpMode() throws InterruptedException {
         initHardware(true);
-        Pose2d initialPose = new Pose2d(-61.5, -23.5, Math.toRadians(0));
+        Pose2d initialPose = new Pose2d(61.5, 23.5, Math.toRadians(180));
         MecanumDrive drive = new MecanumDrive(hardwareMap, initialPose);
 
         // ↓ -------------- ↓ -------------- ↓ TRAJECTORIES ↓ -------------- ↓ -------------- ↓
@@ -32,26 +32,10 @@ public class BlueGoalAuto extends BaseOpMode {
         TrajectoryActionBuilder moveToScan;
         Pose2d scanPose;
 
-        TrajectoryActionBuilder moveToShootPreload;
+        TrajectoryActionBuilder moveToShoot;
         Pose2d shootPose;
 
-        TrajectoryActionBuilder openGate;
-        Pose2d gatePose;
-
-        TrajectoryActionBuilder collectFirst;
-        Pose2d firstPose;
-
-        TrajectoryActionBuilder moveToShootFirst;
-
-        TrajectoryActionBuilder collectSecond;
-        Pose2d secondPose;
-
-        TrajectoryActionBuilder moveToShootSecond;
-
-        TrajectoryActionBuilder collectThird;
-        Pose2d thirdPose;
-
-        TrajectoryActionBuilder moveToShootThird;
+        TrajectoryActionBuilder moveToPark;
 
         // ↓ -------------- ↓ -------------- ↓ SHOOTING ACTIONS ↓ -------------- ↓ -------------- ↓
         SequentialAction swingPaddle = new SequentialAction(

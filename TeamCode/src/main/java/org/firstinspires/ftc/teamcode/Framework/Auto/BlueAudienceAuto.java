@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.Framework.Auto.Autons;
+package org.firstinspires.ftc.teamcode.Framework.Auto;
 
 import androidx.annotation.NonNull;
 
@@ -13,7 +13,7 @@ import com.acmerobotics.roadrunner.TrajectoryActionBuilder;
 import com.acmerobotics.roadrunner.ftc.Actions;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
-import org.firstinspires.ftc.teamcode.Framework.Auto.MecanumDrive;
+import org.firstinspires.ftc.teamcode.Framework.Auto.RoadRunner.MecanumDrive;
 import org.firstinspires.ftc.teamcode.Framework.BaseOpMode;
 import org.firstinspires.ftc.teamcode.Framework.Params;
 
