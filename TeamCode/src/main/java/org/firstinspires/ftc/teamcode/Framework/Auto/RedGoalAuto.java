@@ -21,6 +21,13 @@ import org.firstinspires.ftc.teamcode.Framework.Params;
 @Autonomous(name = "Red Goal", preselectTeleOp = "JellyTele")
 public class RedGoalAuto extends BaseOpMode {
     private Params.Motif motif;
+    //poses
+    Pose2d scanPose;
+    Pose2d shootPose;
+    Pose2d gatePose;
+    Pose2d firstPose;
+    Pose2d secondPose;
+    Pose2d thirdPose;
     @Override
     public void runOpMode() throws InterruptedException {
         initHardware(true);
@@ -30,26 +37,26 @@ public class RedGoalAuto extends BaseOpMode {
         // ↓ -------------- ↓ -------------- ↓ TRAJECTORIES ↓ -------------- ↓ -------------- ↓
 
         TrajectoryActionBuilder moveToScan;
-        Pose2d scanPose;
+        scanPose = null; //pos1
 
         TrajectoryActionBuilder moveToShootPreload;
-        Pose2d shootPose;
+        shootPose = null; //pos2
 
         TrajectoryActionBuilder openGate;
-        Pose2d gatePose;
+        gatePose = null; //pos3
 
         TrajectoryActionBuilder collectFirst;
-        Pose2d firstPose;
+        firstPose = null; //pos4
 
         TrajectoryActionBuilder moveToShootFirst;
 
         TrajectoryActionBuilder collectSecond;
-        Pose2d secondPose;
+        secondPose = null; //pos5
 
         TrajectoryActionBuilder moveToShootSecond;
 
         TrajectoryActionBuilder collectThird;
-        Pose2d thirdPose;
+        thirdPose = null; //pos6
 
         TrajectoryActionBuilder moveToShootThird;
 

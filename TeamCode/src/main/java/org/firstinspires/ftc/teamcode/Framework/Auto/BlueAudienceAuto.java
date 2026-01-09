@@ -21,6 +21,8 @@ import org.firstinspires.ftc.teamcode.Framework.Params;
 @Autonomous(name = "Blue Audience", preselectTeleOp = "JellyTele")
 public class BlueAudienceAuto extends BaseOpMode {
     private Params.Motif motif;
+    Pose2d scanPose;
+    Pose2d shootPose;
     @Override
     public void runOpMode() throws InterruptedException {
         initHardware(true);
@@ -30,10 +32,10 @@ public class BlueAudienceAuto extends BaseOpMode {
         // ↓ -------------- ↓ -------------- ↓ TRAJECTORIES ↓ -------------- ↓ -------------- ↓
 
         TrajectoryActionBuilder moveToScan;
-        Pose2d scanPose;
+        scanPose = null; //pos1
 
         TrajectoryActionBuilder moveToShoot;
-        Pose2d shootPose;
+        shootPose = null; //pos2
 
         TrajectoryActionBuilder moveToPark;
 
