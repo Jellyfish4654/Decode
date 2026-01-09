@@ -20,7 +20,6 @@ import org.firstinspires.ftc.teamcode.Framework.Params;
 @Config
 @Autonomous(name = "Red Audience", preselectTeleOp = "JellyTele")
 public class RedAudienceAuto extends BaseOpMode {
-    private Params.Motif motif;
     Pose2d scanPose;
     Pose2d shootPose;
     @Override
@@ -28,6 +27,7 @@ public class RedAudienceAuto extends BaseOpMode {
         initHardware(true);
         Pose2d initialPose = new Pose2d(61.5, 23.5, Math.toRadians(180));
         MecanumDrive drive = new MecanumDrive(hardwareMap, initialPose);
+        Params.alliance = Params.Alliance.RED;
 
         // ↓ -------------- ↓ -------------- ↓ TRAJECTORIES ↓ -------------- ↓ -------------- ↓
 
@@ -91,7 +91,7 @@ public class RedAudienceAuto extends BaseOpMode {
         Actions.runBlocking(
                 new SequentialAction()
         );
-        switch (motif) {
+        switch (Params.motif) {
             case GPP:
                 Actions.runBlocking(
                         shootGPP

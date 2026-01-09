@@ -20,7 +20,6 @@ import org.firstinspires.ftc.teamcode.Framework.Params;
 @Config
 @Autonomous(name = "Red Goal", preselectTeleOp = "JellyTele")
 public class RedGoalAuto extends BaseOpMode {
-    private Params.Motif motif;
     //poses
     Pose2d scanPose;
     Pose2d shootPose;
@@ -33,6 +32,7 @@ public class RedGoalAuto extends BaseOpMode {
         initHardware(true);
         Pose2d initialPose = new Pose2d(-61.5, 23.5, Math.toRadians(0));
         MecanumDrive drive = new MecanumDrive(hardwareMap, initialPose);
+        Params.alliance = Params.Alliance.RED;
 
         // ↓ -------------- ↓ -------------- ↓ TRAJECTORIES ↓ -------------- ↓ -------------- ↓
 
@@ -112,7 +112,7 @@ public class RedGoalAuto extends BaseOpMode {
         Actions.runBlocking(
                 new SequentialAction()
         );
-        switch (motif) {
+        switch (Params.motif) {
             case GPP:
                 Actions.runBlocking(
                         shootGPP
