@@ -146,8 +146,8 @@ public class BlueGoalAuto extends BaseOpMode {
         }
         @Override
         public boolean run(@NonNull TelemetryPacket packet) {
-            double goalBearing = vision.getGoalBearing(Params.Alliance.BLUE);
-            double goalDistance = vision.getGoalDistance(Params.Alliance.BLUE);
+            double goalBearing = vision.getGoalBearing(Params.alliance);
+            double goalDistance = vision.getGoalDistance(Params.alliance);
             double goalX = -58.5;
             double goalY = -54.5;
             double goalDirection = 223;
