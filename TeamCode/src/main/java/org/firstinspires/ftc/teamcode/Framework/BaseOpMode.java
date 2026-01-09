@@ -33,7 +33,7 @@ public abstract class BaseOpMode extends LinearOpMode {
     protected Controller controller;
     protected IMU imuSensor;
 
-    public final boolean PADDLE_MOTOR = false; // IF CHANGED: change stopHardware() reference to prevent runtime error
+    public final boolean PADDLE_MOTOR = false;
     
     // TODO: we need to make sure nothing moves during auto → teleop transition
     public void initHardware(boolean auto) {
@@ -106,11 +106,15 @@ public abstract class BaseOpMode extends LinearOpMode {
     
     // TODO: use this in auto too!
     public void stopHardware() {
-        drivetrain.setMotorSpeeds(1, new double[4]);
+        drivetrain.setMotorSpeeds(1, new double[]{0,0,0,0});
         intake.off();
         outtake.off();
-        paddle.deenergize();
         spindexer.deenergize();
+        if (!PADDLE_MOTOR) {
+            paddle.deenergize();
+        } else {
+            paddleMotor.deenergize();
+        }
     }
 
 
