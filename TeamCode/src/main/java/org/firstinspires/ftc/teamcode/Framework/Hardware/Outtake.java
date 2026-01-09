@@ -6,7 +6,6 @@ import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.acmerobotics.roadrunner.Action;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
 @Config
 public class Outtake {
@@ -21,10 +20,10 @@ public class Outtake {
     public Outtake (DcMotor outtake, DcMotor guiding) {
         this.outtake = outtake;
         this.guiding = guiding;
-        outtake.setDirection(DcMotorSimple.Direction.FORWARD); // TODO: check outtake motors direction (keep guiding braked?)
+        outtake.setDirection(DcMotor.Direction.REVERSE); // TODO: check outtake motors direction (keep guiding braked?)
         outtake.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
         
-        guiding.setDirection(DcMotorSimple.Direction.FORWARD);
+        guiding.setDirection(DcMotor.Direction.FORWARD);
         guiding.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
     }
     
