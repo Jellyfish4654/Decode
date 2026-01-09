@@ -60,8 +60,8 @@ public class JellyTele extends BaseOpMode {
             updateAux();
             updateParameters();
             telemetry.update();
-            //idle(); // potential fix for not stopping (or after loop), BUT could slow loop
         }
+        stopHardware();
     }
     
     // testing only -- keep this commented for normal use

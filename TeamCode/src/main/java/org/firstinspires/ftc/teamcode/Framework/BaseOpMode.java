@@ -33,8 +33,9 @@ public abstract class BaseOpMode extends LinearOpMode {
     protected Controller controller;
     protected IMU imuSensor;
 
-    public final boolean PADDLE_MOTOR = false;
+    public final boolean PADDLE_MOTOR = false; // IF CHANGED: change stopHardware() reference to prevent runtime error
     
+    // TODO: we need to make sure nothing moves during auto → teleop transition
     public void initHardware(boolean auto) {
 
         // Drivetrain Motors (SAME ORDER IN HARDWARE CONFIG)
@@ -58,7 +59,7 @@ public abstract class BaseOpMode extends LinearOpMode {
         
         // OTHER HARDWARE
         
-        // TODO: remove all paddleMotor stuff soon, once confirmed we are not using it
+        // Let's leave this in case we need it all the sudden an a tourney
         if(!PADDLE_MOTOR){
             paddle = new Paddle(hardwareMap.get(Servo.class, "paddleServo"));
             paddle.setDown();
@@ -77,8 +78,8 @@ public abstract class BaseOpMode extends LinearOpMode {
         outtake.off();
 
         spindexer = new Spindexer(hardwareMap.get(Servo.class, "spindexerServo"));
-        spindexer.setSlotIn(1);
         if (auto) { //change based on preload
+            spindexer.setSlotOut(1);
             spindexer.setContents(1, Params.Artifact.GREEN);
             spindexer.setContents(1, Params.Artifact.PURPLE);
             spindexer.setContents(1, Params.Artifact.PURPLE);
@@ -101,6 +102,15 @@ public abstract class BaseOpMode extends LinearOpMode {
                 RevHubOrientationOnRobot.UsbFacingDirection.UP));
         imu.initialize(parameters);
         return imu;
+    }
+    
+    // TODO: use this in auto too!
+    public void stopHardware() {
+        drivetrain.setMotorSpeeds(1, new double[4]);
+        intake.off();
+        outtake.off();
+        paddle.deenergize();
+        spindexer.deenergize();
     }
 
 

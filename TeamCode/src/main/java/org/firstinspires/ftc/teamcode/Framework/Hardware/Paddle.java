@@ -42,6 +42,9 @@ public class Paddle {
         return isUp;
     }
     
+    public void deenergize() {
+        paddle.getController().pwmDisable();
+    }
     
     // ↓ -------------- ↓ -------------- ↓ AUTO ACTIONS ↓ -------------- ↓ -------------- ↓
     public class PaddleUp implements Action {

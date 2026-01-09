@@ -100,6 +100,9 @@ public class Spindexer {
         return 0;
     }
     
+    public void deenergize() {
+        spindexer.getController().pwmDisable();
+    }
     
     // ↓ -------------- ↓ -------------- ↓ AUTO ACTIONS ↓ -------------- ↓ -------------- ↓
     public class SlotIn implements Action {
