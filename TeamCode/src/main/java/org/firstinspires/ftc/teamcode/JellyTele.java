@@ -233,7 +233,7 @@ public class JellyTele extends BaseOpMode {
         MECANUM,
         FIELDCENTRIC
     }
-    private DriveMode driveMode = DriveMode.MECANUM;
+    private DriveMode driveMode = DriveMode.FIELDCENTRIC;
     private void updateDrive() {
         if (controller.driveModePressed()) {
             if (driveMode == DriveMode.MECANUM) {
