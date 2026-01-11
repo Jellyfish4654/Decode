@@ -14,6 +14,7 @@ import com.acmerobotics.roadrunner.ftc.OverflowEncoder;
 import com.acmerobotics.roadrunner.ftc.PositionVelocityPair;
 import com.acmerobotics.roadrunner.ftc.RawEncoder;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.teamcode.Framework.Auto.RoadRunner.messages.ThreeDeadWheelInputsMessage;
@@ -21,9 +22,9 @@ import org.firstinspires.ftc.teamcode.Framework.Auto.RoadRunner.messages.ThreeDe
 @Config
 public final class ThreeDeadWheelLocalizer implements Localizer {
     public static class Params {
-        public double par0YTicks = 0.0; // y position of the first parallel encoder (in tick units)
-        public double par1YTicks = 1.0; // y position of the second parallel encoder (in tick units)
-        public double perpXTicks = 0.0; // x position of the perpendicular encoder (in tick units)
+        public double par0YTicks = 2446.1225125885185; // y position of the first parallel encoder (in tick units)
+        public double par1YTicks = -2943.954076892479; // y position of the second parallel encoder (in tick units)
+        public double perpXTicks = -2675.538244657888; // x position of the perpendicular encoder (in tick units)
     }
 
     public static Params PARAMS = new Params();
@@ -43,6 +44,8 @@ public final class ThreeDeadWheelLocalizer implements Localizer {
         par0 = new OverflowEncoder(new RawEncoder(hardwareMap.get(DcMotorEx.class, "motorFR"))); //exp 0
         par1 = new OverflowEncoder(new RawEncoder(hardwareMap.get(DcMotorEx.class, "motorFL"))); //ctrl 0
         perp = new OverflowEncoder(new RawEncoder(hardwareMap.get(DcMotorEx.class, "guidingMotor"))); //exp 3
+
+        par0.setDirection(DcMotorSimple.Direction.REVERSE);
 
         // TODO: reverse encoder directions if needed
         //   par0.setDirection(DcMotorSimple.Direction.REVERSE);
