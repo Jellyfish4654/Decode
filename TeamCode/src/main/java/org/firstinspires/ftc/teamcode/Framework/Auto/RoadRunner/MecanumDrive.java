@@ -243,17 +243,10 @@ public final class MecanumDrive {
         leftBack.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         rightBack.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         rightFront.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-<<<<<<< HEAD
-
-        leftFront.setDirection(DcMotorSimple.Direction.REVERSE);
-        leftBack.setDirection(DcMotorSimple.Direction.REVERSE);
-        rightFront.setDirection(DcMotorSimple.Direction.REVERSE);
 
         // TODO: reverse motor directions if needed
-=======
-        
+
         // _TODO: reverse motor directions if needed
->>>>>>> 8678be0f00558fc47def8618033cd1f4b58f6851
         //   leftFront.setDirection(DcMotorSimple.Direction.REVERSE);
         
         leftFront.setDirection(DcMotorSimple.Direction.REVERSE);
