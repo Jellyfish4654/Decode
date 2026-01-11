@@ -10,6 +10,7 @@ import com.acmerobotics.roadrunner.Pose2d;
 import com.acmerobotics.roadrunner.SequentialAction;
 import com.acmerobotics.roadrunner.SleepAction;
 import com.acmerobotics.roadrunner.TrajectoryActionBuilder;
+import com.acmerobotics.roadrunner.Vector2d;
 import com.acmerobotics.roadrunner.ftc.Actions;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
@@ -30,37 +31,58 @@ public class BlueGoalAuto extends BaseOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
         initHardware(true);
-        Pose2d initialPose = new Pose2d(-61.5, -23.5, Math.toRadians(0));
+        Pose2d initialPose = new Pose2d(-61.5, -23.5, Math.toRadians(180));
         MecanumDrive drive = new MecanumDrive(hardwareMap, initialPose);
         Params.alliance = Params.Alliance.BLUE;
 
         // ↓ -------------- ↓ -------------- ↓ TRAJECTORIES ↓ -------------- ↓ -------------- ↓
 
         TrajectoryActionBuilder moveToScan = drive.actionBuilder(initialPose)
-                .lineToXLinearHeading(-23.5, Math.toRadians(160));
-        scanPose = new Pose2d(-23.5, -23.5, Math.toRadians(160)); //pos1
+                .strafeToLinearHeading(new Vector2d(-47, -15), Math.toRadians(153.435));
+        scanPose = new Pose2d(-47, -15, Math.toRadians(153.435)); //pos1
 
         TrajectoryActionBuilder moveToShootPreload = drive.actionBuilder(scanPose)
-                .turnTo(223);
-        shootPose = null; //pos2
+                .strafeToLinearHeading(new Vector2d(-23.5, -23.5), Math.toRadians(225));
+        shootPose = new Pose2d (-23.5, -23.5, 225); //pos2
 
-        TrajectoryActionBuilder openGate;
-        gatePose = null; //pos3
+        TrajectoryActionBuilder collectFirst = drive.actionBuilder(shootPose)
+                .strafeToLinearHeading(new Vector2d(-11.5, -31), Math.toRadians(270))
+                .lineToY(-43)
+                .waitSeconds(1)
+                .lineToY(-48)
+                .waitSeconds(1)
+                .lineToY(-53);
+        firstPose = new Pose2d(-11.5, -53, Math.toRadians(270)); //pos3
 
-        TrajectoryActionBuilder collectFirst;
-        firstPose = null; //pos4
+        TrajectoryActionBuilder openGate; //ignore this unless we decide to go for 12 ball
+        gatePose = null; //pos4
 
-        TrajectoryActionBuilder moveToShootFirst;
+        TrajectoryActionBuilder moveToShootFirst = drive.actionBuilder(firstPose)
+                .strafeToLinearHeading(new Vector2d(-23.5, -23.5), Math.toRadians(225));
 
-        TrajectoryActionBuilder collectSecond;
-        secondPose = null; //pos5
+        TrajectoryActionBuilder collectSecond = drive.actionBuilder(shootPose)
+                .strafeToLinearHeading(new Vector2d(12, -31), Math.toRadians(270))
+                .lineToY(-43)
+                .waitSeconds(1)
+                .lineToY(-48)
+                .waitSeconds(1)
+                .lineToY(-53);
+        secondPose = new Pose2d(12, -53, Math.toRadians(270)); //pos5
 
-        TrajectoryActionBuilder moveToShootSecond;
+        TrajectoryActionBuilder moveToShootSecond = drive.actionBuilder(secondPose)
+                .strafeToLinearHeading(new Vector2d(-23.5, -23.5), Math.toRadians(225));
 
-        TrajectoryActionBuilder collectThird;
-        thirdPose = null; //pos6
+        TrajectoryActionBuilder collectThird = drive.actionBuilder(shootPose) // ignore also unless doing 12 ball
+                .strafeToLinearHeading(new Vector2d(35.5, -31), Math.toRadians(270))
+                .lineToY(-43)
+                .waitSeconds(1)
+                .lineToY(-48)
+                .waitSeconds(1)
+                .lineToY(-53);
+        thirdPose = new Pose2d(35.5, -53, Math.toRadians(270)); //pos6
 
-        TrajectoryActionBuilder moveToShootThird;
+        TrajectoryActionBuilder moveToShootThird = drive.actionBuilder(thirdPose) // ignore unless doing 12 ball
+                .strafeToLinearHeading(new Vector2d(-23.5, -23.5), Math.toRadians(225));
 
         // ↓ -------------- ↓ -------------- ↓ SHOOTING ACTIONS ↓ -------------- ↓ -------------- ↓
         SequentialAction swingPaddle = new SequentialAction(
@@ -114,7 +136,12 @@ public class BlueGoalAuto extends BaseOpMode {
         Actions.runBlocking(
                 new SequentialAction(
                         moveToScan.build(),
-                        moveToShootPreload.build()
+                        moveToShootPreload.build(),
+                        collectFirst.build(),
+                        moveToShootFirst.build(),
+                        collectSecond.build(),
+                        moveToShootSecond.build()
+
                 )
         );
 //        switch (Params.motif) {
@@ -186,9 +213,9 @@ public class BlueGoalAuto extends BaseOpMode {
                 } else if (posNum == 2) {
                     shootPose = calcPose;
                 } else if (posNum == 3) {
-                    gatePose = calcPose;
-                } else if (posNum == 4) {
                     firstPose = calcPose;
+                } else if (posNum == 4) {
+                    gatePose = calcPose;
                 } else if (posNum == 5) {
                     secondPose = calcPose;
                 } else if (posNum == 6) {
