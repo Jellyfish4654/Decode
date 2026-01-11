@@ -54,6 +54,7 @@ public class JellyTele extends BaseOpMode {
         telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
         initHardware(false);
         imuOffset = imuSensor.getRobotYawPitchRollAngles().getYaw(AngleUnit.RADIANS);
+        initFinishedTelemetry();
         waitForStart();
         while (opModeIsActive()) {
             updateDrive();
@@ -120,7 +121,7 @@ public class JellyTele extends BaseOpMode {
                     spinOuttake(Artifact.PURPLE);
                 } else if (controller.outMotif()) {
                     motifOuttakeLock = true;
-                    currentMotifArtifacts = Params.motifArtifacts.get(Motif.GPP);
+                    currentMotifArtifacts = Params.motifArtifacts.get(Params.motif);
                     motifOuttakeIndex = 0;
                 }
             } else { // Motif Outtake Logic ↓
@@ -224,6 +225,14 @@ public class JellyTele extends BaseOpMode {
         telemetry.addData("Millis Per Loop", (nanoPerLoop / 1e6));
         telemetry.addData("Loops Per Sec", loopsPerSec);
         loopTime = currentTime;
+    }
+    
+    private void initFinishedTelemetry() {
+        telemetry.addLine("Status: Init Finished ------------------------------------------");
+        for (int i=0; i<16; i++) {
+            telemetry.addLine("------------------------------------------------------------------------");
+        }
+        telemetry.update();
     }
     
     

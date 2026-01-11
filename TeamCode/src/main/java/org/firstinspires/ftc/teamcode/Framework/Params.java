@@ -6,7 +6,7 @@ import java.util.Map;
 public class Params {
     
     // set both in auto for use in auto and teleop
-    public static Alliance alliance = Alliance.RED;
+    public static Alliance alliance = Alliance.BLUE;
     public static Motif motif = Motif.GPP;
     
     public enum Alliance {
