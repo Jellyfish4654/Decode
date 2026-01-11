@@ -12,9 +12,12 @@ public class OuttakeTuner extends LinearOpMode
 {
     @Override
     public void runOpMode() throws InterruptedException {
-        final DcMotor outtakeMotor;
         telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
-        outtakeMotor = hardwareMap.get(DcMotor.class, "outtakeMotor");
+        final DcMotor outtakeMotor = hardwareMap.get(DcMotor.class, "outtakeMotor");
+        final DcMotor guidingMotor = hardwareMap.get(DcMotor.class, "guidingMotor");
+        
+        outtakeMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+        guidingMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         double offset = 0;
         boolean frozen = false;
@@ -36,6 +39,11 @@ public class OuttakeTuner extends LinearOpMode
             if (!frozen) {
                 power = speed;
                 outtakeMotor.setPower(power);
+                if (power != 0) {
+                    guidingMotor.setPower(1);
+                } else {
+                    guidingMotor.setPower(0);
+                }
             }
 
             // Circle button to freeze / unfreeze (imagine circle as "hold")
