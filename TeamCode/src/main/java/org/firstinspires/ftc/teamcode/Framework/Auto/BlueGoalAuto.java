@@ -36,10 +36,12 @@ public class BlueGoalAuto extends BaseOpMode {
 
         // ↓ -------------- ↓ -------------- ↓ TRAJECTORIES ↓ -------------- ↓ -------------- ↓
 
-        TrajectoryActionBuilder moveToScan;
-        scanPose = null; //pos1
+        TrajectoryActionBuilder moveToScan = drive.actionBuilder(initialPose)
+                .lineToXLinearHeading(-23.5, Math.toRadians(160));
+        scanPose = new Pose2d(-23.5, -23.5, Math.toRadians(160)); //pos1
 
-        TrajectoryActionBuilder moveToShootPreload;
+        TrajectoryActionBuilder moveToShootPreload = drive.actionBuilder(scanPose)
+                .turnTo(223);
         shootPose = null; //pos2
 
         TrajectoryActionBuilder openGate;
@@ -110,22 +112,25 @@ public class BlueGoalAuto extends BaseOpMode {
         waitForStart();
         if (!isStopRequested()) return;
         Actions.runBlocking(
-                new SequentialAction()
+                new SequentialAction(
+                        moveToScan.build(),
+                        moveToShootPreload.build()
+                )
         );
-        switch (Params.motif) {
-            case GPP:
-                Actions.runBlocking(
-                        shootGPP
-                );
-            case PGP:
-                Actions.runBlocking(
-                        shootPGP
-                );
-            case PPG:
-                Actions.runBlocking(
-                        shootPPG
-                );
-        }
+//        switch (Params.motif) {
+//            case GPP:
+//                Actions.runBlocking(
+//                        shootGPP
+//                );
+//            case PGP:
+//                Actions.runBlocking(
+//                        shootPGP
+//                );
+//            case PPG:
+//                Actions.runBlocking(
+//                        shootPPG
+//                );
+//        }
 
     }
 
