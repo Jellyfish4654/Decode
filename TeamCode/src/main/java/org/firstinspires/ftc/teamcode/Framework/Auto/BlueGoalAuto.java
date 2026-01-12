@@ -160,10 +160,6 @@ public class BlueGoalAuto extends BaseOpMode {
                         moveToScan.build(),
                         scanMotif(),
                         moveToShootPreload.build(),
-                        //TODO IMPORTANT: PRELOADING MUST BE IN THIS ORDER:
-                        spindexer.contentsSet(Params.Artifact.GREEN,1),
-                        spindexer.contentsSet(Params.Artifact.PURPLE,2),
-                        spindexer.contentsSet(Params.Artifact.PURPLE,3),
                         new ShootMotif(),
                         intake.intakeOn(),
                         new ParallelAction(

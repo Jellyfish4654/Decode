@@ -171,10 +171,6 @@ public class BlueAudienceAuto extends BaseOpMode {
         Actions.runBlocking(
                 new SequentialAction(
                         scanMotif(),
-                        //TODO IMPORTANT: PRELOADING MUST BE IN THIS ORDER:
-                        spindexer.contentsSet(Params.Artifact.GREEN,1),
-                        spindexer.contentsSet(Params.Artifact.PURPLE,2),
-                        spindexer.contentsSet(Params.Artifact.PURPLE,3),
                         new ShootMotif(),
                         new ParallelAction(
                                 intake.intakeOn(),
