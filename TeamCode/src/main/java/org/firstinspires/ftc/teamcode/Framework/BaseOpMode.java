@@ -135,8 +135,8 @@ public abstract class BaseOpMode extends LinearOpMode {
             Params.Motif motif = vision.getObeliskMotif();
             while(motif==null){
                 motif = vision.getObeliskMotif();
-                Params.motif = motif;
             }
+            Params.motif = motif;
             return motif == Params.Motif.GPP || motif == Params.Motif.PGP || motif == Params.Motif.PPG;
         }
     }
