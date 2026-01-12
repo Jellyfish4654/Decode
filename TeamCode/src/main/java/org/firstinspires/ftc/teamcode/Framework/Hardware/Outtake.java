@@ -52,7 +52,7 @@ public class Outtake {
         @Override
         public boolean run(@NonNull TelemetryPacket packet) {
             onNear();
-            return isOn();
+            return !isOn();
         }
     }
     public Action outtakeOnNear() {
@@ -63,7 +63,7 @@ public class Outtake {
         @Override
         public boolean run(@NonNull TelemetryPacket packet) {
             onFar();
-            return isOn();
+            return !isOn();
         }
     }
     public Action outtakeOnFar() {
@@ -74,7 +74,7 @@ public class Outtake {
         @Override
         public boolean run (@NonNull TelemetryPacket packet) {
             off();
-            return !isOn();
+            return isOn();
         }
     }
     public Action outtakeOff() {

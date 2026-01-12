@@ -124,7 +124,7 @@ public abstract class BaseOpMode extends LinearOpMode {
         public boolean run(@NonNull TelemetryPacket packet) {
             Params.Artifact detected = colorSensor.getArtifact();
             spindexer.setContents(detected);
-            return spindexer.getContents(spindexer.getCurrentSlot())!=null;
+            return spindexer.getContents(spindexer.getCurrentSlot())==null;
         }
     }
     public Action detectArtifact() { return new DetectArtifact(); }
@@ -133,11 +133,13 @@ public abstract class BaseOpMode extends LinearOpMode {
         @Override
         public boolean run(@NonNull TelemetryPacket packet) {
             Params.Motif motif = vision.getObeliskMotif();
-            while(motif==null){
-                motif = vision.getObeliskMotif();
+
+            if(motif != null){
+                Params.motif = motif;
+                return false;
             }
-            Params.motif = motif;
-            return motif == Params.Motif.GPP || motif == Params.Motif.PGP || motif == Params.Motif.PPG;
+
+            return true;
         }
     }
     public Action scanMotif() { return new ScanMotif(); }

@@ -134,7 +134,7 @@ public class RedGoalAuto extends BaseOpMode {
         @Override
         public boolean run(@NonNull TelemetryPacket packet) {
             Params.Motif motif = vision.getObeliskMotif();
-            return motif == Params.Motif.GPP || motif == Params.Motif.PGP || motif == Params.Motif.PPG;
+            return !(motif == Params.Motif.GPP || motif == Params.Motif.PGP || motif == Params.Motif.PPG);
         }
     }
     public Action scanMotif() { return new ScanMotif(); }

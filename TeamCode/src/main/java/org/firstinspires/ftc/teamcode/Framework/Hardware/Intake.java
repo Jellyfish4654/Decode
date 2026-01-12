@@ -36,7 +36,7 @@ public class Intake {
         @Override
         public boolean run(@NonNull TelemetryPacket packet) {
             on();
-            return isOn();
+            return !isOn();
         }
     }
     public Action intakeOn() {
@@ -47,7 +47,7 @@ public class Intake {
         @Override
         public boolean run (@NonNull TelemetryPacket packet) {
             off();
-            return !isOn();
+            return isOn();
         }
     }
     public Action intakeOff() {

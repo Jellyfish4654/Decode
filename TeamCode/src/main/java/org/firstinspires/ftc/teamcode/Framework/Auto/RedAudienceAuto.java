@@ -159,7 +159,7 @@ public class RedAudienceAuto extends BaseOpMode {
                         );
 
                 }
-                return true;
+                return false;
             }
         }
 

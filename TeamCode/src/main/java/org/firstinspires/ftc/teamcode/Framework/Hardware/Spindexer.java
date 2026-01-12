@@ -122,7 +122,7 @@ public class Spindexer {
         public boolean run(@NonNull TelemetryPacket packet) {
             int slot = findSlot(Artifact.GREEN);
             setSlotOut(slot);
-            return (getCurrentSlot() == slot);
+            return (getCurrentSlot() != slot);
         }
     }
     public Action greenOut() {
@@ -134,7 +134,7 @@ public class Spindexer {
         public boolean run(@NonNull TelemetryPacket packet) {
             int slot = findSlot(Artifact.PURPLE);
             setSlotOut(slot);
-            return (getCurrentSlot() == slot);
+            return (getCurrentSlot() != slot);
         }
     }
     public Action purpleOut() {
@@ -155,7 +155,7 @@ public class Spindexer {
         @Override
         public boolean run(@NonNull TelemetryPacket packet) {
             setContents(slot,artifact);
-            return getContents(slot)!=null;
+            return getContents(slot)==null;
         }
     }
 

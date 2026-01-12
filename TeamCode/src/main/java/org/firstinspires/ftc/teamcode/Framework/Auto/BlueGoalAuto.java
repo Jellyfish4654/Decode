@@ -257,7 +257,7 @@ public class BlueGoalAuto extends BaseOpMode {
                     thirdPose = calcPose;
                 }
             }
-            return true;
+            return false;
         }
     }
     public Action verifyPos(int pos) { return new VerifyPos(pos); }

@@ -159,7 +159,7 @@ public class BlueAudienceAuto extends BaseOpMode {
                         );
 
                 }
-                return true;
+                return false;
             }
         }
 
