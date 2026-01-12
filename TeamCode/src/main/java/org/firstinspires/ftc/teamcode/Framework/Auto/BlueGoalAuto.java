@@ -201,21 +201,6 @@ public class BlueGoalAuto extends BaseOpMode {
                         drive.actionBuilder(secondPose).strafeTo(new Vector2d(-25,-45)).build()
                 )
         );
-//        switch (Params.motif) {
-//            case GPP:
-//                Actions.runBlocking(
-//                        shootGPP
-//                );
-//            case PGP:
-//                Actions.runBlocking(
-//                        shootPGP
-//                );
-//            case PPG:
-//                Actions.runBlocking(
-//                        shootPPG
-//                );
-//        }
-
     }
 
 
