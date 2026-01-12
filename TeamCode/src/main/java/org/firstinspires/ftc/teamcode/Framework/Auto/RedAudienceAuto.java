@@ -27,7 +27,7 @@ public class RedAudienceAuto extends BaseOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
         initHardware(true);
-        Pose2d initialPose = new Pose2d(61.5, 23.5, Math.toRadians(70));
+        Pose2d initialPose = new Pose2d(61.5, 23.5, Math.toRadians(180));
         MecanumDrive drive = new MecanumDrive(hardwareMap, initialPose);
         Params.alliance = Params.Alliance.RED;
 

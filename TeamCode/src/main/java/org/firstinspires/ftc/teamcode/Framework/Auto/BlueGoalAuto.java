@@ -158,8 +158,10 @@ public class BlueGoalAuto extends BaseOpMode {
         Actions.runBlocking(
                 new SequentialAction(
                         moveToScan.build(),
-                        scanMotif(),
-                        moveToShootPreload.build(),
+                        new ParallelAction(
+                                scanMotif(),
+                                moveToShootPreload.build()
+                        ),
                         new ShootMotif(),
                         intake.intakeOn(),
                         new ParallelAction(

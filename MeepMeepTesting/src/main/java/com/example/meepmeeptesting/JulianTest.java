@@ -37,7 +37,7 @@ public class JulianTest {
                         .splineToLinearHeading(new Pose2d(new Vector2d(-12,-19),Math.toRadians(-125)),Math.toRadians(-125))
 
                 .build());*/
-        aud.runAction(aud.getDrive().actionBuilder(new Pose2d(59, -12, Math.toRadians(70)))
+        aud.runAction(aud.getDrive().actionBuilder(new Pose2d(59, -12, Math.toRadians(180)))
                         .waitSeconds(3)
                 .strafeToLinearHeading(new Vector2d(54,-58), Math.toRadians(-70))
                         .waitSeconds(0.5)
