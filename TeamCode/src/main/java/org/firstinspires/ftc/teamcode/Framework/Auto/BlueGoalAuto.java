@@ -129,6 +129,28 @@ public class BlueGoalAuto extends BaseOpMode {
                 outtake.outtakeOff()
         );
 
+        class ShootMotif implements Action {
+            @Override
+            public boolean run(@NonNull TelemetryPacket packet) {
+                switch (Params.motif) {
+                    case GPP:
+                        Actions.runBlocking(
+                                shootGPP
+                        );
+                    case PGP:
+                        Actions.runBlocking(
+                                shootPGP
+                        );
+                    case PPG:
+                        Actions.runBlocking(
+                                shootPPG
+                        );
+
+                }
+                return true;
+            }
+        }
+
         // ↓ -------------- ↓ -------------- ↓ AUTO ↓ -------------- ↓ -------------- ↓
 
         waitForStart();
@@ -136,12 +158,51 @@ public class BlueGoalAuto extends BaseOpMode {
         Actions.runBlocking(
                 new SequentialAction(
                         moveToScan.build(),
+                        scanMotif(),
                         moveToShootPreload.build(),
-                        collectFirst.build(),
+                        //TODO IMPORTANT: PRELOADING MUST BE IN THIS ORDER:
+                        spindexer.contentsSet(Params.Artifact.GREEN,1),
+                        spindexer.contentsSet(Params.Artifact.PURPLE,2),
+                        spindexer.contentsSet(Params.Artifact.PURPLE,3),
+                        new ShootMotif(),
+                        intake.intakeOn(),
+                        new ParallelAction(
+                                collectFirst.build(),
+                                new SequentialAction(
+                                        spindexer.slotIn(),
+                                        spindexer.contentsSet(Params.Artifact.PURPLE),
+                                        new SleepAction(0.75),
+                                        spindexer.slotIn(),
+                                        spindexer.contentsSet(Params.Artifact.PURPLE),
+                                        new SleepAction(0.75),
+                                        spindexer.slotIn(),
+                                        spindexer.contentsSet(Params.Artifact.GREEN),
+                                        new SleepAction(0.75),
+                                        intake.intakeOff()
+                                )
+                        ),
                         moveToShootFirst.build(),
-                        collectSecond.build(),
-                        moveToShootSecond.build()
+                        new ShootMotif(),
+                        new ParallelAction(
+                                collectSecond.build(),
+                                new SequentialAction(
+                                        spindexer.slotIn(),
+                                        spindexer.contentsSet(Params.Artifact.PURPLE),
+                                        new SleepAction(0.75),
+                                        spindexer.slotIn(),
+                                        spindexer.contentsSet(Params.Artifact.GREEN),
+                                        new SleepAction(0.75),
+                                        spindexer.slotIn(),
+                                        spindexer.contentsSet(Params.Artifact.PURPLE),
+                                        new SleepAction(0.75),
+                                        intake.intakeOff()
+                                )
+                        ),
 
+                        moveToShootSecond.build(),
+                        new ShootMotif(),
+                        //get out of shooting zone
+                        drive.actionBuilder(secondPose).strafeTo(new Vector2d(-25,-45)).build()
                 )
         );
 //        switch (Params.motif) {
@@ -161,15 +222,6 @@ public class BlueGoalAuto extends BaseOpMode {
 
     }
 
-    // ↓ -------------- ↓ -------------- ↓ VISION ACTIONS ↓ -------------- ↓ -------------- ↓
-    public class ScanMotif implements Action {
-        @Override
-        public boolean run(@NonNull TelemetryPacket packet) {
-            Params.Motif motif = vision.getObeliskMotif();
-            return motif == Params.Motif.GPP || motif == Params.Motif.PGP || motif == Params.Motif.PPG;
-        }
-    }
-    public Action scanMotif() { return new ScanMotif(); }
 
     public class VerifyPos implements Action {
         private int posNum;

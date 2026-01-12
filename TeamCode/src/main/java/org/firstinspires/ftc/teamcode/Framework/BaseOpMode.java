@@ -128,4 +128,15 @@ public abstract class BaseOpMode extends LinearOpMode {
         }
     }
     public Action detectArtifact() { return new DetectArtifact(); }
+
+    public class ScanMotif implements Action {
+        @Override
+        public boolean run(@NonNull TelemetryPacket packet) {
+            Params.Motif motif = vision.getObeliskMotif();
+            return motif == Params.Motif.GPP || motif == Params.Motif.PGP || motif == Params.Motif.PPG;
+        }
+    }
+    public Action scanMotif() { return new ScanMotif(); }
+
+
 }

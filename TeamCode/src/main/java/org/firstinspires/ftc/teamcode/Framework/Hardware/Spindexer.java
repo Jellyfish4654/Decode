@@ -7,6 +7,7 @@ import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.acmerobotics.roadrunner.Action;
 import com.qualcomm.robotcore.hardware.Servo;
 
+import org.firstinspires.ftc.teamcode.Framework.Params;
 import org.firstinspires.ftc.teamcode.Framework.Params.Artifact;
 
 @Config
@@ -139,4 +140,25 @@ public class Spindexer {
     public Action purpleOut() {
         return new PurpleOut();
     }
+
+    public class ContentsSet implements Action{
+        private final Params.Artifact artifact;
+        private final int slot;
+        ContentsSet (Params.Artifact artifact){
+            this.artifact = artifact;
+            this.slot = getCurrentSlot();
+        }
+        ContentsSet (Params.Artifact artifact, int slot){
+            this.artifact = artifact;
+            this.slot = slot;
+        }
+        @Override
+        public boolean run(@NonNull TelemetryPacket packet) {
+            setContents(slot,artifact);
+            return getContents(slot)!=null;
+        }
+    }
+
+    public Action contentsSet(Params.Artifact artifact) {return new ContentsSet(artifact);}
+    public Action contentsSet(Params.Artifact artifact, int slot) {return new ContentsSet(artifact, slot);}
 }

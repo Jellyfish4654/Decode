@@ -16,6 +16,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
 import org.firstinspires.ftc.teamcode.Framework.Auto.RoadRunner.MecanumDrive;
 import org.firstinspires.ftc.teamcode.Framework.BaseOpMode;
+import org.firstinspires.ftc.teamcode.Framework.Hardware.Spindexer;
 import org.firstinspires.ftc.teamcode.Framework.Params;
 
 @Config
@@ -55,20 +56,30 @@ public class RedAudienceAuto extends BaseOpMode {
 
         SequentialAction motifOneCollector = new SequentialAction(
                 new ParallelAction(
-                        spindexer.slotIn(),
+                        new SequentialAction(
+                                spindexer.slotIn(),
+                                spindexer.contentsSet(Params.Artifact.GREEN)
+                        ),
+
                         intake.intakeOn(),
                         drive.actionBuilder(shootOnePose)
                                 .splineToLinearHeading(new Pose2d(35.5,35,Math.toRadians(90)),Math.toRadians(90))
                                 .build()
                 ),
                 new ParallelAction(
-                        spindexer.slotIn(),
+                        new SequentialAction(
+                                spindexer.slotIn(),
+                                spindexer.contentsSet(Params.Artifact.PURPLE)
+                        ),
                         drive.actionBuilder(new Pose2d(35.5,35,Math.toRadians(90)))
                                 .strafeToLinearHeading(new Vector2d(35.5,40),Math.toRadians(90))
                                 .build()
                 ),
                 new ParallelAction(
-                        spindexer.slotIn(),
+                        new SequentialAction(
+                                spindexer.slotIn(),
+                                spindexer.contentsSet(Params.Artifact.PURPLE)
+                        ),
                         drive.actionBuilder(new Pose2d(35.5,40,Math.toRadians(90)))
                                 .lineToYConstantHeading(45)
                                 .build()
@@ -160,15 +171,21 @@ public class RedAudienceAuto extends BaseOpMode {
         Actions.runBlocking(
                 new SequentialAction(
                         scanMotif(),
+                        //TODO IMPORTANT: PRELOADING MUST BE IN THIS ORDER:
+                        spindexer.contentsSet(Params.Artifact.GREEN,1),
+                        spindexer.contentsSet(Params.Artifact.PURPLE,2),
+                        spindexer.contentsSet(Params.Artifact.PURPLE,3),
                         new ShootMotif(),
                         new ParallelAction(
                                 intake.intakeOn(),
                                 spindexer.slotIn(),
-                                cornerOne.build()
+                                cornerOne.build(),
+                                spindexer.contentsSet(Params.Artifact.PURPLE)
                         ),
                         new ParallelAction(
                                 spindexer.slotIn(),
-                                cornerTwo.build()
+                                cornerTwo.build(),
+                                spindexer.contentsSet(Params.Artifact.GREEN)
                         ),
                         shootOne.build(),
                         new ParallelAction(
@@ -192,15 +209,7 @@ public class RedAudienceAuto extends BaseOpMode {
 
     }
 
-    // ↓ -------------- ↓ -------------- ↓ VISION ACTIONS ↓ -------------- ↓ -------------- ↓
-    public class ScanMotif implements Action {
-        @Override
-        public boolean run(@NonNull TelemetryPacket packet) {
-            Params.Motif motif = vision.getObeliskMotif();
-            return motif == Params.Motif.GPP || motif == Params.Motif.PGP || motif == Params.Motif.PPG;
-        }
-    }
-    public Action scanMotif() { return new ScanMotif(); }
+
 
 
 }

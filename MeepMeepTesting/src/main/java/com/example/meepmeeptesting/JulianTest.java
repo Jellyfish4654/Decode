@@ -37,23 +37,24 @@ public class JulianTest {
                         .splineToLinearHeading(new Pose2d(new Vector2d(-12,-19),Math.toRadians(-125)),Math.toRadians(-125))
 
                 .build());*/
-        aud.runAction(aud.getDrive().actionBuilder(new Pose2d(59, 12, Math.toRadians(70)))
+        aud.runAction(aud.getDrive().actionBuilder(new Pose2d(59, -12, Math.toRadians(70)))
                         .waitSeconds(3)
-                .strafeToLinearHeading(new Vector2d(54,58), Math.toRadians(70))
+                .strafeToLinearHeading(new Vector2d(54,-58), Math.toRadians(-70))
                         .waitSeconds(0.5)
-                .splineToConstantHeading(new Vector2d(60,58), Math.toRadians(90))
+                .splineToConstantHeading(new Vector2d(60,-58), Math.toRadians(-90))
                         .waitSeconds(0.5)
-                        .strafeToLinearHeading(new Vector2d(60,12),Math.toRadians(140))
+                        .strafeToLinearHeading(new Vector2d(60,-12),Math.toRadians(-140))
                         .waitSeconds(0.5)
-                        .splineToLinearHeading(new Pose2d(35.5,35,Math.toRadians(90)),Math.toRadians(90))
-                        .strafeToLinearHeading(new Vector2d(35.5,40),Math.toRadians(90))
+                        .splineToLinearHeading(new Pose2d(35.5,-35,Math.toRadians(-90)),Math.toRadians(-90))
+                        .strafeToLinearHeading(new Vector2d(35.5,-40),Math.toRadians(-90))
                 .waitSeconds(0.5)
-                        .lineToYConstantHeading(45)
+                        .lineToYConstantHeading(-45)
                 .waitSeconds(0.5)
-                        .strafeToLinearHeading(new Vector2d(60,12),Math.toRadians(140))
+                        .strafeToLinearHeading(new Vector2d(60,-12),Math.toRadians(-140))
                         .lineToX(30)
                 .build()
         );
+
 
 
         meepMeep.setBackground(MeepMeep.Background.FIELD_DECODE_JUICE_DARK)
