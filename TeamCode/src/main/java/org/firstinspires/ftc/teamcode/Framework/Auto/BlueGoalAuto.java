@@ -147,7 +147,7 @@ public class BlueGoalAuto extends BaseOpMode {
                         );
 
                 }
-                return true;
+                return false;
             }
         }
 
