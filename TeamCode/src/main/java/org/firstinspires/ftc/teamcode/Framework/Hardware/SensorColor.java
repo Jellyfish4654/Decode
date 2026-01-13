@@ -36,9 +36,8 @@ public class SensorColor {
     }
 
     public double[] detectHSV() {
-        double[] rgba = detectRGBA();
         float [] hsvValues = new float[3];
-        Color.RGBToHSV((int) rgba[0], (int) rgba[1], (int) rgba[2], hsvValues);
+        Color.RGBToHSV((colorSensor.red(), colorSensor.green(), colorSensor.blue(), hsvValues);
         return new double[] { //may need to add scaling like for rgba
                 hsvValues[0]*360,
                 hsvValues[1]*100,
