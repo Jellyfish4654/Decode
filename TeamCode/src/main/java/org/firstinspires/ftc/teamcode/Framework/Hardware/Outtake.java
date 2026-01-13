@@ -6,20 +6,25 @@ import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.acmerobotics.roadrunner.Action;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.VoltageSensor;
 
 @Config
 public class Outtake {
     private final DcMotor outtake;
     private final DcMotor guiding;
+    private final VoltageSensor voltageSensor;
     
-    // TODO: tune near and far power (also guiding)
-    public static double NEAR_POWER = 1;
-    public static double FAR_POWER = 1;
+    // TODO: tune near and far power
+    // TODO: test voltage compensation
+    public static double NEAR_POWER = 0.6;
+    public static double FAR_POWER = 0.8;
     public static double GUIDING_POWER = 1;
     
-    public Outtake (DcMotor outtake, DcMotor guiding) {
+    public Outtake (DcMotor outtake, DcMotor guiding, VoltageSensor voltSensor) {
         this.outtake = outtake;
         this.guiding = guiding;
+        this.voltageSensor = voltSensor;
+        
         outtake.setDirection(DcMotor.Direction.REVERSE); // TODO: check outtake motors direction
         outtake.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
         
@@ -28,12 +33,12 @@ public class Outtake {
     }
     
     public void onNear() {
-        outtake.setPower(NEAR_POWER);
+        outtake.setPower(applyVoltageCompensation(NEAR_POWER));
         guiding.setPower(GUIDING_POWER);
     }
     
     public void onFar() {
-        outtake.setPower(FAR_POWER);
+        outtake.setPower(applyVoltageCompensation(FAR_POWER));
         guiding.setPower(GUIDING_POWER);
     }
     
@@ -43,7 +48,24 @@ public class Outtake {
     }
     
     public boolean isOn() {
-        return (outtake.getPower() != 0) && (guiding.getPower() != 0);
+        return (outtake.getPower() != 0) || (guiding.getPower() != 0);
+    }
+    
+    public double getPower() {
+        return outtake.getPower();
+    }
+    
+    public double getVoltage() {
+        return voltageSensor.getVoltage();
+    }
+    
+    public double getVoltageCompensation() {
+        return 12.0 / voltageSensor.getVoltage();
+    }
+    
+    public double applyVoltageCompensation(double power) {
+        double voltageCompensation = 12.0 / voltageSensor.getVoltage();
+        return power * voltageCompensation;
     }
     
     

@@ -11,6 +11,8 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.IMU;
 import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.hardware.VoltageSensor;
+
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 
 import org.firstinspires.ftc.teamcode.Framework.Hardware.Drivetrain;
@@ -73,7 +75,8 @@ public abstract class BaseOpMode extends LinearOpMode {
         
         outtake = new Outtake(
                 hardwareMap.get(DcMotor.class, "outtakeMotor"),
-                hardwareMap.get(DcMotor.class, "guidingMotor")
+                hardwareMap.get(DcMotor.class, "guidingMotor"),
+                hardwareMap.get(VoltageSensor.class, "Control Hub")
         );
         outtake.off();
 

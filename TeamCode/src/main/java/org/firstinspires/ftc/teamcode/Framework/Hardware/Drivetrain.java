@@ -4,7 +4,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 
 public class Drivetrain {
 
-    DcMotor[] driveMotors;
+    private final DcMotor[] driveMotors;
 
     public Drivetrain(DcMotor[] dcMotors) {
         this.driveMotors = dcMotors;
