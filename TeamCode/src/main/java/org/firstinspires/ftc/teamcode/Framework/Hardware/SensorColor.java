@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.Framework.Hardware;
 
+import android.graphics.Color;
+
 import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.hardware.rev.RevColorSensorV3;
 import com.qualcomm.robotcore.hardware.NormalizedRGBA;
@@ -32,6 +34,18 @@ public class SensorColor {
                 Math.min(255, (raw.alpha*255*1000))
         };
     }
+
+    public double[] detectHSV() {
+        double[] rgba = detectRGBA();
+        float [] hsvValues = new float[3];
+        Color.RGBToHSV((int) rgba[0], (int) rgba[1], (int) rgba[2], hsvValues);
+        return new double[] { //may need to add scaling like for rgba
+                hsvValues[0]*360,
+                hsvValues[1]*100,
+                hsvValues[2]*100
+        };
+    }
+
     
     private boolean isInRange(double[] color, double[] low, double[] high){
         return color[0] >= low[0] && color[1] >= low[1] && color[2] >= low[2] &&
