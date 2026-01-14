@@ -174,6 +174,7 @@ public class RedAudienceAuto extends BaseOpMode {
         Actions.runBlocking(
                 new SequentialAction(
                         scanMotif(),
+                        preshoot.build(),
                         new ShootMotif(),
                         new ParallelAction(
                                 intake.intakeOn(),

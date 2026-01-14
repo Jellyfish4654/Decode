@@ -173,10 +173,8 @@ public class BlueAudienceAuto extends BaseOpMode {
         if (isStopRequested()) return;
         Actions.runBlocking(
                 new SequentialAction(
-                        new ParallelAction(
-                                scanMotif(),
-                                preshoot.build()
-                        ),
+                        scanMotif(),
+                        preshoot.build(),
                         new ShootMotif(),
                         new ParallelAction(
                                 intake.intakeOn(),
