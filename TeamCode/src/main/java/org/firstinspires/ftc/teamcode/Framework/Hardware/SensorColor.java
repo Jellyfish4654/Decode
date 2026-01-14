@@ -11,7 +11,7 @@ import org.firstinspires.ftc.teamcode.Framework.Params.Artifact;
 @Config
 public class SensorColor {
     private final RevColorSensorV3 colorSensor;
-    public static float GAIN = 1.45F; // TODO: retune cuz this still doesnt work lol
+    public static float GAIN = 0.1F;
     public static boolean USE_HSV = true;
     
     public static int[] HSV_PURPLE_RANGE = {210, 280};

@@ -6,6 +6,7 @@ import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.acmerobotics.roadrunner.Action;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.VoltageSensor;
 
 @Config
@@ -25,7 +26,7 @@ public class Outtake {
         this.guiding = guiding;
         this.voltageSensor = voltSensor;
         
-        outtake.setDirection(DcMotor.Direction.REVERSE); // TODO: check outtake motors direction
+        outtake.setDirection(DcMotor.Direction.FORWARD); // TODO: check outtake motors direction
         outtake.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
         
         guiding.setDirection(DcMotor.Direction.FORWARD);
