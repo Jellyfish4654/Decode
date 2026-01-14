@@ -43,15 +43,15 @@ public class BlueGoalAuto extends BaseOpMode {
 
         TrajectoryActionBuilder moveToShootPreload = drive.actionBuilder(scanPose)
                 .strafeToLinearHeading(new Vector2d(-23.5, -23.5), Math.toRadians(225));
-        shootPose = new Pose2d (-23.5, -23.5, 225); //pos2
+        shootPose = new Pose2d (-23.5, -23.5, Math.toRadians(225)); //pos2
 
         TrajectoryActionBuilder collectFirst = drive.actionBuilder(shootPose)
                 .strafeToLinearHeading(new Vector2d(-11.5, -31), Math.toRadians(270))
-                .lineToY(-43)
+                .strafeToConstantHeading(new Vector2d(-11.5,-43))
                 .waitSeconds(1)
-                .lineToY(-48)
+                .strafeToConstantHeading(new Vector2d(-11.5,-48))
                 .waitSeconds(1)
-                .lineToY(-53);
+                .strafeToConstantHeading(new Vector2d(-11.5,-53));
         firstPose = new Pose2d(-11.5, -53, Math.toRadians(270)); //pos3
 
         TrajectoryActionBuilder openGate; //ignore this unless we decide to go for 12 ball
@@ -62,11 +62,11 @@ public class BlueGoalAuto extends BaseOpMode {
 
         TrajectoryActionBuilder collectSecond = drive.actionBuilder(shootPose)
                 .strafeToLinearHeading(new Vector2d(12, -31), Math.toRadians(270))
-                .lineToY(-43)
+                .strafeToConstantHeading(new Vector2d(12,-43))
                 .waitSeconds(1)
-                .lineToY(-48)
+                .strafeToConstantHeading(new Vector2d(12,-48))
                 .waitSeconds(1)
-                .lineToY(-53);
+                .strafeToConstantHeading(new Vector2d(12,-53));
         secondPose = new Pose2d(12, -53, Math.toRadians(270)); //pos5
 
         TrajectoryActionBuilder moveToShootSecond = drive.actionBuilder(secondPose)
@@ -200,7 +200,7 @@ public class BlueGoalAuto extends BaseOpMode {
                         moveToShootSecond.build(),
                         new ShootMotif(),
                         //get out of shooting zone
-                        drive.actionBuilder(secondPose).strafeTo(new Vector2d(-25,-45)).build()
+                        drive.actionBuilder(shootPose).strafeTo(new Vector2d(-25,-45)).build()
                 )
         );
     }
