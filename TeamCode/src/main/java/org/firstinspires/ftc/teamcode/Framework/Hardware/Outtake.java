@@ -17,8 +17,8 @@ public class Outtake {
     
     // TODO: tune near and far power
     // TODO: test voltage compensation
-    public static double NEAR_POWER = 0.6;
-    public static double FAR_POWER = 0.8;
+    public static double NEAR_POWER = 0.85;
+    public static double FAR_POWER = 1;
     public static double GUIDING_POWER = 1;
     
     public Outtake (DcMotor outtake, DcMotor guiding, VoltageSensor voltSensor) {
