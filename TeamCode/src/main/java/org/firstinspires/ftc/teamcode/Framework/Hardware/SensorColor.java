@@ -12,15 +12,19 @@ import org.firstinspires.ftc.teamcode.Framework.Params.Artifact;
 public class SensorColor {
     private final RevColorSensorV3 colorSensor;
     public static float GAIN = 1.45F; // TODO: retune cuz this still doesnt work lol
-
-    // TODO: retune color sensor ranges
+    public static boolean USE_HSV = true;
+    
+    public static int[] HSV_PURPLE_RANGE = {210, 280};
+    public static int[] HSV_GREEN_RANGE = {120, 180};
+    public static int HSV_MIN_VALUE = 35;
+    
+    
     // current graph: https://www.desmos.com/3d/g1f8te9yqm
-    public static double[][][] purpleRanges = {{{0,0,0},{80,40,100}},{{70,10,60},{150,80,180}},{{170,80,150},{255,180,230}},{{100,80,60},{170,120,150}}};
-    public static double[][][] greenRanges = {{{25,48,15},{65,100,100}},{{20,90,40},{90,150,110}},{{20,130,20},{110,255,140}}};
+    public static double[][][] RGB_PURPLE_RANGES = {{{0,0,0},{80,40,100}},{{70,10,60},{150,80,180}},{{170,80,150},{255,180,230}},{{100,80,60},{170,120,150}}};
+    public static double[][][] RGB_GREEN_RANGES = {{{25,48,15},{65,100,100}},{{20,90,40},{90,150,110}},{{20,130,20},{110,255,140}}};
 
     public SensorColor (RevColorSensorV3 sensor) {
         colorSensor = sensor;
-
     }
     
     public double[] detectRGBA() {
@@ -53,23 +57,33 @@ public class SensorColor {
     }
 
     public boolean isGreen() {
-        double[] color = detectRGBA();
-        for (double[][] range : greenRanges){
-            if(isInRange(color,range[0],range[1])){
-                return true;
+        if (USE_HSV) {
+            double[] hsv = detectHSV();
+            return hsv[0] > HSV_GREEN_RANGE[0] && hsv[0] < HSV_GREEN_RANGE[1] && hsv[2] > HSV_MIN_VALUE;
+        } else {
+            double[] rgba = detectRGBA();
+            for (double[][] range : RGB_GREEN_RANGES) {
+                if (isInRange(rgba, range[0], range[1])) {
+                    return true;
+                }
             }
+            return false;
         }
-        return false;
     }
 
     public boolean isPurple() {
-        double[] color = detectRGBA();
-        for (double[][] range : purpleRanges){
-            if(isInRange(color,range[0],range[1])){
-                return true;
+        if (USE_HSV) {
+            double[] hsv = detectHSV();
+            return hsv[0] > HSV_PURPLE_RANGE[0] && hsv[0] < HSV_PURPLE_RANGE[1] && hsv[2] > HSV_MIN_VALUE;
+        } else {
+            double[] rgba = detectRGBA();
+            for (double[][] range : RGB_PURPLE_RANGES) {
+                if (isInRange(rgba, range[0], range[1])) {
+                    return true;
+                }
             }
+            return false;
         }
-        return false;
     }
     
     public Artifact getArtifact() {
