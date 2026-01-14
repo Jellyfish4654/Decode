@@ -170,7 +170,7 @@ public class BlueAudienceAuto extends BaseOpMode {
         // ↓ -------------- ↓ -------------- ↓ AUTO ↓ -------------- ↓ -------------- ↓
 
         waitForStart();
-        if (!isStopRequested()) return;
+        if (isStopRequested()) return;
         Actions.runBlocking(
                 new SequentialAction(
                         new ParallelAction(

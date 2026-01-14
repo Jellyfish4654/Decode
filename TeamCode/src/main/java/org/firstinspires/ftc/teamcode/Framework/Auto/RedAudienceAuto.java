@@ -170,7 +170,7 @@ public class RedAudienceAuto extends BaseOpMode {
         // ↓ -------------- ↓ -------------- ↓ AUTO ↓ -------------- ↓ -------------- ↓
 
         waitForStart();
-        if (!isStopRequested()) return;
+        if (isStopRequested()) return;
         Actions.runBlocking(
                 new SequentialAction(
                         scanMotif(),

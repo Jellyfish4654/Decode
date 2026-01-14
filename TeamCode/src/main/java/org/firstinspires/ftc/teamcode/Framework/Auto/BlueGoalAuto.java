@@ -154,7 +154,7 @@ public class BlueGoalAuto extends BaseOpMode {
         // ↓ -------------- ↓ -------------- ↓ AUTO ↓ -------------- ↓ -------------- ↓
 
         waitForStart();
-        if (!isStopRequested()) return;
+        if (isStopRequested()) return;
         Actions.runBlocking(
                 new SequentialAction(
                         moveToScan.build(),
