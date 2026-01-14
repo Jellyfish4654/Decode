@@ -41,8 +41,11 @@ public class BlueAudienceAuto extends BaseOpMode {
 
         TrajectoryActionBuilder moveToPark;
 
+        TrajectoryActionBuilder preshoot = drive.actionBuilder(initialPose)
+                .strafeToLinearHeading(new Vector2d(60,-12),Math.toRadians(-150));
+        Pose2d preshootPose = new Pose2d(new Vector2d(60,-12),Math.toRadians(-150));
 
-        TrajectoryActionBuilder cornerOne = drive.actionBuilder(initialPose)
+        TrajectoryActionBuilder cornerOne = drive.actionBuilder(preshootPose)
                 .strafeToLinearHeading(new Vector2d(54,-58), Math.toRadians(-70));
         Pose2d cornerOnePose = new Pose2d(new Vector2d(54,-58), Math.toRadians(-70));
 
@@ -51,8 +54,8 @@ public class BlueAudienceAuto extends BaseOpMode {
         Pose2d cornerTwoPose = new Pose2d(new Vector2d(60,-58), Math.toRadians(-90));
 
         TrajectoryActionBuilder shootOne = drive.actionBuilder(cornerTwoPose)
-                .strafeToLinearHeading(new Vector2d(60,-12),Math.toRadians(-140));
-        Pose2d shootOnePose = new Pose2d(new Vector2d(60,-12),Math.toRadians(-140));
+                .strafeToLinearHeading(new Vector2d(60,-12),Math.toRadians(-150));
+        Pose2d shootOnePose = new Pose2d(new Vector2d(60,-12),Math.toRadians(-150));
 
         SequentialAction motifOneCollector = new SequentialAction(
                 new ParallelAction(
@@ -88,7 +91,7 @@ public class BlueAudienceAuto extends BaseOpMode {
         );
 
         TrajectoryActionBuilder shootTwo = drive.actionBuilder(new Pose2d(35.5,-45,Math.toRadians(-90)))
-                .strafeToLinearHeading(new Vector2d(60,-12),Math.toRadians(-140));
+                .strafeToLinearHeading(new Vector2d(60,-12),Math.toRadians(-150));
         Pose2d shootTwoPose = shootOnePose;
 
         TrajectoryActionBuilder park = drive.actionBuilder(shootTwoPose)
@@ -170,7 +173,10 @@ public class BlueAudienceAuto extends BaseOpMode {
         if (!isStopRequested()) return;
         Actions.runBlocking(
                 new SequentialAction(
-                        scanMotif(),
+                        new ParallelAction(
+                                scanMotif(),
+                                preshoot.build()
+                        ),
                         new ShootMotif(),
                         new ParallelAction(
                                 intake.intakeOn(),
