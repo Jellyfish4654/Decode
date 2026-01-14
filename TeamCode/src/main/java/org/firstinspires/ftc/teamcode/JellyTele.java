@@ -129,11 +129,12 @@ public class JellyTele extends BaseOpMode {
                     spinOuttakeDelaySkip = SPIN_OUTTAKE_DELAY;
                 }
             } else { // Motif Outtake Logic ↓
-                spinOuttake(currentMotifArtifacts[motifOuttakeIndex]);
-                motifOuttakeIndex += 1;
-                if(motifOuttakeIndex >= 3){
+                if(motifOuttakeIndex > 3){
                     motifOuttakeLock = false;
                     spinOuttakeDelaySkip = SPIN_OUTTAKE_DELAY;
+                } else {
+                    spinOuttake(currentMotifArtifacts[motifOuttakeIndex]);
+                    motifOuttakeIndex += 1;
                 }
             }
         }
