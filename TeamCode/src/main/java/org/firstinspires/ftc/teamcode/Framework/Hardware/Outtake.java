@@ -16,11 +16,10 @@ public class Outtake {
     private final VoltageSensor voltageSensor;
     
     // TODO: tune near and far power
-    // TODO: test voltage compensation
     public static double NEAR_POWER = 0.87;
     public static double FAR_POWER = 1;
     public static double GUIDING_POWER = 1;
-    public static double VOLTAGE_COMP_MULTIPLIER = 1.2;
+    public static double VOLTAGE_COMP_STRENGTH = 1.3; // TODO: tune strength
     
     public Outtake (DcMotor outtake, DcMotor guiding, VoltageSensor voltSensor) {
         this.outtake = outtake;
@@ -62,7 +61,8 @@ public class Outtake {
     }
     
     public double getVoltageCompensation() {
-        return (12.0 / voltageSensor.getVoltage()) * VOLTAGE_COMP_MULTIPLIER;
+        return Math.pow((12.0 / voltageSensor.getVoltage()), VOLTAGE_COMP_STRENGTH);
+        // Math.pow allows 12/12 to still be 1, while 10/12 to be larger than 1.2
     }
     
     public double applyVoltageCompensation(double power) {
