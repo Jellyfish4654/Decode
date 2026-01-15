@@ -16,7 +16,7 @@ public class SensorColor {
     
     public static int[] HSV_PURPLE_RANGE = {210, 280};
     public static int[] HSV_GREEN_RANGE = {120, 180};
-    public static int HSV_MIN_VALUE = 55;
+    public static int HSV_MIN_VALUE = 50;
     
     
     // current graph: https://www.desmos.com/3d/g1f8te9yqm
