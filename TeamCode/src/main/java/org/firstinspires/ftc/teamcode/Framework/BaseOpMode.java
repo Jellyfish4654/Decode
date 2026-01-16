@@ -27,6 +27,8 @@ import org.firstinspires.ftc.teamcode.Framework.Hardware.SensorColor;
 import org.firstinspires.ftc.teamcode.Framework.Hardware.Spindexer;
 import org.firstinspires.ftc.teamcode.Framework.Hardware.Vision;
 import org.firstinspires.ftc.teamcode.JellyTele;
+import org.firstinspires.ftc.teamcode.Framework.Params.Artifact;
+import org.firstinspires.ftc.teamcode.Framework.Params.Motif;
 
 public abstract class BaseOpMode extends LinearOpMode {
     protected Drivetrain drivetrain;
@@ -88,9 +90,9 @@ public abstract class BaseOpMode extends LinearOpMode {
         spindexer = new Spindexer(hardwareMap.get(Servo.class, "spindexerServo"));
         if (auto) { // TODO: change based on preload
             spindexer.setSlotOut(1);
-            spindexer.setContents(1, Params.Artifact.GREEN);
-            spindexer.setContents(2, Params.Artifact.PURPLE);
-            spindexer.setContents(3, Params.Artifact.PURPLE);
+            spindexer.setContents(1, Artifact.GREEN);
+            spindexer.setContents(2, Artifact.PURPLE);
+            spindexer.setContents(3, Artifact.PURPLE);
         }
 
         colorSensor = new SensorColor (hardwareMap.get(RevColorSensorV3.class, "colorSensor"));
@@ -252,9 +254,9 @@ public abstract class BaseOpMode extends LinearOpMode {
     public class DetectArtifact implements Action {
         @Override
         public boolean run(@NonNull TelemetryPacket packet) {
-            Params.Artifact detected = colorSensor.getArtifact();
+            Artifact detected = colorSensor.getArtifact();
             spindexer.setContents(detected);
-            return spindexer.getContents(spindexer.getCurrentSlot())==null;
+            return spindexer.getContents(spindexer.getCurrentSlot())==Artifact.NONE;
         }
     }
     public Action detectArtifact() { return new DetectArtifact(); }
@@ -262,7 +264,7 @@ public abstract class BaseOpMode extends LinearOpMode {
     public class ScanMotif implements Action {
         @Override
         public boolean run(@NonNull TelemetryPacket packet) {
-            Params.Motif motif = vision.getObeliskMotif();
+            Motif motif = vision.getObeliskMotif();
 
             if(motif != null){
                 Params.motif = motif;
