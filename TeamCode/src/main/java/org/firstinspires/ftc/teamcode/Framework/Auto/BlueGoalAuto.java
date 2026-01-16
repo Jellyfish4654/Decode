@@ -19,7 +19,7 @@ import org.firstinspires.ftc.teamcode.Framework.Params;
 
 @Config
 @Autonomous(name = "Blue Goal", preselectTeleOp = "JellyTele")
-public class BlueGoalAuto extends ActionCompiler {
+public class BlueGoalAuto extends BaseAuto {
     //poses
     Pose2d scanPose;
     Pose2d shootPose;

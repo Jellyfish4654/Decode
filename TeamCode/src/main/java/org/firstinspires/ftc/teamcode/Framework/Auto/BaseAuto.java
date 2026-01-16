@@ -13,7 +13,7 @@ import org.firstinspires.ftc.teamcode.Framework.BaseOpMode;
 import org.firstinspires.ftc.teamcode.Framework.Params;
 import org.firstinspires.ftc.teamcode.JellyTele;
 
-public abstract class ActionCompiler extends BaseOpMode {
+public abstract class BaseAuto extends BaseOpMode {
     // ↓ -------------- ↓ -------------- ↓ AUTO SHOOTING ACTIONS ↓ -------------- ↓ -------------- ↓
     SequentialAction swingPaddle () {
         return new SequentialAction(

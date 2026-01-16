@@ -22,7 +22,7 @@ import org.firstinspires.ftc.teamcode.JellyTele;
 
 @Config
 @Autonomous(name = "Blue Audience", preselectTeleOp = "JellyTele")
-public class BlueAudienceAuto extends BaseOpMode {
+public class BlueAudienceAuto extends BaseAuto {
     Pose2d scanPose;
     Pose2d shootPose;
     @Override
@@ -125,13 +125,13 @@ public class BlueAudienceAuto extends BaseOpMode {
                                 outtake.outtakeOnFar(),
                                 new SleepAction(JellyTele.SPIN_OUTTAKE_DELAY_LONG/1000.0)
                         ),
-                        swingPaddle,
+                        swingPaddle(),
                         new ParallelAction(
                                 spindexer.greenOut(),
                                 outtake.outtakeOnFar(),
                                 new SleepAction(JellyTele.SPIN_OUTTAKE_DELAY_SHORT/1000.0)
                         ),
-                        swingPaddle,
+                        swingPaddle(),
                         outtake.outtakeOff(),
                         motifOneCollector,
                         shootTwo.build(),
