@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.Framework.Auto;
 
+import android.app.Notification;
+
 import androidx.annotation.NonNull;
 
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
@@ -12,14 +14,34 @@ import com.acmerobotics.roadrunner.ftc.Actions;
 import org.firstinspires.ftc.teamcode.Framework.BaseOpMode;
 import org.firstinspires.ftc.teamcode.Framework.Params;
 import org.firstinspires.ftc.teamcode.JellyTele;
+import org.firstinspires.ftc.teamcode.Framework.Params.Artifact;
 
 public abstract class BaseAuto extends BaseOpMode {
     // ↓ -------------- ↓ -------------- ↓ AUTO SHOOTING ACTIONS ↓ -------------- ↓ -------------- ↓
+    public class SpindexerTelemetry implements Action {
+        int time = 0;
+        SpindexerTelemetry (int t){
+            time = t;
+        }
+        @Override
+        public boolean run(@NonNull TelemetryPacket packet) {
+            telemetry.addLine(String.format("This time is the %s time.", time));
+            telemetry.addLine(String.format("%s: Spindexer slot: %s", spindexer.getCurrentSlot(),time));
+            telemetry.addLine(String.format("%s: Slot 1: %s", spindexer.getContents(1),time));
+            telemetry.addLine(String.format("%s: Slot 2: %s", spindexer.getContents(2),time));
+            telemetry.addLine(String.format("%s: Slot 3: %s", spindexer.getContents(3),time));
+            telemetry.update();
+            return false;
+        }
+    }
+    
+    public Action spindexerTelemetry(int time) { return new SpindexerTelemetry(time); }
     SequentialAction swingPaddle() { return new SequentialAction(
             paddle.paddleUp(),
-            new SleepAction(0.5),
+            new SleepAction(0.3),
             paddle.paddleDown(),
-            new SleepAction(0.5)
+            new SleepAction(0.3),
+            spindexer.contentsSet(Artifact.NONE)
     );}
 
     SequentialAction shootGPP() { return new SequentialAction(
@@ -74,16 +96,22 @@ public abstract class BaseAuto extends BaseOpMode {
             switch (Params.motif) {
                 case GPP:
                     Actions.runBlocking(
-                            shootGPP()
+                            new ParallelAction(
+                                    shootGPP(),
+                                    spindexerTelemetry(1)
+                            )
                     );
+                    break;
                 case PGP:
                     Actions.runBlocking(
                             shootPGP()
                     );
+                    break;
                 case PPG:
                     Actions.runBlocking(
                             shootPPG()
                     );
+                    break;
 
             }
             return false;

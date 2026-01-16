@@ -144,18 +144,26 @@ public class Spindexer {
     public class ContentsSet implements Action{
         private final Params.Artifact artifact;
         private final int slot;
+        private final boolean runWithSlot;
         ContentsSet (Params.Artifact artifact){
             this.artifact = artifact;
-            this.slot = getCurrentSlot();
+            this.slot = Math.abs(getCurrentSlot());
+            runWithSlot = false;
         }
         ContentsSet (Params.Artifact artifact, int slot){
             this.artifact = artifact;
-            this.slot = slot;
+            this.slot = Math.abs(slot);
+            runWithSlot = true;
         }
         @Override
         public boolean run(@NonNull TelemetryPacket packet) {
-            setContents(slot,artifact);
-            return getContents(slot)==null;
+            if(runWithSlot){
+                setContents(slot,artifact);
+            }else{
+                setContents(artifact);
+            }
+            
+            return false;
         }
     }
 

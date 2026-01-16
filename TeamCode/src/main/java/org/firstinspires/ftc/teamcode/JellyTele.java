@@ -22,7 +22,7 @@ public class JellyTele extends BaseOpMode {
     public static double STRAFE_ADJUSTMENT_FACTOR = 1.08;
     
     public static long SPIN_INTAKE_DELAY = 550; // in millis -- also used with outtake when held
-    public static long SPIN_OUTTAKE_DELAY_LONG = 2500; // in millis -- TODO: adjust with new motor and belt after powers and voltage compensation work
+    public static long SPIN_OUTTAKE_DELAY_LONG = 2700; // in millis -- TODO: adjust with new motor and belt after powers and voltage compensation work
     public static long SPIN_OUTTAKE_DELAY_SHORT = 1000; // in millis
     public static long OUTTAKE_DELAY = 500; // in millis
     

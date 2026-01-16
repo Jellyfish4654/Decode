@@ -149,8 +149,8 @@ public class Vision {
         this.visionPortal = new VisionPortal.Builder()
                 .setCamera(cameraName)
                 .addProcessor(this.aprilTag)
-                .addProcessor(this.purpleArtifactDetector)
-                .addProcessor(this.greenArtifactDetector)
+                //.addProcessor(this.purpleArtifactDetector)
+                //.addProcessor(this.greenArtifactDetector)
                 //.addProcessor(dashboardProcessor) // FTC Dashboard livestream
                 //lower resolution possibly might make code faster if possible (ex 320, 240)
                 //however, camera will need to be calibrated and itll probably be a pain
