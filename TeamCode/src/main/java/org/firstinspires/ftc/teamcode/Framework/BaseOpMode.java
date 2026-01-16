@@ -4,6 +4,10 @@ import androidx.annotation.NonNull;
 
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.acmerobotics.roadrunner.Action;
+import com.acmerobotics.roadrunner.ParallelAction;
+import com.acmerobotics.roadrunner.SequentialAction;
+import com.acmerobotics.roadrunner.SleepAction;
+import com.acmerobotics.roadrunner.ftc.Actions;
 import com.qualcomm.hardware.rev.RevColorSensorV3;
 import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
@@ -14,15 +18,16 @@ import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.VoltageSensor;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
-
 import org.firstinspires.ftc.teamcode.Framework.Hardware.Drivetrain;
-import org.firstinspires.ftc.teamcode.Framework.Hardware.Paddle;
 import org.firstinspires.ftc.teamcode.Framework.Hardware.Intake;
 import org.firstinspires.ftc.teamcode.Framework.Hardware.Outtake;
+import org.firstinspires.ftc.teamcode.Framework.Hardware.Paddle;
 import org.firstinspires.ftc.teamcode.Framework.Hardware.PaddleMotor;
 import org.firstinspires.ftc.teamcode.Framework.Hardware.SensorColor;
 import org.firstinspires.ftc.teamcode.Framework.Hardware.Spindexer;
 import org.firstinspires.ftc.teamcode.Framework.Hardware.Vision;
+import org.firstinspires.ftc.teamcode.JellyTele;
+
 public abstract class BaseOpMode extends LinearOpMode {
     protected Drivetrain drivetrain;
     protected Paddle paddle;
@@ -95,6 +100,100 @@ public abstract class BaseOpMode extends LinearOpMode {
         controller = new Controller(gamepad1,gamepad2);
 
         imuSensor = initializeIMUSensor();
+        
+        // ↓ -------------- ↓ -------------- ↓ AUTO SHOOTING ACTIONS UNTIL INIT IMU ↓ -------------- ↓ -------------- ↓
+        
+        shootGPP = new SequentialAction (
+                new ParallelAction(
+                        spindexer.greenOut(),
+                        outtake.outtakeOnNear(),
+                        new SleepAction(JellyTele.SPIN_OUTTAKE_DELAY_LONG/1000.0)
+                ),
+                new SequentialAction(
+                        paddle.paddleUp(),
+                        new SleepAction(0.5),
+                        paddle.paddleDown(),
+                        new SleepAction(0.5)
+                ),
+                spindexer.purpleOut(),
+                new SleepAction(JellyTele.SPIN_OUTTAKE_DELAY_SHORT/1000.0),
+                new SequentialAction(
+                        paddle.paddleUp(),
+                        new SleepAction(0.5),
+                        paddle.paddleDown(),
+                        new SleepAction(0.5)
+                ),
+                spindexer.purpleOut(),
+                new SleepAction(JellyTele.SPIN_OUTTAKE_DELAY_SHORT/1000.0),
+                new SequentialAction(
+                        paddle.paddleUp(),
+                        new SleepAction(0.5),
+                        paddle.paddleDown(),
+                        new SleepAction(0.5)
+                ),
+                outtake.outtakeOff()
+        );
+        
+        shootPGP = new SequentialAction (
+                new ParallelAction(
+                        spindexer.purpleOut(),
+                        outtake.outtakeOnNear(),
+                        new SleepAction(JellyTele.SPIN_OUTTAKE_DELAY_LONG/1000.0)
+                ),
+                new SequentialAction(
+                        paddle.paddleUp(),
+                        new SleepAction(0.5),
+                        paddle.paddleDown(),
+                        new SleepAction(0.5)
+                ),
+                spindexer.greenOut(),
+                new SleepAction(JellyTele.SPIN_OUTTAKE_DELAY_SHORT/1000.0),
+                new SequentialAction(
+                        paddle.paddleUp(),
+                        new SleepAction(0.5),
+                        paddle.paddleDown(),
+                        new SleepAction(0.5)
+                ),
+                spindexer.purpleOut(),
+                new SleepAction(JellyTele.SPIN_OUTTAKE_DELAY_SHORT/1000.0),
+                new SequentialAction(
+                        paddle.paddleUp(),
+                        new SleepAction(0.5),
+                        paddle.paddleDown(),
+                        new SleepAction(0.5)
+                ),
+                outtake.outtakeOff()
+        );
+        shootPPG = new SequentialAction (
+                new ParallelAction(
+                        spindexer.purpleOut(),
+                        outtake.outtakeOnNear(),
+                        new SleepAction(JellyTele.SPIN_OUTTAKE_DELAY_SHORT/1000.0)
+                ),
+                new SequentialAction(
+                        paddle.paddleUp(),
+                        new SleepAction(0.5),
+                        paddle.paddleDown(),
+                        new SleepAction(0.5)
+                ),
+                spindexer.purpleOut(),
+                new SleepAction(JellyTele.SPIN_OUTTAKE_DELAY_SHORT/1000.0),
+                new SequentialAction(
+                        paddle.paddleUp(),
+                        new SleepAction(0.5),
+                        paddle.paddleDown(),
+                        new SleepAction(0.5)
+                ),
+                spindexer.greenOut(),
+                new SleepAction(JellyTele.SPIN_OUTTAKE_DELAY_SHORT/1000.0),
+                new SequentialAction(
+                        paddle.paddleUp(),
+                        new SleepAction(0.5),
+                        paddle.paddleDown(),
+                        new SleepAction(0.5)
+                ),
+                outtake.outtakeOff()
+        );
     }
     
     private IMU initializeIMUSensor()
@@ -119,8 +218,36 @@ public abstract class BaseOpMode extends LinearOpMode {
             paddleMotor.deenergize();
         }
     }
-
-
+    
+    // ↓ -------------- ↓ -------------- ↓ AUTO SHOOTING ACTIONS ↓ -------------- ↓ -------------- ↓
+    public SequentialAction swingPaddle;
+    public SequentialAction shootGPP;
+    
+    public SequentialAction shootPGP;
+    public SequentialAction shootPPG;
+    public class ShootMotif implements Action {
+        @Override
+        public boolean run(@NonNull TelemetryPacket packet) {
+            switch (Params.motif) {
+                case GPP:
+                    Actions.runBlocking(
+                            shootGPP
+                    );
+                case PGP:
+                    Actions.runBlocking(
+                            shootPGP
+                    );
+                case PPG:
+                    Actions.runBlocking(
+                            shootPPG
+                    );
+                
+            }
+            return false;
+        }
+    }
+    
+    
     // ↓ -------------- ↓ -------------- ↓ EXTRA AUTO ACTIONS ↓ -------------- ↓ -------------- ↓
     public class DetectArtifact implements Action {
         @Override

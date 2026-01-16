@@ -83,73 +83,7 @@ public class BlueGoalAuto extends BaseOpMode {
 
         TrajectoryActionBuilder moveToShootThird = drive.actionBuilder(thirdPose) // ignore unless doing 12 ball
                 .strafeToLinearHeading(new Vector2d(-23.5, -23.5), Math.toRadians(225));
-
-        // ↓ -------------- ↓ -------------- ↓ SHOOTING ACTIONS ↓ -------------- ↓ -------------- ↓
-        SequentialAction swingPaddle = new SequentialAction(
-                paddle.paddleUp(),
-                new SleepAction(0.1),
-                paddle.paddleDown()
-        );
-
-        SequentialAction shootGPP = new SequentialAction (
-                new ParallelAction(
-                        spindexer.greenOut(),
-                        outtake.outtakeOnNear()
-                ),
-                swingPaddle,
-                spindexer.purpleOut(),
-                swingPaddle,
-                spindexer.purpleOut(),
-                swingPaddle,
-                outtake.outtakeOff()
-        );
-
-        SequentialAction shootPGP = new SequentialAction (
-                new ParallelAction(
-                        spindexer.purpleOut(),
-                        outtake.outtakeOnNear()
-                ),
-                swingPaddle,
-                spindexer.greenOut(),
-                swingPaddle,
-                spindexer.purpleOut(),
-                swingPaddle,
-                outtake.outtakeOff()
-        );
-        SequentialAction shootPPG = new SequentialAction (
-                new ParallelAction(
-                        spindexer.purpleOut(),
-                        outtake.outtakeOnNear()
-                ),
-                swingPaddle,
-                spindexer.purpleOut(),
-                swingPaddle,
-                spindexer.greenOut(),
-                swingPaddle,
-                outtake.outtakeOff()
-        );
-
-        class ShootMotif implements Action {
-            @Override
-            public boolean run(@NonNull TelemetryPacket packet) {
-                switch (Params.motif) {
-                    case GPP:
-                        Actions.runBlocking(
-                                shootGPP
-                        );
-                    case PGP:
-                        Actions.runBlocking(
-                                shootPGP
-                        );
-                    case PPG:
-                        Actions.runBlocking(
-                                shootPPG
-                        );
-
-                }
-                return false;
-            }
-        }
+        
 
         // ↓ -------------- ↓ -------------- ↓ AUTO ↓ -------------- ↓ -------------- ↓
 

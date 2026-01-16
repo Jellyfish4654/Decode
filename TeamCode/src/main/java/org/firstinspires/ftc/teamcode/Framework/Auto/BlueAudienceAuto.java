@@ -18,6 +18,7 @@ import org.firstinspires.ftc.teamcode.Framework.Auto.RoadRunner.MecanumDrive;
 import org.firstinspires.ftc.teamcode.Framework.BaseOpMode;
 import org.firstinspires.ftc.teamcode.Framework.Hardware.Spindexer;
 import org.firstinspires.ftc.teamcode.Framework.Params;
+import org.firstinspires.ftc.teamcode.JellyTele;
 
 @Config
 @Autonomous(name = "Blue Audience", preselectTeleOp = "JellyTele")
@@ -98,75 +99,6 @@ public class BlueAudienceAuto extends BaseOpMode {
                 .lineToX(30);
 
 
-        // ↓ -------------- ↓ -------------- ↓ SHOOTING ACTIONS ↓ -------------- ↓ -------------- ↓
-        SequentialAction swingPaddle = new SequentialAction(
-                paddle.paddleUp(),
-                new SleepAction(0.1),
-                paddle.paddleDown()
-        );
-
-        SequentialAction shootGPP = new SequentialAction (
-                new ParallelAction(
-                        spindexer.greenOut(),
-                        outtake.outtakeOnNear()
-                ),
-                swingPaddle,
-                spindexer.purpleOut(),
-                swingPaddle,
-                spindexer.purpleOut(),
-                swingPaddle,
-                outtake.outtakeOff()
-        );
-
-        SequentialAction shootPGP = new SequentialAction (
-                new ParallelAction(
-                        spindexer.purpleOut(),
-                        outtake.outtakeOnNear()
-                ),
-                swingPaddle,
-                spindexer.greenOut(),
-                swingPaddle,
-                spindexer.purpleOut(),
-                swingPaddle,
-                outtake.outtakeOff()
-        );
-        SequentialAction shootPPG = new SequentialAction (
-                new ParallelAction(
-                        spindexer.purpleOut(),
-                        outtake.outtakeOnNear()
-                ),
-                swingPaddle,
-                spindexer.purpleOut(),
-                swingPaddle,
-                spindexer.greenOut(),
-                swingPaddle,
-                outtake.outtakeOff()
-        );
-
-
-        class ShootMotif implements Action {
-            @Override
-            public boolean run(@NonNull TelemetryPacket packet) {
-                switch (Params.motif) {
-                    case GPP:
-                        Actions.runBlocking(
-                                shootGPP
-                        );
-                    case PGP:
-                        Actions.runBlocking(
-                                shootPGP
-                        );
-                    case PPG:
-                        Actions.runBlocking(
-                                shootPPG
-                        );
-
-                }
-                return false;
-            }
-        }
-
-
         // ↓ -------------- ↓ -------------- ↓ AUTO ↓ -------------- ↓ -------------- ↓
 
         waitForStart();
@@ -190,12 +122,14 @@ public class BlueAudienceAuto extends BaseOpMode {
                         shootOne.build(),
                         new ParallelAction(
                                 spindexer.purpleOut(),
-                                outtake.outtakeOnFar()
+                                outtake.outtakeOnFar(),
+                                new SleepAction(JellyTele.SPIN_OUTTAKE_DELAY_LONG/1000.0)
                         ),
                         swingPaddle,
                         new ParallelAction(
                                 spindexer.greenOut(),
-                                outtake.outtakeOnFar()
+                                outtake.outtakeOnFar(),
+                                new SleepAction(JellyTele.SPIN_OUTTAKE_DELAY_SHORT/1000.0)
                         ),
                         swingPaddle,
                         outtake.outtakeOff(),

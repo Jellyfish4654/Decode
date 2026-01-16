@@ -22,7 +22,8 @@ public class JellyTele extends BaseOpMode {
     public static double STRAFE_ADJUSTMENT_FACTOR = 1.08;
     
     public static long SPIN_INTAKE_DELAY = 550; // in millis -- also used with outtake when held
-    public static long SPIN_OUTTAKE_DELAY = 2500; // TODO: adjust with new motor and belt after powers and voltage compensation work
+    public static long SPIN_OUTTAKE_DELAY_LONG = 2500; // in millis -- TODO: adjust with new motor and belt after powers and voltage compensation work
+    public static long SPIN_OUTTAKE_DELAY_SHORT = 1000; // in millis
     public static long OUTTAKE_DELAY = 500; // in millis
     
     public static double DISTANCE_TOO_FAR = 200; // TODO: Adjust near/far distances
@@ -47,7 +48,7 @@ public class JellyTele extends BaseOpMode {
     private long spindexerStartTime = 0;
     private long outtakeStartTime = 0;
     private double aimRotation = 0;
-    private long spinOuttakeDelaySkip = SPIN_OUTTAKE_DELAY;
+    private long spinOuttakeDelaySkip = SPIN_OUTTAKE_DELAY_LONG;
 
     
     @Override
@@ -94,7 +95,7 @@ public class JellyTele extends BaseOpMode {
             paddleDown();
             spindexer.setContents(Artifact.NONE);
             spinState = SpinState.STANDBY;
-            spinOuttakeDelaySkip = SPIN_INTAKE_DELAY;
+            spinOuttakeDelaySkip = SPIN_OUTTAKE_DELAY_SHORT;
         } else if (spinState == SpinState.SPIN_INTAKE && spinInCompleted) {
             intake.on();
             spinState = SpinState.INTAKING;
@@ -126,12 +127,12 @@ public class JellyTele extends BaseOpMode {
                     currentMotifArtifacts = Params.motifArtifacts.get(Params.motif);
                     motifOuttakeIndex = 0;
                 } else {
-                    spinOuttakeDelaySkip = SPIN_OUTTAKE_DELAY;
+                    spinOuttakeDelaySkip = SPIN_OUTTAKE_DELAY_LONG;
                 }
             } else { // Motif Outtake Logic ↓
                 if(motifOuttakeIndex >= 3){
                     motifOuttakeLock = false;
-                    spinOuttakeDelaySkip = SPIN_OUTTAKE_DELAY;
+                    spinOuttakeDelaySkip = SPIN_OUTTAKE_DELAY_LONG;
                 } else {
                     spinOuttake(currentMotifArtifacts[motifOuttakeIndex]);
                     motifOuttakeIndex += 1;
