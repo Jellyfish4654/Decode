@@ -15,66 +15,59 @@ import org.firstinspires.ftc.teamcode.JellyTele;
 
 public abstract class BaseAuto extends BaseOpMode {
     // ↓ -------------- ↓ -------------- ↓ AUTO SHOOTING ACTIONS ↓ -------------- ↓ -------------- ↓
-    SequentialAction swingPaddle () {
-        return new SequentialAction(
-                paddle.paddleUp(),
-                new SleepAction(0.5),
-                paddle.paddleDown(),
-                new SleepAction(0.5)
-        );
-    }
+    SequentialAction swingPaddle() { return new SequentialAction(
+            paddle.paddleUp(),
+            new SleepAction(0.5),
+            paddle.paddleDown(),
+            new SleepAction(0.5)
+    );}
 
-    SequentialAction shootGPP () {
-        return new SequentialAction(
-                new ParallelAction(
-                        spindexer.greenOut(),
-                        outtake.outtakeOnNear(),
-                        new SleepAction(JellyTele.SPIN_OUTTAKE_DELAY_LONG/1000.0)
-                ),
-                swingPaddle(),
-                spindexer.purpleOut(),
-                new SleepAction(JellyTele.SPIN_OUTTAKE_DELAY_SHORT/1000.0),
-                swingPaddle(),
-                spindexer.purpleOut(),
-                new SleepAction(JellyTele.SPIN_OUTTAKE_DELAY_SHORT/1000.0),
-                swingPaddle(),
-                outtake.outtakeOff()
-        );
-    }
-    SequentialAction shootPGP () {
-        return new SequentialAction(
-                new ParallelAction(
-                        spindexer.purpleOut(),
-                        outtake.outtakeOnNear(),
-                        new SleepAction(JellyTele.SPIN_OUTTAKE_DELAY_LONG/1000.0)
-                ),
-                swingPaddle(),
-                spindexer.greenOut(),
-                new SleepAction(JellyTele.SPIN_OUTTAKE_DELAY_SHORT/1000.0),
-                swingPaddle(),
-                spindexer.purpleOut(),
-                new SleepAction(JellyTele.SPIN_OUTTAKE_DELAY_SHORT/1000.0),
-                swingPaddle(),
-                outtake.outtakeOff()
-        );
-    }
-    SequentialAction shootPPG () {
-        return new SequentialAction(
-                new ParallelAction(
-                        spindexer.purpleOut(),
-                        outtake.outtakeOnNear(),
-                        new SleepAction(JellyTele.SPIN_OUTTAKE_DELAY_LONG/1000.0)
-                ),
-                swingPaddle(),
-                spindexer.purpleOut(),
-                new SleepAction(JellyTele.SPIN_OUTTAKE_DELAY_SHORT/1000.0),
-                swingPaddle(),
-                spindexer.greenOut(),
-                new SleepAction(JellyTele.SPIN_OUTTAKE_DELAY_SHORT/1000.0),
-                swingPaddle(),
-                outtake.outtakeOff()
-        );
-    }
+    SequentialAction shootGPP() { return new SequentialAction(
+            new ParallelAction(
+                    spindexer.greenOut(),
+                    outtake.outtakeOnNear(),
+                    new SleepAction(JellyTele.SPIN_OUTTAKE_DELAY_LONG/1000.0)
+            ),
+            swingPaddle(),
+            spindexer.purpleOut(),
+            new SleepAction(JellyTele.SPIN_OUTTAKE_DELAY_SHORT/1000.0),
+            swingPaddle(),
+            spindexer.purpleOut(),
+            new SleepAction(JellyTele.SPIN_OUTTAKE_DELAY_SHORT/1000.0),
+            swingPaddle(),
+            outtake.outtakeOff()
+    );}
+    SequentialAction shootPGP() { return new SequentialAction(
+            new ParallelAction(
+                    spindexer.purpleOut(),
+                    outtake.outtakeOnNear(),
+                    new SleepAction(JellyTele.SPIN_OUTTAKE_DELAY_LONG/1000.0)
+            ),
+            swingPaddle(),
+            spindexer.greenOut(),
+            new SleepAction(JellyTele.SPIN_OUTTAKE_DELAY_SHORT/1000.0),
+            swingPaddle(),
+            spindexer.purpleOut(),
+            new SleepAction(JellyTele.SPIN_OUTTAKE_DELAY_SHORT/1000.0),
+            swingPaddle(),
+            outtake.outtakeOff()
+    );}
+    SequentialAction shootPPG() { return new SequentialAction(
+            new ParallelAction(
+                    spindexer.purpleOut(),
+                    outtake.outtakeOnNear(),
+                    new SleepAction(JellyTele.SPIN_OUTTAKE_DELAY_LONG/1000.0)
+            ),
+            swingPaddle(),
+            spindexer.purpleOut(),
+            new SleepAction(JellyTele.SPIN_OUTTAKE_DELAY_SHORT/1000.0),
+            swingPaddle(),
+            spindexer.greenOut(),
+            new SleepAction(JellyTele.SPIN_OUTTAKE_DELAY_SHORT/1000.0),
+            swingPaddle(),
+            outtake.outtakeOff()
+    );}
+    
     public class ShootMotif implements Action {
         @Override
         public boolean run(@NonNull TelemetryPacket packet) {
