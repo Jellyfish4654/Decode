@@ -93,7 +93,6 @@ public class BlueGoalAuto extends BaseAuto {
                         moveToScan.build(),
                         scanMotif(),
                         moveToShootPreload.build(),
-
                         new ShootMotif(),
                         intake.intakeOn(),
                         new ParallelAction(
