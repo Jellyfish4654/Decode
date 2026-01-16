@@ -15,12 +15,11 @@ import com.acmerobotics.roadrunner.ftc.Actions;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
 import org.firstinspires.ftc.teamcode.Framework.Auto.RoadRunner.MecanumDrive;
-import org.firstinspires.ftc.teamcode.Framework.BaseOpMode;
 import org.firstinspires.ftc.teamcode.Framework.Params;
 
 @Config
 @Autonomous(name = "Blue Goal", preselectTeleOp = "JellyTele")
-public class BlueGoalAuto extends BaseOpMode {
+public class BlueGoalAuto extends ActionCompiler {
     //poses
     Pose2d scanPose;
     Pose2d shootPose;
