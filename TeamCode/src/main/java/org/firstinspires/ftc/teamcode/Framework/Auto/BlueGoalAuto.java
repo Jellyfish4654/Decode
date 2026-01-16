@@ -16,6 +16,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
 import org.firstinspires.ftc.teamcode.Framework.Auto.RoadRunner.MecanumDrive;
 import org.firstinspires.ftc.teamcode.Framework.Params;
+import org.firstinspires.ftc.teamcode.JellyTele;
 
 @Config
 @Autonomous(name = "Blue Goal", preselectTeleOp = "JellyTele")
@@ -61,7 +62,7 @@ public class BlueGoalAuto extends BaseAuto {
 
         TrajectoryActionBuilder collectSecond = drive.actionBuilder(shootPose)
                 .strafeToLinearHeading(new Vector2d(12, -39), Math.toRadians(270))
-                .strafeToConstantHeading(new Vector2d(12,-44))
+                .strafeToConstantHeading(new Vector2d(12,-34))
                 .waitSeconds(1)
                 .strafeToConstantHeading(new Vector2d(12,-39))
                 .waitSeconds(1)
@@ -100,30 +101,31 @@ public class BlueGoalAuto extends BaseAuto {
                                 new SequentialAction(
                                         spindexer.slotIn(),
                                         spindexer.contentsSet(Params.Artifact.PURPLE),
-                                        new SleepAction(0.75),
+                                        new SleepAction(1),
                                         spindexer.slotIn(),
                                         spindexer.contentsSet(Params.Artifact.PURPLE),
-                                        new SleepAction(0.75),
+                                        new SleepAction(1),
                                         spindexer.slotIn(),
                                         spindexer.contentsSet(Params.Artifact.GREEN),
-                                        new SleepAction(0.75),
+                                        new SleepAction(1),
                                         intake.intakeOff()
                                 )
                         ),
                         moveToShootFirst.build(),
                         new ShootMotif(),
+                        intake.intakeOn(),
                         new ParallelAction(
                                 collectSecond.build(),
                                 new SequentialAction(
                                         spindexer.slotIn(),
                                         spindexer.contentsSet(Params.Artifact.PURPLE),
-                                        new SleepAction(0.75),
+                                        new SleepAction(1),
                                         spindexer.slotIn(),
                                         spindexer.contentsSet(Params.Artifact.GREEN),
-                                        new SleepAction(0.75),
+                                        new SleepAction(1),
                                         spindexer.slotIn(),
                                         spindexer.contentsSet(Params.Artifact.PURPLE),
-                                        new SleepAction(0.75),
+                                        new SleepAction(1),
                                         intake.intakeOff()
                                 )
                         ),
