@@ -1,13 +1,5 @@
 package org.firstinspires.ftc.teamcode.Framework;
 
-import androidx.annotation.NonNull;
-
-import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
-import com.acmerobotics.roadrunner.Action;
-import com.acmerobotics.roadrunner.ParallelAction;
-import com.acmerobotics.roadrunner.SequentialAction;
-import com.acmerobotics.roadrunner.SleepAction;
-import com.acmerobotics.roadrunner.ftc.Actions;
 import com.qualcomm.hardware.rev.RevColorSensorV3;
 import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
@@ -26,9 +18,7 @@ import org.firstinspires.ftc.teamcode.Framework.Hardware.PaddleMotor;
 import org.firstinspires.ftc.teamcode.Framework.Hardware.SensorColor;
 import org.firstinspires.ftc.teamcode.Framework.Hardware.Spindexer;
 import org.firstinspires.ftc.teamcode.Framework.Hardware.Vision;
-import org.firstinspires.ftc.teamcode.JellyTele;
 import org.firstinspires.ftc.teamcode.Framework.Params.Artifact;
-import org.firstinspires.ftc.teamcode.Framework.Params.Motif;
 
 public abstract class BaseOpMode extends LinearOpMode {
     protected Drivetrain drivetrain;
