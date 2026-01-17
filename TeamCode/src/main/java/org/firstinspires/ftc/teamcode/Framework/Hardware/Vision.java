@@ -91,7 +91,7 @@ public class Vision {
     public static int GAIN = 25; // TODO: tune gain in each environment
     public static long EXPOSURE = 30;
     
-    public static double GOAL_BEARING_DEADBAND = 2; // +- degrees that aim correction is not applied
+    public static double GOAL_BEARING_DEADBAND = 3; // +- degrees that aim correction is not applied
 
 
     private CameraName name;

@@ -15,7 +15,7 @@ public class Outtake {
     private final VoltageSensor voltageSensor;
     
     // TODO: tune near and far power
-    public static double NEAR_POWER = 0.87;
+    public static double NEAR_POWER = 0.89;
     public static double FAR_POWER = 1;
     public static double GUIDING_POWER = 1;
     public static double VOLTAGE_COMP_STRENGTH = 1.3; // TODO: tune strength
@@ -60,7 +60,7 @@ public class Outtake {
     }
     
     public double getVoltageCompensation() {
-        return Math.pow((12.0 / voltageSensor.getVoltage()), VOLTAGE_COMP_STRENGTH);
+        return Math.max(Math.pow((12.0 / voltageSensor.getVoltage()), VOLTAGE_COMP_STRENGTH), 1);
         // Math.pow allows 12/12 to still be 1, while 10/12 to be larger than 1.2
     }
     
