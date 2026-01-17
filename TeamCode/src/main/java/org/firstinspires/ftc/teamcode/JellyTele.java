@@ -86,11 +86,11 @@ public class JellyTele extends BaseOpMode {
         if (controller.revIntake() && !reversingIntake) { // TODO: this could prob be improved
             spindexer.deenergize();
             intake.reverse();
+            paddleDown();
+            outtake.off();
             reversingIntake = true;
         } else if (reversingIntake && !controller.revIntake()) { // reset everything and go to standby
             intake.off();
-            paddleDown();
-            outtake.off();
             spindexer.energize();
             spinPostIntake();
             motifOuttakeLock = false;

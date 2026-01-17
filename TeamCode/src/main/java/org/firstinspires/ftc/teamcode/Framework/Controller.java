@@ -75,7 +75,7 @@ public class Controller {
         this.outPurpleBtn = Button.PRIMARY_SQUARE;
         this.outMotifBtn = Button.PRIMARY_CROSS;
         this.intakeBtn = Button.PRIMARY_RIGHT_TRIGGER_BUTTON;
-        this.revIntakeBtn = Button.PRIMARY_LEFT_TRIGGER_BUTTON;
+        this.revIntakeBtn = Button.SECONDARY_LEFT_TRIGGER_BUTTON;
 
         this.lowPrecisionBtn = Button.PRIMARY_LEFT_BUMPER;
         this.highPrecisionBtn = Button.PRIMARY_RIGHT_BUMPER;
