@@ -5,12 +5,18 @@ import androidx.annotation.NonNull;
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.acmerobotics.roadrunner.Action;
+import com.acmerobotics.roadrunner.Arclength;
+import com.acmerobotics.roadrunner.MecanumKinematics;
 import com.acmerobotics.roadrunner.ParallelAction;
 import com.acmerobotics.roadrunner.Pose2d;
+import com.acmerobotics.roadrunner.Pose2dDual;
+import com.acmerobotics.roadrunner.PosePath;
 import com.acmerobotics.roadrunner.SequentialAction;
 import com.acmerobotics.roadrunner.SleepAction;
 import com.acmerobotics.roadrunner.TrajectoryActionBuilder;
+import com.acmerobotics.roadrunner.TrajectoryBuilderParams;
 import com.acmerobotics.roadrunner.Vector2d;
+import com.acmerobotics.roadrunner.VelConstraint;
 import com.acmerobotics.roadrunner.ftc.Actions;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
@@ -37,6 +43,8 @@ public class BlueGoalAuto extends BaseAuto {
     Pose2d thirdPose;
     @Override
     public void runOpMode() throws InterruptedException {
+
+
         initHardware(true);
         Pose2d initialPose = new Pose2d(-61.5, -33, Math.toRadians(180));
         MecanumDrive drive = new MecanumDrive(hardwareMap, initialPose);
@@ -49,25 +57,25 @@ public class BlueGoalAuto extends BaseAuto {
         scanPose = new Pose2d(-47, -15, Math.toRadians(153.435)); //pos1
 
         TrajectoryActionBuilder moveToShootPreload = drive.actionBuilder(scanPose)
-                .strafeToLinearHeading(new Vector2d(-23.5, -23.5), Math.toRadians(225));
-        shootPose = new Pose2d (-23.5, -23.5, Math.toRadians(225)); //pos2
+                .strafeToLinearHeading(new Vector2d(-28, -28), Math.toRadians(225));
+        shootPose = new Pose2d (-28, -28, Math.toRadians(225)); //pos2
 
         TrajectoryActionBuilder moveToCollectFirst = drive.actionBuilder(shootPose)
                 .strafeToLinearHeading(new Vector2d(-13, -29), Math.toRadians(265));
         collectFirstPose = new Pose2d(-13, -29, Math.toRadians(265)); //pos3
 
         TrajectoryActionBuilder collectArtifact1 = drive.actionBuilder(collectFirstPose)
-                .strafeToConstantHeading(new Vector2d(-13,-34));
+                .strafeToConstantHeading(new Vector2d(-13,-34), intakeMovementConstraint);
 
         artifactPose1 = new Pose2d(-13, -34, Math.toRadians(265));
 
         TrajectoryActionBuilder collectArtifact2 = drive.actionBuilder(artifactPose1)
-                .strafeToConstantHeading(new Vector2d(-13,-39));
+                .strafeToConstantHeading(new Vector2d(-13,-39), intakeMovementConstraint);
 
         artifactPose2 = new Pose2d(-13, -39, Math.toRadians(265));
 
         TrajectoryActionBuilder collectArtifact3 = drive.actionBuilder(artifactPose2)
-                .strafeToConstantHeading(new Vector2d(-13,-44));
+                .strafeToConstantHeading(new Vector2d(-13,-44), intakeMovementConstraint);
 
         artifactPose3 = new Pose2d(-13, -44, Math.toRadians(265));
 
@@ -75,29 +83,29 @@ public class BlueGoalAuto extends BaseAuto {
         gatePose = null; //pos4
 
         TrajectoryActionBuilder moveToShootFirst = drive.actionBuilder(artifactPose3)
-                .strafeToLinearHeading(new Vector2d(-23.5, -23.5), Math.toRadians(225));
+                .strafeToLinearHeading(new Vector2d(-28, -28), Math.toRadians(225));
 
         TrajectoryActionBuilder moveToCollectSecond = drive.actionBuilder(shootPose)
                 .strafeToLinearHeading(new Vector2d(9, -29), Math.toRadians(260));
         collectFirstPose = new Pose2d(9, -29, Math.toRadians(260)); //pos3
 
         TrajectoryActionBuilder collectArtifact4 = drive.actionBuilder(collectFirstPose)
-                .strafeToConstantHeading(new Vector2d(9,-34));
+                .strafeToConstantHeading(new Vector2d(9,-34), intakeMovementConstraint);
 
         artifactPose4 = new Pose2d(9, -34, Math.toRadians(260));
 
         TrajectoryActionBuilder collectArtifact5 = drive.actionBuilder(artifactPose1)
-                .strafeToConstantHeading(new Vector2d(9,-39));
+                .strafeToConstantHeading(new Vector2d(9,-39), intakeMovementConstraint);
 
         artifactPose5 = new Pose2d(9, -39, Math.toRadians(260));
 
         TrajectoryActionBuilder collectArtifact6 = drive.actionBuilder(artifactPose2)
-                .strafeToConstantHeading(new Vector2d(9,-44));
+                .strafeToConstantHeading(new Vector2d(9,-44), intakeMovementConstraint);
 
         artifactPose6 = new Pose2d(9, -44, Math.toRadians(260));
 
         TrajectoryActionBuilder moveToShootSecond = drive.actionBuilder(artifactPose6)
-                .strafeToLinearHeading(new Vector2d(-23.5, -23.5), Math.toRadians(225));
+                .strafeToLinearHeading(new Vector2d(-28, -28), Math.toRadians(225));
 
         TrajectoryActionBuilder collectThird = drive.actionBuilder(shootPose) // ignore also unless doing 12 ball
                 .strafeToLinearHeading(new Vector2d(35.5, -31), Math.toRadians(270))
