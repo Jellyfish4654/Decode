@@ -18,7 +18,7 @@ import org.firstinspires.ftc.teamcode.Framework.Auto.RoadRunner.MecanumDrive;
 import org.firstinspires.ftc.teamcode.Framework.Params;
 import org.firstinspires.ftc.teamcode.JellyTele;
 <<<<<<< Updated upstream
-=======
+        =======
 import org.firstinspires.ftc.teamcode.Framework.Params.Artifact;
 >>>>>>> Stashed changes
 
@@ -29,6 +29,8 @@ public class RedGoalAuto extends BaseAuto {
     Pose2d scanPose;
     Pose2d shootPose;
     Pose2d gatePose;
+    Pose2d firstPose;
+    Pose2d secondPose;
     Pose2d collectFirstPose;
     Pose2d artifactPose1;
     Pose2d artifactPose2;
@@ -43,6 +45,7 @@ public class RedGoalAuto extends BaseAuto {
         initHardware(true);
         Pose2d initialPose = new Pose2d(-61.5, 33, Math.toRadians(180));
         MecanumDrive drive = new MecanumDrive(hardwareMap, initialPose);
+        Params.alliance = Params.Alliance.BLUE;
         Params.alliance = Params.Alliance.RED;
 
         // ↓ -------------- ↓ -------------- ↓ TRAJECTORIES ↓ -------------- ↓ -------------- ↓
@@ -88,6 +91,7 @@ public class RedGoalAuto extends BaseAuto {
         TrajectoryActionBuilder openGate; //ignore this unless we decide to go for 12 ball
         gatePose = null; //pos4
 
+        TrajectoryActionBuilder moveToShootFirst = drive.actionBuilder(firstPose)
         TrajectoryActionBuilder moveToShootFirst = drive.actionBuilder(artifactPose3)
                 .strafeToLinearHeading(new Vector2d(-23.5, 23.5), Math.toRadians(135));
 
@@ -116,6 +120,7 @@ public class RedGoalAuto extends BaseAuto {
 
         artifactPose5 = new Pose2d(9, 39, Math.toRadians(100));
 
+        TrajectoryActionBuilder moveToShootSecond = drive.actionBuilder(secondPose)
         TrajectoryActionBuilder collectArtifact6 = drive.actionBuilder(artifactPose2)
                 .strafeToConstantHeading(new Vector2d(9,44));
 
@@ -147,86 +152,90 @@ public class RedGoalAuto extends BaseAuto {
                         scanMotif(),
                         moveToShootPreload.build(),
                         new ShootMotif(),
-                        new ParallelAction(
-                                moveToCollectFirst.build(),
-                                intake.intakeOn(),
-                                spindexer.slotIn()
-                        ),
-                        new SequentialAction(
-                                collectArtifact1.build(),
-                                spindexer.contentsSet(Artifact.PURPLE),
-                                new ParallelAction(
-                                        spindexer.slotIn(),
-<<<<<<< Updated upstream
-                                        spindexer.contentsSet(Params.Artifact.PURPLE),
-                                        new SleepAction(1),
-                                        spindexer.slotIn(),
-                                        spindexer.contentsSet(Params.Artifact.PURPLE),
-                                        new SleepAction(1),
-                                        spindexer.slotIn(),
-                                        spindexer.contentsSet(Params.Artifact.GREEN),
-                                        new SleepAction(1),
-                                        intake.intakeOff()
-                                )
-=======
-                                        new SleepAction(JellyTele.SPIN_INTAKE_DELAY/1000)
-                                ),
-                                collectArtifact2.build(),
-                                spindexer.contentsSet(Artifact.PURPLE),
-                                new ParallelAction(
-                                        spindexer.slotIn(),
-                                        new SleepAction(JellyTele.SPIN_INTAKE_DELAY/1000)
-                                ),
-                                collectArtifact3.build(),
-                                spindexer.contentsSet(Artifact.GREEN),
-                                intake.intakeOff()
->>>>>>> Stashed changes
-                        ),
-                        moveToShootFirst.build(),
-                        new ShootMotif(),
                         intake.intakeOn(),
                         new ParallelAction(
-<<<<<<< Updated upstream
-                                collectSecond.build(),
+                                collectFirst.build(),
                                 new SequentialAction(
+                                        moveToCollectFirst.build(),
+                                        intake.intakeOn(),
+                                        spindexer.slotIn()
+                                ),
+                                new SequentialAction(
+                                        collectArtifact1.build(),
+                                        spindexer.contentsSet(Artifact.PURPLE),
+                                        new ParallelAction(
+                                                spindexer.slotIn(),
+                                                <<<<<<< Updated upstream
+                                        spindexer.contentsSet(Params.Artifact.PURPLE),
+                                        new SleepAction(1),
                                         spindexer.slotIn(),
                                         spindexer.contentsSet(Params.Artifact.PURPLE),
                                         new SleepAction(1),
                                         spindexer.slotIn(),
                                         spindexer.contentsSet(Params.Artifact.GREEN),
                                         new SleepAction(1),
-                                        spindexer.slotIn(),
-                                        spindexer.contentsSet(Params.Artifact.PURPLE),
-                                        new SleepAction(1),
                                         intake.intakeOff()
                                 )
-=======
-                                moveToCollectSecond.build(),
-                                intake.intakeOn(),
-                                spindexer.slotIn()
-                        ),
-                        new SequentialAction(
-                                collectArtifact4.build(),
-                                spindexer.contentsSet(Artifact.PURPLE),
-                                new ParallelAction(
-                                        spindexer.slotIn(),
+                                        =======
                                         new SleepAction(JellyTele.SPIN_INTAKE_DELAY/1000)
-                                ),
-                                collectArtifact5.build(),
-                                spindexer.contentsSet(Artifact.GREEN),
-                                new ParallelAction(
-                                        spindexer.slotIn(),
-                                        new SleepAction(JellyTele.SPIN_INTAKE_DELAY/1000)
-                                ),
-                                collectArtifact6.build(),
-                                spindexer.contentsSet(Artifact.PURPLE),
-                                intake.intakeOff()
->>>>>>> Stashed changes
                         ),
-                        moveToShootSecond.build(),
-                        new ShootMotif(),
-                        //get out of shooting zone
-                        drive.actionBuilder(shootPose).strafeTo(new Vector2d(-25,-45)).build()
+                        collectArtifact2.build(),
+                        spindexer.contentsSet(Artifact.PURPLE),
+                        new ParallelAction(
+                                spindexer.slotIn(),
+                                new SleepAction(JellyTele.SPIN_INTAKE_DELAY/1000)
+                        ),
+                        collectArtifact3.build(),
+                        spindexer.contentsSet(Artifact.GREEN),
+                        intake.intakeOff()
+                                >>>>>>> Stashed changes
+                ),
+                moveToShootFirst.build(),
+                new ShootMotif(),
+                intake.intakeOn(),
+                new ParallelAction(
+                        <<<<<<< Updated upstream
+                collectSecond.build(),
+                new SequentialAction(
+                        spindexer.slotIn(),
+                        spindexer.contentsSet(Params.Artifact.PURPLE),
+                        new SleepAction(1),
+                        spindexer.slotIn(),
+                        spindexer.contentsSet(Params.Artifact.GREEN),
+                        new SleepAction(1),
+                        spindexer.slotIn(),
+                        spindexer.contentsSet(Params.Artifact.PURPLE),
+                        new SleepAction(1),
+                        intake.intakeOff()
+                )
+                        =======
+                        moveToCollectSecond.build(),
+                intake.intakeOn(),
+                spindexer.slotIn()
+        ),
+                new SequentialAction(
+                        collectArtifact4.build(),
+                        spindexer.contentsSet(Artifact.PURPLE),
+                        new ParallelAction(
+                                spindexer.slotIn(),
+                                new SleepAction(JellyTele.SPIN_INTAKE_DELAY/1000)
+                        ),
+                        collectArtifact5.build(),
+                        spindexer.contentsSet(Artifact.GREEN),
+                        new ParallelAction(
+                                spindexer.slotIn(),
+                                new SleepAction(JellyTele.SPIN_INTAKE_DELAY/1000)
+                        ),
+                        collectArtifact6.build(),
+                        spindexer.contentsSet(Artifact.PURPLE),
+                        intake.intakeOff()
+                                >>>>>>> Stashed changes
+                ),
+
+                moveToShootSecond.build(),
+                new ShootMotif(),
+                //get out of shooting zone
+                drive.actionBuilder(shootPose).strafeTo(new Vector2d(-25,-45)).build()
                 )
         );
     }
@@ -274,10 +283,12 @@ public class RedGoalAuto extends BaseAuto {
                 } else if (posNum == 2) {
                     shootPose = calcPose;
                 } else if (posNum == 3) {
+                    firstPose = calcPose;
                     collectFirstPose = calcPose;
                 } else if (posNum == 4) {
                     gatePose = calcPose;
                 } else if (posNum == 5) {
+                    secondPose = calcPose;
                     collectSecondPose = calcPose;
                 } else if (posNum == 6) {
                     thirdPose = calcPose;
