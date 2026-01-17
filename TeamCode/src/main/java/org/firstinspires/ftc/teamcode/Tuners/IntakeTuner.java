@@ -32,7 +32,7 @@ public class IntakeTuner extends LinearOpMode
             }
             
             // triggers for quick control (left=negative, right=positive)
-            double speed = Math.max(Math.min(offset + (gamepad1.right_trigger-gamepad1.left_trigger),1),-1);;
+            double speed = Math.max(Math.min(offset + (gamepad1.right_trigger-gamepad1.left_trigger),1),-1);
             if (!frozen) {
                 power = speed;
                 intakeMotor.setPower(power);
