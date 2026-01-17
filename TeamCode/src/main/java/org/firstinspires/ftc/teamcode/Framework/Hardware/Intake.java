@@ -25,6 +25,10 @@ public class Intake {
     public void off() {
         intake.setPower(0);
     }
+
+    public void reverse() {
+        intake.setPower(-POWER);
+    }
     
     public boolean isOn() {
         return intake.getPower() != 0;

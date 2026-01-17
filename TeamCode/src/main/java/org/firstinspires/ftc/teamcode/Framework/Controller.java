@@ -51,6 +51,7 @@ public class Controller {
     Button outGreenBtn;
     Button outMotifBtn;
     Button intakeBtn;
+    Button revIntakeBtn;
     Button driveModeBtn;
     Button allianceRedBtn;
     Button allianceBlueBtn;
@@ -74,6 +75,7 @@ public class Controller {
         this.outPurpleBtn = Button.PRIMARY_SQUARE;
         this.outMotifBtn = Button.PRIMARY_CROSS;
         this.intakeBtn = Button.PRIMARY_RIGHT_TRIGGER_BUTTON;
+        this.revIntakeBtn = Button.PRIMARY_LEFT_TRIGGER_BUTTON;
 
         this.lowPrecisionBtn = Button.PRIMARY_LEFT_BUMPER;
         this.highPrecisionBtn = Button.PRIMARY_RIGHT_BUMPER;
@@ -278,6 +280,8 @@ public class Controller {
         return buttonIsOn(this.intakeBtn);
     }
 
+    public boolean revIntake() { return buttonIsOn(this.revIntakeBtn); }
+
     public boolean outPurple() {
         return buttonIsOn(this.outPurpleBtn);
     }
@@ -325,6 +329,8 @@ public class Controller {
     public boolean intakePressed() {
         return buttonPressed(this.intakeBtn);
     }
+
+    public boolean revIntakePressed() { return buttonPressed(this.revIntakeBtn); }
 
     public boolean outPurplePressed() {
         return buttonPressed(this.outPurpleBtn);

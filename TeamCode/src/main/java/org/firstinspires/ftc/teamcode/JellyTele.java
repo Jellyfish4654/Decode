@@ -78,11 +78,13 @@ public class JellyTele extends BaseOpMode {
 
     // main auxiliary logic for intake, spindexer, outtake, and vision integrations
     private void updateAux() {
-        boolean spinInCompleted = System.currentTimeMillis()-spindexerStartTime >= SPIN_INTAKE_DELAY;
-        boolean spinOutCompleted = System.currentTimeMillis()-spindexerStartTime >= spinOuttakeDelaySkip;
-        boolean outtakeCompleted = System.currentTimeMillis()-outtakeStartTime >= OUTTAKE_DELAY;
+        boolean spinInCompleted = System.currentTimeMillis() - spindexerStartTime >= SPIN_INTAKE_DELAY;
+        boolean spinOutCompleted = System.currentTimeMillis() - spindexerStartTime >= spinOuttakeDelaySkip;
+        boolean outtakeCompleted = System.currentTimeMillis() - outtakeStartTime >= OUTTAKE_DELAY;
         aimRotation = 0;
-        if (spinState == SpinState.INTAKING) {
+        if (controller.revIntake()) {
+            intake.reverse();
+        } else if (spinState == SpinState.INTAKING) {
             Artifact detectedArtifact = colorSensor.getArtifact();
             if (detectedArtifact != Artifact.NONE) {
                 intake.off();
