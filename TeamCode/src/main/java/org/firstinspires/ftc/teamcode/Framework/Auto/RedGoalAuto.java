@@ -16,6 +16,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
 import org.firstinspires.ftc.teamcode.Framework.Auto.RoadRunner.MecanumDrive;
 import org.firstinspires.ftc.teamcode.Framework.Params;
+import org.firstinspires.ftc.teamcode.JellyTele;
 
 @Config
 @Autonomous(name = "Red Goal", preselectTeleOp = "JellyTele")
@@ -45,12 +46,12 @@ public class RedGoalAuto extends BaseAuto {
         shootPose = new Pose2d (-23.5, 23.5, Math.toRadians(135)); //pos2
 
         TrajectoryActionBuilder collectFirst = drive.actionBuilder(shootPose)
-                .strafeToLinearHeading(new Vector2d(-11.5, 29), Math.toRadians(90))
-                .strafeToConstantHeading(new Vector2d(-11.5,34))
+                .strafeToLinearHeading(new Vector2d(-11.5, 27), Math.toRadians(90))
+                .strafeToConstantHeading(new Vector2d(-11.5,32))
                 .waitSeconds(1)
-                .strafeToConstantHeading(new Vector2d(-11.5,39))
+                .strafeToConstantHeading(new Vector2d(-11.5,37))
                 .waitSeconds(1)
-                .strafeToConstantHeading(new Vector2d(-11.5,44));
+                .strafeToConstantHeading(new Vector2d(-11.5,42));
         firstPose = new Pose2d(-11.5, -53, Math.toRadians(90)); //pos3
 
         TrajectoryActionBuilder openGate; //ignore this unless we decide to go for 12 ball
@@ -60,12 +61,12 @@ public class RedGoalAuto extends BaseAuto {
                 .strafeToLinearHeading(new Vector2d(-23.5, 23.5), Math.toRadians(135));
 
         TrajectoryActionBuilder collectSecond = drive.actionBuilder(shootPose)
-                .strafeToLinearHeading(new Vector2d(12, 39), Math.toRadians(90))
-                .strafeToConstantHeading(new Vector2d(12,44))
+                .strafeToLinearHeading(new Vector2d(12, 27), Math.toRadians(90))
+                .strafeToConstantHeading(new Vector2d(12,32))
                 .waitSeconds(1)
-                .strafeToConstantHeading(new Vector2d(12,39))
+                .strafeToConstantHeading(new Vector2d(12,37))
                 .waitSeconds(1)
-                .strafeToConstantHeading(new Vector2d(12,44));
+                .strafeToConstantHeading(new Vector2d(12,42));
         secondPose = new Pose2d(12, -53, Math.toRadians(90)); //pos5
 
         TrajectoryActionBuilder moveToShootSecond = drive.actionBuilder(secondPose)
@@ -100,30 +101,31 @@ public class RedGoalAuto extends BaseAuto {
                                 new SequentialAction(
                                         spindexer.slotIn(),
                                         spindexer.contentsSet(Params.Artifact.PURPLE),
-                                        new SleepAction(0.75),
+                                        new SleepAction(1),
                                         spindexer.slotIn(),
                                         spindexer.contentsSet(Params.Artifact.PURPLE),
-                                        new SleepAction(0.75),
+                                        new SleepAction(1),
                                         spindexer.slotIn(),
                                         spindexer.contentsSet(Params.Artifact.GREEN),
-                                        new SleepAction(0.75),
+                                        new SleepAction(1),
                                         intake.intakeOff()
                                 )
                         ),
                         moveToShootFirst.build(),
                         new ShootMotif(),
+                        intake.intakeOn(),
                         new ParallelAction(
                                 collectSecond.build(),
                                 new SequentialAction(
                                         spindexer.slotIn(),
                                         spindexer.contentsSet(Params.Artifact.PURPLE),
-                                        new SleepAction(0.75),
+                                        new SleepAction(1),
                                         spindexer.slotIn(),
                                         spindexer.contentsSet(Params.Artifact.GREEN),
-                                        new SleepAction(0.75),
+                                        new SleepAction(1),
                                         spindexer.slotIn(),
                                         spindexer.contentsSet(Params.Artifact.PURPLE),
-                                        new SleepAction(0.75),
+                                        new SleepAction(1),
                                         intake.intakeOff()
                                 )
                         ),
