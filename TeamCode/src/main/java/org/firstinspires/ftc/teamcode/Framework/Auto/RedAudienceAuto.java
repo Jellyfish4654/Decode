@@ -37,8 +37,8 @@ public class RedAudienceAuto extends BaseAuto {
         TrajectoryActionBuilder moveToPark;
 
         TrajectoryActionBuilder preshoot = drive.actionBuilder(initialPose)
-                .strafeToLinearHeading(new Vector2d(60,12),Math.toRadians(150));
-        Pose2d preshootPose = new Pose2d(new Vector2d(60,12),Math.toRadians(150));
+                .strafeToLinearHeading(new Vector2d(-20,20),Math.toRadians(140));
+        Pose2d preshootPose = new Pose2d(new Vector2d(-20,20),Math.toRadians(140));
 
         TrajectoryActionBuilder cornerOne = drive.actionBuilder(preshootPose)
                 .strafeToLinearHeading(new Vector2d(54,58), Math.toRadians(70));
@@ -49,8 +49,8 @@ public class RedAudienceAuto extends BaseAuto {
         Pose2d cornerTwoPose = new Pose2d(new Vector2d(60,58), Math.toRadians(90));
 
         TrajectoryActionBuilder shootOne = drive.actionBuilder(cornerTwoPose)
-                .strafeToLinearHeading(new Vector2d(60,12),Math.toRadians(150));
-        Pose2d shootOnePose = new Pose2d(new Vector2d(60,12),Math.toRadians(150));
+                .strafeToLinearHeading(new Vector2d(-20,20),Math.toRadians(140));
+        Pose2d shootOnePose = new Pose2d(new Vector2d(-20,20),Math.toRadians(140));
 
         SequentialAction motifOneCollector = new SequentialAction(
                 new ParallelAction(
@@ -86,7 +86,7 @@ public class RedAudienceAuto extends BaseAuto {
         );
 
         TrajectoryActionBuilder shootTwo = drive.actionBuilder(new Pose2d(35.5,45,Math.toRadians(90)))
-                .strafeToLinearHeading(new Vector2d(60,12),Math.toRadians(150));
+                .strafeToLinearHeading(new Vector2d(-20,20),Math.toRadians(140));
         Pose2d shootTwoPose = shootOnePose;
 
         TrajectoryActionBuilder park = drive.actionBuilder(shootTwoPose)
