@@ -17,6 +17,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import org.firstinspires.ftc.teamcode.Framework.Auto.RoadRunner.MecanumDrive;
 import org.firstinspires.ftc.teamcode.Framework.Params;
 import org.firstinspires.ftc.teamcode.JellyTele;
+import org.firstinspires.ftc.teamcode.Framework.Params.Artifact;
 
 @Config
 @Autonomous(name = "Blue Goal", preselectTeleOp = "JellyTele")
@@ -25,8 +26,14 @@ public class BlueGoalAuto extends BaseAuto {
     Pose2d scanPose;
     Pose2d shootPose;
     Pose2d gatePose;
-    Pose2d firstPose;
-    Pose2d secondPose;
+    Pose2d collectFirstPose;
+    Pose2d artifactPose1;
+    Pose2d artifactPose2;
+    Pose2d artifactPose3;
+    Pose2d collectSecondPose;
+    Pose2d artifactPose4;
+    Pose2d artifactPose5;
+    Pose2d artifactPose6;
     Pose2d thirdPose;
     @Override
     public void runOpMode() throws InterruptedException {
@@ -45,31 +52,51 @@ public class BlueGoalAuto extends BaseAuto {
                 .strafeToLinearHeading(new Vector2d(-23.5, -23.5), Math.toRadians(225));
         shootPose = new Pose2d (-23.5, -23.5, Math.toRadians(225)); //pos2
 
-        TrajectoryActionBuilder collectFirst = drive.actionBuilder(shootPose)
-                .strafeToLinearHeading(new Vector2d(-11.5, -27), Math.toRadians(270))
-                .strafeToConstantHeading(new Vector2d(-11.5,-32))
-                .waitSeconds(1)
-                .strafeToConstantHeading(new Vector2d(-11.5,-37))
-                .waitSeconds(1)
-                .strafeToConstantHeading(new Vector2d(-11.5,-42));
-        firstPose = new Pose2d(-11.5, -53, Math.toRadians(270)); //pos3
+        TrajectoryActionBuilder moveToCollectFirst = drive.actionBuilder(shootPose)
+                .strafeToLinearHeading(new Vector2d(-13, -29), Math.toRadians(265));
+        collectFirstPose = new Pose2d(-13, -29, Math.toRadians(265)); //pos3
+
+        TrajectoryActionBuilder collectArtifact1 = drive.actionBuilder(collectFirstPose)
+                .strafeToConstantHeading(new Vector2d(-13,-34));
+
+        artifactPose1 = new Pose2d(-13, -34, Math.toRadians(265));
+
+        TrajectoryActionBuilder collectArtifact2 = drive.actionBuilder(artifactPose1)
+                .strafeToConstantHeading(new Vector2d(-13,-39));
+
+        artifactPose2 = new Pose2d(-13, -39, Math.toRadians(265));
+
+        TrajectoryActionBuilder collectArtifact3 = drive.actionBuilder(artifactPose2)
+                .strafeToConstantHeading(new Vector2d(-13,-44));
+
+        artifactPose3 = new Pose2d(-13, -44, Math.toRadians(265));
 
         TrajectoryActionBuilder openGate; //ignore this unless we decide to go for 12 ball
         gatePose = null; //pos4
 
-        TrajectoryActionBuilder moveToShootFirst = drive.actionBuilder(firstPose)
+        TrajectoryActionBuilder moveToShootFirst = drive.actionBuilder(artifactPose3)
                 .strafeToLinearHeading(new Vector2d(-23.5, -23.5), Math.toRadians(225));
 
-        TrajectoryActionBuilder collectSecond = drive.actionBuilder(shootPose)
-                .strafeToLinearHeading(new Vector2d(12, -27), Math.toRadians(265))
-                .strafeToConstantHeading(new Vector2d(12,-32))
-                .waitSeconds(1)
-                .strafeToConstantHeading(new Vector2d(12,-37))
-                .waitSeconds(1)
-                .strafeToConstantHeading(new Vector2d(12,-42));
-        secondPose = new Pose2d(12, -53, Math.toRadians(270)); //pos5
+        TrajectoryActionBuilder moveToCollectSecond = drive.actionBuilder(shootPose)
+                .strafeToLinearHeading(new Vector2d(9, -29), Math.toRadians(260));
+        collectFirstPose = new Pose2d(9, -29, Math.toRadians(260)); //pos3
 
-        TrajectoryActionBuilder moveToShootSecond = drive.actionBuilder(secondPose)
+        TrajectoryActionBuilder collectArtifact4 = drive.actionBuilder(collectFirstPose)
+                .strafeToConstantHeading(new Vector2d(9,-34));
+
+        artifactPose4 = new Pose2d(9, -34, Math.toRadians(260));
+
+        TrajectoryActionBuilder collectArtifact5 = drive.actionBuilder(artifactPose1)
+                .strafeToConstantHeading(new Vector2d(9,-39));
+
+        artifactPose5 = new Pose2d(9, -39, Math.toRadians(260));
+
+        TrajectoryActionBuilder collectArtifact6 = drive.actionBuilder(artifactPose2)
+                .strafeToConstantHeading(new Vector2d(9,-44));
+
+        artifactPose6 = new Pose2d(9, -44, Math.toRadians(260));
+
+        TrajectoryActionBuilder moveToShootSecond = drive.actionBuilder(artifactPose6)
                 .strafeToLinearHeading(new Vector2d(-23.5, -23.5), Math.toRadians(225));
 
         TrajectoryActionBuilder collectThird = drive.actionBuilder(shootPose) // ignore also unless doing 12 ball
@@ -95,41 +122,52 @@ public class BlueGoalAuto extends BaseAuto {
                         scanMotif(),
                         moveToShootPreload.build(),
                         new ShootMotif(),
-                        intake.intakeOn(),
                         new ParallelAction(
-                                collectFirst.build(),
-                                new SequentialAction(
+                                moveToCollectFirst.build(),
+                                intake.intakeOn(),
+                                spindexer.slotIn()
+                        ),
+                        new SequentialAction(
+                                collectArtifact1.build(),
+                                spindexer.contentsSet(Artifact.PURPLE),
+                                new ParallelAction(
                                         spindexer.slotIn(),
-                                        spindexer.contentsSet(Params.Artifact.PURPLE),
-                                        new SleepAction(1),
+                                        new SleepAction(JellyTele.SPIN_INTAKE_DELAY/1000)
+                                ),
+                                collectArtifact2.build(),
+                                spindexer.contentsSet(Artifact.PURPLE),
+                                new ParallelAction(
                                         spindexer.slotIn(),
-                                        spindexer.contentsSet(Params.Artifact.PURPLE),
-                                        new SleepAction(1),
-                                        spindexer.slotIn(),
-                                        spindexer.contentsSet(Params.Artifact.GREEN),
-                                        new SleepAction(1),
-                                        intake.intakeOff()
-                                )
+                                        new SleepAction(JellyTele.SPIN_INTAKE_DELAY/1000)
+                                ),
+                                collectArtifact3.build(),
+                                spindexer.contentsSet(Artifact.GREEN),
+                                intake.intakeOff()
                         ),
                         moveToShootFirst.build(),
                         new ShootMotif(),
-                        intake.intakeOn(),
                         new ParallelAction(
-                                collectSecond.build(),
-                                new SequentialAction(
-                                        spindexer.slotIn(),
-                                        spindexer.contentsSet(Params.Artifact.PURPLE),
-                                        new SleepAction(1),
-                                        spindexer.slotIn(),
-                                        spindexer.contentsSet(Params.Artifact.GREEN),
-                                        new SleepAction(1),
-                                        spindexer.slotIn(),
-                                        spindexer.contentsSet(Params.Artifact.PURPLE),
-                                        new SleepAction(1),
-                                        intake.intakeOff()
-                                )
+                                moveToCollectSecond.build(),
+                                intake.intakeOn(),
+                                spindexer.slotIn()
                         ),
-
+                        new SequentialAction(
+                                collectArtifact4.build(),
+                                spindexer.contentsSet(Artifact.PURPLE),
+                                new ParallelAction(
+                                        spindexer.slotIn(),
+                                        new SleepAction(JellyTele.SPIN_INTAKE_DELAY/1000)
+                                ),
+                                collectArtifact5.build(),
+                                spindexer.contentsSet(Artifact.GREEN),
+                                new ParallelAction(
+                                        spindexer.slotIn(),
+                                        new SleepAction(JellyTele.SPIN_INTAKE_DELAY/1000)
+                                ),
+                                collectArtifact6.build(),
+                                spindexer.contentsSet(Artifact.PURPLE),
+                                intake.intakeOff()
+                        ),
                         moveToShootSecond.build(),
                         new ShootMotif(),
                         //get out of shooting zone
@@ -181,11 +219,11 @@ public class BlueGoalAuto extends BaseAuto {
                 } else if (posNum == 2) {
                     shootPose = calcPose;
                 } else if (posNum == 3) {
-                    firstPose = calcPose;
+                    collectFirstPose = calcPose;
                 } else if (posNum == 4) {
                     gatePose = calcPose;
                 } else if (posNum == 5) {
-                    secondPose = calcPose;
+                    collectSecondPose = calcPose;
                 } else if (posNum == 6) {
                     thirdPose = calcPose;
                 }
