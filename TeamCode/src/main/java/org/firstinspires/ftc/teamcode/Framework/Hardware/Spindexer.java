@@ -100,6 +100,10 @@ public class Spindexer {
         return 0;
     }
     
+    public void energize() {
+        spindexer.getController().pwmEnable();
+    }
+    
     public void deenergize() {
         spindexer.getController().pwmDisable();
     }

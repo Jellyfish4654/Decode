@@ -78,7 +78,7 @@ public abstract class BaseOpMode extends LinearOpMode {
         outtake.off();
 
         spindexer = new Spindexer(hardwareMap.get(Servo.class, "spindexerServo"));
-        if (auto) { // TODO: change based on preload
+        if (auto) { // TODO: use for preload
             spindexer.setSlotOut(1);
             spindexer.setContents(1, Artifact.GREEN);
             spindexer.setContents(2, Artifact.PURPLE);
@@ -104,7 +104,6 @@ public abstract class BaseOpMode extends LinearOpMode {
         return imu;
     }
     
-    // TODO: use this in auto too!
     public void stopHardware() {
         drivetrain.setMotorSpeeds(1, new double[]{0,0,0,0});
         intake.off();

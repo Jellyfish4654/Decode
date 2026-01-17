@@ -21,14 +21,14 @@ public class JellyTele extends BaseOpMode {
     public static double DEADBAND_VALUE = 0.02;
     public static double STRAFE_ADJUSTMENT_FACTOR = 1.08;
     
-    public static long SPIN_INTAKE_DELAY = 550; // in millis -- also used with outtake when held
-    public static long SPIN_OUTTAKE_DELAY_LONG = 2700; // in millis -- TODO: adjust with new motor and belt after powers and voltage compensation work
-    public static long SPIN_OUTTAKE_DELAY_SHORT = 1000; // in millis
-    public static long OUTTAKE_DELAY = 500; // in millis
+    public static long SPIN_INTAKE_DELAY = 550; // in millis
+    public static long SPIN_OUTTAKE_DELAY_LONG = 2700; // in millis -- TODO: still good?
+    public static long SPIN_OUTTAKE_DELAY_SHORT = 1000; // in millis -- for holding, motif, and auto sequences
+    public static long OUTTAKE_DELAY = 500; // in millis -- for full spin-up and assumed full spin-up
     
-    public static double DISTANCE_TOO_FAR = 200; // TODO: Adjust near/far distances
+    public static double DISTANCE_TOO_FAR = 200; // TODO: Adjust near/far distances?
     public static double DISTANCE_FAR = 70;
-    public static double AIM_ROTATION_SPEED = 0.02; // TODO: speed good?
+    public static double AIM_ROTATION_SPEED = 0.02;
     
     private double imuOffset = 0;
     
@@ -43,6 +43,7 @@ public class JellyTele extends BaseOpMode {
     }
     private SpinState spinState = SpinState.STANDBY;
     private boolean motifOuttakeLock = false;
+    private boolean reversingIntake = false;
     private Artifact[] currentMotifArtifacts;
     private int motifOuttakeIndex = 0;
     private long spindexerStartTime = 0;
@@ -82,15 +83,27 @@ public class JellyTele extends BaseOpMode {
         boolean spinOutCompleted = System.currentTimeMillis() - spindexerStartTime >= spinOuttakeDelaySkip;
         boolean outtakeCompleted = System.currentTimeMillis() - outtakeStartTime >= OUTTAKE_DELAY;
         aimRotation = 0;
-        if (controller.revIntake()) {
+        if (controller.revIntake() && !reversingIntake) { // TODO: this could prob be improved
+            spindexer.deenergize();
             intake.reverse();
+            reversingIntake = true;
+        } else if (reversingIntake && !controller.revIntake()) { // reset everything and go to standby
+            intake.off();
+            paddleDown();
+            outtake.off();
+            spindexer.energize();
+            spinPostIntake();
+            motifOuttakeLock = false;
+            spinOuttakeDelaySkip = SPIN_OUTTAKE_DELAY_LONG;
+            reversingIntake = false;
+            spinState = SpinState.STANDBY;
         } else if (spinState == SpinState.INTAKING) {
             Artifact detectedArtifact = colorSensor.getArtifact();
             if (detectedArtifact != Artifact.NONE) {
                 intake.off();
                 spindexer.setContents(detectedArtifact);
                 spinState = SpinState.STANDBY;
-                spinPostIntake(); // TODO: tell noah to shhh and let me cook (consider if necessary, doesn't currently save time)
+                spinPostIntake(); // TODO: consider if necessary, doesn't currently save time
             }
         } else if (spinState == SpinState.OUTTAKING && outtakeCompleted) {
             outtake.off();
@@ -112,7 +125,7 @@ public class JellyTele extends BaseOpMode {
                 double distance = vision.getGoalDistance(Params.alliance);
                 if (distance > DISTANCE_FAR && distance < DISTANCE_TOO_FAR) {
                     outtake.onFar();
-                } else { // TODO: should near or far be default if goal isn't recognized or distance is unrealistic?
+                } else { // near is default
                     outtake.onNear();
                 }
             }
