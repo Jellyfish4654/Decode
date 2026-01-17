@@ -45,13 +45,13 @@ public class GoalAutoTest {
         shootPose = new Pose2d (-23.5, -23.5, Math.toRadians(225)); //pos2
 
         TrajectoryActionBuilder collectFirst = drive.actionBuilder(shootPose)
-                .strafeToLinearHeading(new Vector2d(-11.5, -27), Math.toRadians(270))
-                .strafeToConstantHeading(new Vector2d(-11.5,-32))
+                .strafeToLinearHeading(new Vector2d(-11.5, -29), Math.toRadians(270))
+                .strafeToConstantHeading(new Vector2d(-11.5,-34))
                 .waitSeconds(1)
-                .strafeToConstantHeading(new Vector2d(-11.5,-37))
+                .strafeToConstantHeading(new Vector2d(-11.5,-39))
                 .waitSeconds(1)
-                .strafeToConstantHeading(new Vector2d(-11.5,-42));
-        firstPose = new Pose2d(-11.5, -53, Math.toRadians(270)); //pos3
+                .strafeToConstantHeading(new Vector2d(-11.5,-44));
+        firstPose = new Pose2d(-11.5, -44, Math.toRadians(270)); //pos3
 
         TrajectoryActionBuilder openGate; //ignore this unless we decide to go for 12 ball
         gatePose = null; //pos4
@@ -60,13 +60,13 @@ public class GoalAutoTest {
                 .strafeToLinearHeading(new Vector2d(-23.5, -23.5), Math.toRadians(225));
 
         TrajectoryActionBuilder collectSecond = drive.actionBuilder(shootPose)
-                .strafeToLinearHeading(new Vector2d(12, -27), Math.toRadians(270))
-                .strafeToConstantHeading(new Vector2d(12,-32))
+                .strafeToLinearHeading(new Vector2d(12, -29), Math.toRadians(270))
+                .strafeToConstantHeading(new Vector2d(12,-34))
                 .waitSeconds(1)
-                .strafeToConstantHeading(new Vector2d(12,-37))
+                .strafeToConstantHeading(new Vector2d(12,-39))
                 .waitSeconds(1)
-                .strafeToConstantHeading(new Vector2d(12,-42));
-        secondPose = new Pose2d(12, -53, Math.toRadians(270)); //pos5
+                .strafeToConstantHeading(new Vector2d(12,-44));
+        secondPose = new Pose2d(12, -44, Math.toRadians(270)); //pos5
 
         TrajectoryActionBuilder moveToShootSecond = drive.actionBuilder(secondPose)
                 .strafeToLinearHeading(new Vector2d(-23.5, -23.5), Math.toRadians(225));
