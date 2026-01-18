@@ -37,20 +37,21 @@ public class RedAudienceAuto extends BaseAuto {
         TrajectoryActionBuilder moveToPark;
 
         TrajectoryActionBuilder preshoot = drive.actionBuilder(initialPose)
-                .strafeToLinearHeading(new Vector2d(-20,20),Math.toRadians(140));
-        Pose2d preshootPose = new Pose2d(new Vector2d(-20,20),Math.toRadians(140));
+                .splineToLinearHeading(new Pose2d(new Vector2d(-57,23),Math.toRadians(90)),Math.toRadians(120),intakeMovementConstraint);
+        
+        Pose2d preshootPose = new Pose2d(new Vector2d(-57,23),Math.toRadians(90));
 
         TrajectoryActionBuilder cornerOne = drive.actionBuilder(preshootPose)
-                .strafeToLinearHeading(new Vector2d(54,58), Math.toRadians(70));
-        Pose2d cornerOnePose = new Pose2d(new Vector2d(54,58), Math.toRadians(70));
+                .strafeToLinearHeading(new Vector2d(54,54), Math.toRadians(70));
+        Pose2d cornerOnePose = new Pose2d(new Vector2d(54,54), Math.toRadians(70));
 
         TrajectoryActionBuilder cornerTwo = drive.actionBuilder(cornerOnePose)
-                .splineToConstantHeading(new Vector2d(60,58), Math.toRadians(90));
-        Pose2d cornerTwoPose = new Pose2d(new Vector2d(60,58), Math.toRadians(90));
+                .splineToConstantHeading(new Vector2d(60,54), Math.toRadians(90),intakeMovementConstraint);
+        Pose2d cornerTwoPose = new Pose2d(new Vector2d(60,54), Math.toRadians(90));
 
         TrajectoryActionBuilder shootOne = drive.actionBuilder(cornerTwoPose)
-                .strafeToLinearHeading(new Vector2d(-20,20),Math.toRadians(140));
-        Pose2d shootOnePose = new Pose2d(new Vector2d(-20,20),Math.toRadians(140));
+                .splineToLinearHeading(new Pose2d(new Vector2d(-60,23),Math.toRadians(90)),Math.toRadians(120));
+        Pose2d shootOnePose = new Pose2d(new Vector2d(-60,23),Math.toRadians(90));
 
         SequentialAction motifOneCollector = new SequentialAction(
                 new ParallelAction(
@@ -61,7 +62,7 @@ public class RedAudienceAuto extends BaseAuto {
 
                         intake.intakeOn(),
                         drive.actionBuilder(shootOnePose)
-                                .splineToLinearHeading(new Pose2d(35.5,35,Math.toRadians(90)),Math.toRadians(90))
+                                .splineToLinearHeading(new Pose2d(35.5,35,Math.toRadians(90)),Math.toRadians(90),intakeMovementConstraint)
                                 .build()
                 ),
                 new ParallelAction(
@@ -70,7 +71,7 @@ public class RedAudienceAuto extends BaseAuto {
                                 spindexer.contentsSet(Params.Artifact.PURPLE)
                         ),
                         drive.actionBuilder(new Pose2d(35.5,35,Math.toRadians(90)))
-                                .strafeToLinearHeading(new Vector2d(35.5,40),Math.toRadians(90))
+                                .strafeToLinearHeading(new Vector2d(35.5,40),Math.toRadians(90),intakeMovementConstraint)
                                 .build()
                 ),
                 new ParallelAction(
@@ -79,18 +80,18 @@ public class RedAudienceAuto extends BaseAuto {
                                 spindexer.contentsSet(Params.Artifact.PURPLE)
                         ),
                         drive.actionBuilder(new Pose2d(35.5,40,Math.toRadians(90)))
-                                .lineToYConstantHeading(45)
+                                .lineToYConstantHeading(45,intakeMovementConstraint)
                                 .build()
                 ),
                 intake.intakeOff()
         );
 
         TrajectoryActionBuilder shootTwo = drive.actionBuilder(new Pose2d(35.5,45,Math.toRadians(90)))
-                .strafeToLinearHeading(new Vector2d(-20,20),Math.toRadians(140));
+                .splineToLinearHeading(new Pose2d(new Vector2d(-57,23),Math.toRadians(90)),Math.toRadians(120));
         Pose2d shootTwoPose = shootOnePose;
 
         TrajectoryActionBuilder park = drive.actionBuilder(shootTwoPose)
-                .lineToX(30);
+                .lineToY(30);
         
 
 

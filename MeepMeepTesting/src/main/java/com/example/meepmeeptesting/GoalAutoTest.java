@@ -34,7 +34,7 @@ public class GoalAutoTest {
                 .build();
 
         DriveShim drive = aud.getDrive();
-        Pose2d initialPose = new Pose2d(-61.5, -23.5, Math.toRadians(180));
+        Pose2d initialPose = new Pose2d(-51, -48, Math.toRadians(-127));
 
         TrajectoryActionBuilder moveToScan = drive.actionBuilder(initialPose)
                 .strafeToLinearHeading(new Vector2d(-47, -15), Math.toRadians(153.435));
