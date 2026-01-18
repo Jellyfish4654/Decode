@@ -1,21 +1,12 @@
 package org.firstinspires.ftc.teamcode.Framework.Auto;
 
 import com.acmerobotics.dashboard.config.Config;
-import com.acmerobotics.roadrunner.ParallelAction;
 import com.acmerobotics.roadrunner.Pose2d;
-import com.acmerobotics.roadrunner.SequentialAction;
-import com.acmerobotics.roadrunner.SleepAction;
-import com.acmerobotics.roadrunner.TrajectoryActionBuilder;
-import com.acmerobotics.roadrunner.Vector2d;
-import com.acmerobotics.roadrunner.ftc.Actions;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-
 import org.firstinspires.ftc.teamcode.Framework.Auto.RoadRunner.MecanumDrive;
-import org.firstinspires.ftc.teamcode.Framework.Params;
-import org.firstinspires.ftc.teamcode.JellyTele;
 
 @Config
-@Autonomous(name = "Auto Position Finder")
+@Autonomous(name = "Auto Position Finder", group = "Tools")
 public class AutoPositionFinder extends BaseAuto {
     public static double posX = 0;
     public static double posY = 0;

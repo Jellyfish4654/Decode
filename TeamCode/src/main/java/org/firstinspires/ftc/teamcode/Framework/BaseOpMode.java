@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.Framework;
 
+import com.acmerobotics.dashboard.FtcDashboard;
+import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.qualcomm.hardware.rev.RevColorSensorV3;
 import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
@@ -36,7 +38,8 @@ public abstract class BaseOpMode extends LinearOpMode {
     
     // TODO: we need to make sure nothing moves during auto → teleop transition
     public void initHardware(boolean auto) {
-
+        telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
+        
         // Drivetrain Motors (SAME ORDER IN HARDWARE CONFIG)
 
         DcMotor[] driveMotors = {
