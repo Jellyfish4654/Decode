@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode;
 
 import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.DcMotor;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.teamcode.Framework.BaseOpMode;
@@ -107,6 +108,7 @@ public class JellyTele extends BaseOpMode {
             paddleDown();
             spindexer.setContents(Artifact.NONE);
             spinState = SpinState.STANDBY;
+            drivetrain.setMotorZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
             spinOuttakeDelaySkip = SPIN_OUTTAKE_DELAY_SHORT;
         } else if (spinState == SpinState.SPIN_INTAKE && spinInCompleted) {
             intake.on();
@@ -131,10 +133,13 @@ public class JellyTele extends BaseOpMode {
                 if (controller.intake()) {
                     spinIntake();
                 } else if (controller.outGreen()) {
+                    drivetrain.setMotorZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
                     spinOuttake(Artifact.GREEN);
                 } else if (controller.outPurple()) {
+                    drivetrain.setMotorZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
                     spinOuttake(Artifact.PURPLE);
                 } else if (controller.outMotif()) {
+                    drivetrain.setMotorZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
                     motifOuttakeLock = true;
                     currentMotifArtifacts = Params.motifArtifacts.get(Params.motif);
                     motifOuttakeIndex = 0;

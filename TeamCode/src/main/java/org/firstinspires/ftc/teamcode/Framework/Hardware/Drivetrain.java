@@ -13,7 +13,13 @@ public class Drivetrain {
     public void setMotorDirections(DcMotor.Direction[] directions) {
         for (int i = 0; i < driveMotors.length; i++) {
             driveMotors[i].setDirection(directions[i]);
-            driveMotors[i].setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+            driveMotors[i].setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+        }
+    }
+
+    public void setMotorZeroPowerBehavior(DcMotor.ZeroPowerBehavior behavior){
+        for (DcMotor driveMotor : driveMotors) {
+            driveMotor.setZeroPowerBehavior(behavior);
         }
     }
 
