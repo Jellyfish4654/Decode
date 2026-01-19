@@ -185,9 +185,9 @@ public class Vision {
     }
     /**
      * Get AprilTags detected by the camera
-     * @return Object[] of AprilTags (can be cast to AprilTagDetection)
+     * @return AprilTagDetection[]
      */
-    public Object[] getTags(){
+    public AprilTagDetection[] getTags(){
         exposureUpdate();
         List<AprilTagDetection> detectionsList;
         detectionsList = this.aprilTag.getDetections();
@@ -283,9 +283,9 @@ public class Vision {
 
     /**
      * Get Green-colored Blobs (likely Green Artifacts) detected by the camera
-     * @return Object[] of Blobs (can be cast to ColorBlobLocatorProcessor.Blob)
+     * @return ColorBlobLocatorProcessor.Blob[]
      */
-    public Object[] getGreenArtifacts(){
+    public ColorBlobLocatorProcessor.Blob[] getGreenArtifacts(){
         exposureUpdate();
         List<ColorBlobLocatorProcessor.Blob> blobs;
         blobs = this.greenArtifactDetector.getBlobs();
@@ -304,9 +304,9 @@ public class Vision {
 
     /**
      * Get Purple-colored Blobs (likely Purple Artifacts) detected by the camera
-     * @return Object[] of Blobs (can be cast to ColorBlobLocatorProcessor.Blob)
+     * @return ColorBlobLocatorProcessor.Blob[]
      */
-    public Object[] getPurpleArtifacts(){
+    public ColorBlobLocatorProcessor.Blob[] getPurpleArtifacts(){
         exposureUpdate();
         List<ColorBlobLocatorProcessor.Blob> blobs;
         blobs = this.purpleArtifactDetector.getBlobs();
