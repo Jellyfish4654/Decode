@@ -10,6 +10,8 @@ import org.firstinspires.ftc.robotcore.external.hardware.camera.controls.Exposur
 import org.firstinspires.ftc.robotcore.external.hardware.camera.controls.GainControl;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
+import org.firstinspires.ftc.robotcore.external.navigation.Position;
+import org.firstinspires.ftc.robotcore.external.navigation.YawPitchRollAngles;
 import org.firstinspires.ftc.vision.VisionPortal;
 import org.firstinspires.ftc.vision.apriltag.AprilTagDetection;
 import org.firstinspires.ftc.vision.apriltag.AprilTagGameDatabase;
@@ -107,6 +109,8 @@ public class Vision {
     private AngleUnit angleUnit = AngleUnit.DEGREES;
     private int camWidth=640;
     private int camHeight=480;
+    Position cameraPosition = new Position(DistanceUnit.INCH, 0, 8.5, 7, 0);
+    YawPitchRollAngles cameraOrientation = new YawPitchRollAngles(AngleUnit.DEGREES, 0, -80, 0, 0);
     
     private GainControl gainControl;
     private ExposureControl exposureControl;
@@ -120,6 +124,7 @@ public class Vision {
     public Vision(CameraName cameraName, LinearOpMode opMode){
         this.name = cameraName;
         this.aprilTag = new AprilTagProcessor.Builder()
+                .setCameraPose(cameraPosition,cameraOrientation)
                 .setDrawAxes(true)
                 .setTagLibrary(AprilTagGameDatabase.getCurrentGameTagLibrary())
                 .setOutputUnits(distanceUnit, angleUnit)
