@@ -54,7 +54,7 @@ public class BlueGoalAuto extends BaseAuto {
 
         TrajectoryActionBuilder moveToScan = drive.actionBuilder(initialPose)
                 .strafeToLinearHeading(new Vector2d(-33.5, -20), Math.toRadians(140));
-        scanPose = new Pose2d(-47, -15, Math.toRadians(140)); //pos1
+        scanPose = new Pose2d(-33.5, -20, Math.toRadians(140)); //pos1
 
         TrajectoryActionBuilder moveToShootPreload = drive.actionBuilder(scanPose)
                 .strafeToLinearHeading(new Vector2d(-27, -27), Math.toRadians(225));
