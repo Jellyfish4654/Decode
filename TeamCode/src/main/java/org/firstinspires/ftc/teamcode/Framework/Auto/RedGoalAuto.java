@@ -45,7 +45,7 @@ public class RedGoalAuto extends BaseAuto {
         // ↓ -------------- ↓ -------------- ↓ TRAJECTORIES ↓ -------------- ↓ -------------- ↓
 
         TrajectoryActionBuilder moveToScan = drive.actionBuilder(initialPose)
-                .strafeToLinearHeading(new Vector2d(-33.5, -20), Math.toRadians(-140));
+                .strafeToLinearHeading(new Vector2d(-33.5, 20), Math.toRadians(-140));
         scanPose = new Pose2d(-47, 15, Math.toRadians(-140)); //pos1
 
         TrajectoryActionBuilder moveToShootPreload = drive.actionBuilder(scanPose)
