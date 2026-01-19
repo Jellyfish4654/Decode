@@ -38,9 +38,8 @@ public class JulianTest {
 
                 .build());*/
         aud.runAction(aud.getDrive().actionBuilder(new Pose2d(61, -12, Math.toRadians(180)))
-                        .strafeToLinearHeading(new Vector2d(-20,-20), Math.toRadians(-140))
-                        .turnTo(Math.toRadians(-150))
-                        .waitSeconds(3)
+                        .strafeToLinearHeading(new Vector2d(-60,23), Math.toRadians(90))
+                        .waitSeconds(300)
                 .strafeToLinearHeading(new Vector2d(54,-58), Math.toRadians(-70))
                         .waitSeconds(0.5)
                 .splineToConstantHeading(new Vector2d(60,-58), Math.toRadians(-90))
