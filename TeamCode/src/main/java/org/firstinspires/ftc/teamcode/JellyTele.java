@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode;
 import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.teamcode.Framework.BaseOpMode;
@@ -56,14 +57,23 @@ public class JellyTele extends BaseOpMode {
         initHardware(false);
         imuOffset = imuSensor.getRobotYawPitchRollAngles().getYaw(AngleUnit.RADIANS);
         initFinishedTelemetry();
+        ElapsedTime timer = new ElapsedTime();
         waitForStart();
         while (opModeIsActive()) {
             updateDrive();
             updateAux();
             updateParameters();
+            if (timer.seconds() >= 100 & timer.seconds() <= 100.2) {
+                alertEndgame();
+            }
             telemetry.update();
         }
         stopHardware();
+    }
+
+    private void alertEndgame() {
+        controller.rumble(300, true);
+        controller.rumble(300, false);
     }
     
     // testing only -- keep this commented for normal use
