@@ -128,6 +128,7 @@ public class BlueGoalAuto extends BaseAuto {
                 new SequentialAction(
                         moveToScan.build(),
                         scanMotif(),
+                        outtake.outtakeOnNear(),
                         moveToShootPreload.build(),
                         new ShootMotif(),
                         new ParallelAction(
@@ -155,6 +156,7 @@ public class BlueGoalAuto extends BaseAuto {
                                 spindexer.contentsSet(Artifact.GREEN),
                                 intake.intakeOff()
                         ),
+                        outtake.outtakeOnNear(),
                         moveToShootFirst.build(),
                         new ShootMotif(),
                         new ParallelAction(
@@ -179,6 +181,7 @@ public class BlueGoalAuto extends BaseAuto {
                                 spindexer.contentsSet(Artifact.PURPLE),
                                 intake.intakeOff()
                         ),
+                        outtake.outtakeOnNear(),
                         moveToShootSecond.build(),
                         new ShootMotif(),
                         //get out of shooting zone
