@@ -45,10 +45,13 @@ public class AutoPositionFinder extends BaseAuto {
             headingSum = 0;
 
             for(AprilTagDetection tag : tagDetections){
-                xSum += tag.robotPose.getPosition().x;
-                ySum += tag.robotPose.getPosition().y;
+                if(!(tag.metadata.fieldPosition.get(0) == 0 && tag.metadata.fieldPosition.get(1) == 0 && tag.metadata.fieldPosition.get(2) == 0)
+                {
+                    xSum += tag.robotPose.getPosition().x;
+                    ySum += tag.robotPose.getPosition().y;
 
-                headingSum += tag.robotPose.getOrientation().getYaw();
+                    headingSum += tag.robotPose.getOrientation().getYaw();
+                }
             }
 
 
