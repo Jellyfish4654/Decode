@@ -59,6 +59,7 @@ public class JellyTele extends BaseOpMode {
         initFinishedTelemetry();
         ElapsedTime timer = new ElapsedTime();
         waitForStart();
+        timer.reset();
         while (opModeIsActive()) {
             updateDrive();
             updateAux();
