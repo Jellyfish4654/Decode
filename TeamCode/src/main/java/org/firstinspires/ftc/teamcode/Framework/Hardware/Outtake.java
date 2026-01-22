@@ -14,18 +14,18 @@ public class Outtake {
     private final DcMotor guiding;
     private final VoltageSensor voltageSensor;
     
-    // TODO: tune near and far power
+    // TODO: PID! (keep as backup)
     public static double NEAR_POWER = 0.89;
     public static double FAR_POWER = 1;
     public static double GUIDING_POWER = 1;
-    public static double VOLTAGE_COMP_STRENGTH = 1.3; // TODO: tune strength
+    public static double VOLTAGE_COMP_STRENGTH = 1.3; // not necessary at all with pid
     
     public Outtake (DcMotor outtake, DcMotor guiding, VoltageSensor voltSensor) {
-        this.outtake = outtake;
+        this.outtake = outtake; // TODO: second outtake motor (check direction)
         this.guiding = guiding;
         this.voltageSensor = voltSensor;
         
-        outtake.setDirection(DcMotor.Direction.FORWARD); // TODO: check outtake motors direction
+        outtake.setDirection(DcMotor.Direction.FORWARD);
         outtake.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
         
         guiding.setDirection(DcMotor.Direction.FORWARD);

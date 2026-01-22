@@ -76,7 +76,7 @@ public class Controller {
         this.outPurpleBtn = Button.PRIMARY_SQUARE;
         this.outMotifBtn = Button.PRIMARY_CROSS;
         this.intakeBtn = Button.PRIMARY_RIGHT_TRIGGER_BUTTON;
-        this.outPrespinBtn = Button.PRIMARY_TRIANGLE; // TODO: swap this and motif button
+        this.outPrespinBtn = Button.PRIMARY_TRIANGLE; // TODO: swap this and motif button?
         this.unjamBtn = Button.SECONDARY_LEFT_TRIGGER_BUTTON;
 
         this.lowPrecisionBtn = Button.PRIMARY_LEFT_BUMPER;
