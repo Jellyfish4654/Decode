@@ -5,18 +5,12 @@ import androidx.annotation.NonNull;
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.acmerobotics.roadrunner.Action;
-import com.acmerobotics.roadrunner.Arclength;
-import com.acmerobotics.roadrunner.MecanumKinematics;
 import com.acmerobotics.roadrunner.ParallelAction;
 import com.acmerobotics.roadrunner.Pose2d;
-import com.acmerobotics.roadrunner.Pose2dDual;
-import com.acmerobotics.roadrunner.PosePath;
 import com.acmerobotics.roadrunner.SequentialAction;
 import com.acmerobotics.roadrunner.SleepAction;
 import com.acmerobotics.roadrunner.TrajectoryActionBuilder;
-import com.acmerobotics.roadrunner.TrajectoryBuilderParams;
 import com.acmerobotics.roadrunner.Vector2d;
-import com.acmerobotics.roadrunner.VelConstraint;
 import com.acmerobotics.roadrunner.ftc.Actions;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
@@ -128,6 +122,7 @@ public class BlueGoalAuto extends BaseAuto {
                 new SequentialAction(
                         moveToScan.build(),
                         scanMotif(),
+                        outtake.outtakeOnNear(),
                         moveToShootPreload.build(),
                         new ShootMotif(),
                         new ParallelAction(
@@ -155,6 +150,7 @@ public class BlueGoalAuto extends BaseAuto {
                                 spindexer.contentsSet(Artifact.GREEN),
                                 intake.intakeOff()
                         ),
+                        outtake.outtakeOnNear(),
                         moveToShootFirst.build(),
                         new ShootMotif(),
                         new ParallelAction(
@@ -179,6 +175,7 @@ public class BlueGoalAuto extends BaseAuto {
                                 spindexer.contentsSet(Artifact.PURPLE),
                                 intake.intakeOff()
                         ),
+                        outtake.outtakeOnNear(),
                         moveToShootSecond.build(),
                         new ShootMotif(),
                         //get out of shooting zone
