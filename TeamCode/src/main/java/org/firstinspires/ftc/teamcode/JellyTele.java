@@ -277,17 +277,17 @@ public class JellyTele extends BaseOpMode {
     }
 
     private void updateParameters() {
-        if (controller.allianceRedPressed()) {
+        if (controller.allianceRed()) {
             Params.alliance = Alliance.RED;
-        } else if (controller.allianceBluePressed()) {
+        } else if (controller.allianceBlue()) {
             Params.alliance = Alliance.BLUE;
         }
 
-        if (controller.motifGPPPressed()){
+        if (controller.motifGPP()){
             Params.motif = Motif.GPP;
-        }else if(controller.motifPGPPressed()){
+        }else if(controller.motifPGP()){
             Params.motif = Motif.PGP;
-        }else if(controller.motifPPGPressed()){
+        }else if(controller.motifPPG()){
             Params.motif = Motif.PPG;
         }
         
