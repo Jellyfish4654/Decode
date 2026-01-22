@@ -177,10 +177,15 @@ public class Controller {
             case PRIMARY_RIGHT_BUMPER:
             case SECONDARY_RIGHT_BUMPER:
                 return Gamepad.class.getMethod("rightBumperWasPressed");
+            case PRIMARY_LEFT_TRIGGER_BUTTON:
+            case SECONDARY_LEFT_TRIGGER_BUTTON:
+                return Gamepad.class.getMethod("leftTriggerWasPressed");
+            case PRIMARY_RIGHT_TRIGGER_BUTTON:
+            case SECONDARY_RIGHT_TRIGGER_BUTTON:
+                return Gamepad.class.getMethod("rightTriggerWasPressed");
             case PRIMARY_PLAYSTATION_LOGO:
             case SECONDARY_PLAYSTATION_LOGO:
                 return Gamepad.class.getMethod("psWasPressed");
-
         }
 
         return null;
@@ -211,10 +216,11 @@ public class Controller {
         try {
             switch (btn) {
                 case PRIMARY_LEFT_TRIGGER_BUTTON:
-                case PRIMARY_RIGHT_TRIGGER_BUTTON:
                 case SECONDARY_LEFT_TRIGGER_BUTTON:
+                    return chooseGamepad(btn).left_trigger_pressed;
+                case PRIMARY_RIGHT_TRIGGER_BUTTON:
                 case SECONDARY_RIGHT_TRIGGER_BUTTON:
-                    return this.getField(btn).getFloat(chooseGamepad(btn)) >= this.TRIGGER_BUTTON_THRESHOLD;
+                    return chooseGamepad(btn).right_trigger_pressed;
                 default:
                     return this.getField(btn).getBoolean(chooseGamepad(btn));
             }
