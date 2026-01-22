@@ -51,7 +51,8 @@ public class Controller {
     Button outGreenBtn;
     Button outMotifBtn;
     Button intakeBtn;
-    Button revIntakeBtn;
+    Button outPrespinBtn;
+    Button unjamBtn;
     Button driveModeBtn;
     Button allianceRedBtn;
     Button allianceBlueBtn;
@@ -75,7 +76,8 @@ public class Controller {
         this.outPurpleBtn = Button.PRIMARY_SQUARE;
         this.outMotifBtn = Button.PRIMARY_CROSS;
         this.intakeBtn = Button.PRIMARY_RIGHT_TRIGGER_BUTTON;
-        this.revIntakeBtn = Button.SECONDARY_LEFT_TRIGGER_BUTTON;
+        this.outPrespinBtn = Button.PRIMARY_TRIANGLE; // TODO: swap this and motif button
+        this.unjamBtn = Button.SECONDARY_LEFT_TRIGGER_BUTTON;
 
         this.lowPrecisionBtn = Button.PRIMARY_LEFT_BUMPER;
         this.highPrecisionBtn = Button.PRIMARY_RIGHT_BUMPER;
@@ -235,6 +237,10 @@ public class Controller {
                 return this.gamepad1.left_stick_x;
             case PRIMARY_RIGHT_JOYSTICK:
                 return this.gamepad1.right_stick_x;
+            case SECONDARY_LEFT_JOYSTICK:
+                return this.gamepad2.left_stick_x;
+            case SECONDARY_RIGHT_JOYSTICK:
+                return this.gamepad2.right_stick_x;
         }
         return 0.0;
     }
@@ -245,6 +251,10 @@ public class Controller {
                 return this.gamepad1.left_stick_y;
             case PRIMARY_RIGHT_JOYSTICK:
                 return this.gamepad1.right_stick_y;
+            case SECONDARY_LEFT_JOYSTICK:
+                return this.gamepad2.left_stick_y;
+            case SECONDARY_RIGHT_JOYSTICK:
+                return this.gamepad2.right_stick_y;
         }
         return 0.0;
     }
@@ -255,6 +265,10 @@ public class Controller {
                 return this.gamepad1.left_stick_x;
             case PRIMARY_RIGHT_JOYSTICK:
                 return this.gamepad1.right_stick_x;
+            case SECONDARY_LEFT_JOYSTICK:
+                return this.gamepad2.left_stick_x;
+            case SECONDARY_RIGHT_JOYSTICK:
+                return this.gamepad2.right_stick_x;
         }
         return 0.0;
     }
@@ -265,6 +279,10 @@ public class Controller {
                 return -this.gamepad1.left_stick_y;
             case PRIMARY_RIGHT_JOYSTICK:
                 return -this.gamepad1.right_stick_y;
+            case SECONDARY_LEFT_JOYSTICK:
+                return this.gamepad2.left_stick_y;
+            case SECONDARY_RIGHT_JOYSTICK:
+                return this.gamepad2.right_stick_y;
         }
         return 0.0;
     }
@@ -280,7 +298,13 @@ public class Controller {
         return buttonIsOn(this.intakeBtn);
     }
 
-    public boolean revIntake() { return buttonIsOn(this.revIntakeBtn); }
+    public boolean outPrespin() {
+        return buttonIsOn(this.outPrespinBtn);
+    }
+    
+    public boolean unjam() {
+        return buttonIsOn(this.unjamBtn);
+    }
 
     public boolean outPurple() {
         return buttonIsOn(this.outPurpleBtn);
@@ -329,8 +353,14 @@ public class Controller {
     public boolean intakePressed() {
         return buttonPressed(this.intakeBtn);
     }
-
-    public boolean revIntakePressed() { return buttonPressed(this.revIntakeBtn); }
+    
+    public boolean outPrespinPressed() {
+        return buttonPressed(this.outPrespinBtn);
+    }
+    
+    public boolean unjamPressed() {
+        return buttonPressed(this.unjamBtn);
+    }
 
     public boolean outPurplePressed() {
         return buttonPressed(this.outPurpleBtn);

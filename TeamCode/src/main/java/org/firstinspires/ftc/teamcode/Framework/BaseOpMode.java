@@ -10,8 +10,10 @@ import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.IMU;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.VoltageSensor;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
+import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.teamcode.Framework.Hardware.Drivetrain;
 import org.firstinspires.ftc.teamcode.Framework.Hardware.Intake;
 import org.firstinspires.ftc.teamcode.Framework.Hardware.Outtake;
@@ -33,6 +35,8 @@ public abstract class BaseOpMode extends LinearOpMode {
     protected Vision vision;
     protected Controller controller;
     protected IMU imuSensor;
+    protected ElapsedTime matchTimer;
+    protected double imuOffset = 0;
 
     public final boolean PADDLE_MOTOR = false;
     
@@ -95,6 +99,8 @@ public abstract class BaseOpMode extends LinearOpMode {
         controller = new Controller(gamepad1,gamepad2);
 
         imuSensor = initializeIMUSensor();
+        
+        matchTimer = new ElapsedTime(ElapsedTime.Resolution.MILLISECONDS);
     }
     
     private IMU initializeIMUSensor()
@@ -104,6 +110,7 @@ public abstract class BaseOpMode extends LinearOpMode {
                 RevHubOrientationOnRobot.LogoFacingDirection.LEFT,
                 RevHubOrientationOnRobot.UsbFacingDirection.UP));
         imu.initialize(parameters);
+        imuOffset = imuSensor.getRobotYawPitchRollAngles().getYaw(AngleUnit.RADIANS);
         return imu;
     }
     

@@ -2,8 +2,6 @@ package org.firstinspires.ftc.teamcode;
 
 import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.teamcode.Framework.BaseOpMode;
@@ -30,51 +28,40 @@ public class JellyTele extends BaseOpMode {
     public static double DISTANCE_FAR = 70;
     public static double AIM_ROTATION_SPEED = 0.02;
     
-    private double imuOffset = 0;
-    
-    private long loopTime = 0;
+    private long prevLoopNanoTime = 0;
 
     private enum SpinState {
         STANDBY,
+        PRESPIN_OUTTAKE,
         SPIN_INTAKE,
         SPIN_OUTTAKE,
         INTAKING,
-        OUTTAKING
+        OUTTAKING,
+        UNJAM
     }
     private SpinState spinState = SpinState.STANDBY;
     private boolean motifOuttakeLock = false;
-    private boolean reversingIntake = false;
-    private Artifact[] currentMotifArtifacts;
     private int motifOuttakeIndex = 0;
-    private long spindexerStartTime = 0;
-    private long outtakeStartTime = 0;
+    private long delayStartTime = 0;
     private double aimRotation = 0;
-    private long spinOuttakeDelaySkip = SPIN_OUTTAKE_DELAY_LONG;
+    private long dynamicSpinOuttakeDelay = SPIN_OUTTAKE_DELAY_LONG;
+    private boolean alertedEndgame = false;
 
     
     @Override
     public void runOpMode() throws InterruptedException {
         initHardware(false);
-        imuOffset = imuSensor.getRobotYawPitchRollAngles().getYaw(AngleUnit.RADIANS);
         initFinishedTelemetry();
-        ElapsedTime timer = new ElapsedTime();
         waitForStart();
-        timer.reset();
+        matchTimer.reset();
         while (opModeIsActive()) {
             updateDrive();
             updateAux();
             updateParameters();
-            if (timer.seconds() >= 100 & timer.seconds() <= 100.2) {
-                alertEndgame();
-            }
+            updateTiming();
             telemetry.update();
         }
         stopHardware();
-    }
-
-    private void alertEndgame() {
-        controller.rumble(300, true);
-        controller.rumble(300, false);
     }
     
     // testing only -- keep this commented for normal use
@@ -88,83 +75,59 @@ public class JellyTele extends BaseOpMode {
 
     // main auxiliary logic for intake, spindexer, outtake, and vision integrations
     private void updateAux() {
-        boolean spinInCompleted = System.currentTimeMillis() - spindexerStartTime >= SPIN_INTAKE_DELAY;
-        boolean spinOutCompleted = System.currentTimeMillis() - spindexerStartTime >= spinOuttakeDelaySkip;
-        boolean outtakeCompleted = System.currentTimeMillis() - outtakeStartTime >= OUTTAKE_DELAY;
+        boolean spinInCompleted = System.currentTimeMillis() - delayStartTime >= SPIN_INTAKE_DELAY;
+        boolean spinOutCompleted = System.currentTimeMillis() - delayStartTime >= dynamicSpinOuttakeDelay;
+        boolean outtakeCompleted = System.currentTimeMillis() - delayStartTime >= OUTTAKE_DELAY;
         aimRotation = 0;
-        if (controller.revIntake() && !reversingIntake) { // TODO: this could prob be improved
-            spindexer.deenergize();
-            intake.reverse();
-            paddleDown();
-            outtake.off();
-            reversingIntake = true;
-        } else if (reversingIntake && !controller.revIntake()) { // reset everything and go to standby
-            intake.off();
-            spindexer.energize();
-            spinPostIntake();
-            motifOuttakeLock = false;
-            spinOuttakeDelaySkip = SPIN_OUTTAKE_DELAY_LONG;
-            reversingIntake = false;
-            spinState = SpinState.STANDBY;
-        } else if (spinState == SpinState.INTAKING) {
-            Artifact detectedArtifact = colorSensor.getArtifact();
-            if (detectedArtifact != Artifact.NONE) {
-                intake.off();
-                spindexer.setContents(detectedArtifact);
-                spinState = SpinState.STANDBY;
-                spinPostIntake(); // TODO: consider if necessary, doesn't currently save time
+        
+        // TODO: try controller lighting effects for each spin state (this could be right here or at each spinState write)
+        if (controller.unjam()) { // ↓ ------------------ ↓ START UNJAM ↓ ------------------ ↓
+            if (spinState != SpinState.UNJAM) {
+                unjamControl(true);
             }
-        } else if (spinState == SpinState.OUTTAKING && outtakeCompleted) {
-            outtake.off();
-            paddleDown();
-            spindexer.setContents(Artifact.NONE);
-            spinState = SpinState.STANDBY;
-            drivetrain.setMotorZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
-            spinOuttakeDelaySkip = SPIN_OUTTAKE_DELAY_SHORT;
-        } else if (spinState == SpinState.SPIN_INTAKE && spinInCompleted) {
-            intake.on();
-            spinState = SpinState.INTAKING;
+        } else if (spinState == SpinState.UNJAM) {
+            if (!controller.unjam()) {
+                unjamControl(false);
+            } // ↑ -------------- ↑ -------------- ↑ END UNJAM ↑ -------------- ↑ -------------- ↑
+        } else if (spinState == SpinState.INTAKING) {
+            checkIntakeCompleted();
+        } else if (spinState == SpinState.OUTTAKING) {
+            if (outtakeCompleted) {
+                stopOuttake();
+            }
+        } else if (spinState == SpinState.SPIN_INTAKE) {
+            if (spinInCompleted) {
+                intake.on();
+                spinState = SpinState.INTAKING;
+            }
+        } else if (spinState == SpinState.PRESPIN_OUTTAKE) {
+            if (!motifOuttakeLock) {
+                if (handleOuttakeButtons()) {
+                    outtakeVision(false); // TODO: should aim correction be applied during
+                }
+            } else {
+                iterateMotifOuttake();
+            }
         } else if (spinState == SpinState.SPIN_OUTTAKE) {
             if (spinOutCompleted) {
-                paddleUp();
-                outtakeStartTime = System.currentTimeMillis();
-                spinState = SpinState.OUTTAKING;
+                startOuttake();
             } else {
-                aimRotation = vision.getGoalBearing(Params.alliance) * AIM_ROTATION_SPEED;
-                // power up outtake early
-                double distance = vision.getGoalDistance(Params.alliance);
-                if (distance > DISTANCE_FAR && distance < DISTANCE_TOO_FAR) {
-                    outtake.onFar();
-                } else { // near is default
-                    outtake.onNear();
-                }
+                outtakeVision(true);
             }
         } else if (spinState == SpinState.STANDBY) {
             if (!motifOuttakeLock) {
                 if (controller.intake()) {
                     spinIntake();
-                } else if (controller.outGreen()) {
-                    drivetrain.setMotorZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-                    spinOuttake(Artifact.GREEN);
-                } else if (controller.outPurple()) {
-                    drivetrain.setMotorZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-                    spinOuttake(Artifact.PURPLE);
-                } else if (controller.outMotif()) {
-                    drivetrain.setMotorZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-                    motifOuttakeLock = true;
-                    currentMotifArtifacts = Params.motifArtifacts.get(Params.motif);
-                    motifOuttakeIndex = 0;
-                } else {
-                    spinOuttakeDelaySkip = SPIN_OUTTAKE_DELAY_LONG;
+                } else if (handleOuttakeButtons()) {
+                    // ↑ this doesn't just get the return for the if, it also handles the button presses
+                    if (controller.outPrespin()) {
+                        spinState = SpinState.PRESPIN_OUTTAKE;
+                    } else {
+                        dynamicSpinOuttakeDelay = SPIN_OUTTAKE_DELAY_LONG;
+                    }
                 }
             } else { // Motif Outtake Logic ↓
-                if(motifOuttakeIndex >= 3){
-                    motifOuttakeLock = false;
-                    spinOuttakeDelaySkip = SPIN_OUTTAKE_DELAY_LONG;
-                } else {
-                    spinOuttake(currentMotifArtifacts[motifOuttakeIndex]);
-                    motifOuttakeIndex += 1;
-                }
+                iterateMotifOuttake();
             }
         }
         
@@ -184,13 +147,40 @@ public class JellyTele extends BaseOpMode {
         telemetry.addData("\tSlot 1", spindexer.getContents(1));
         telemetry.addData("\tSlot 2", spindexer.getContents(2));
         telemetry.addData("\tSlot 3", spindexer.getContents(3));
-        telemetry.addData("\tOuttakeSpinDelay", spinOuttakeDelaySkip);
+        telemetry.addData("\tOuttakeSpinDelay", dynamicSpinOuttakeDelay);
         
         telemetry.addLine();
         telemetry.addLine("Vision & Color:");
         telemetry.addData("\tGoalBearing", vision.getGoalBearing(Params.alliance)); // potentially heavy
         telemetry.addData("\tGoalDistance", vision.getGoalDistance(Params.alliance)); // potentially heavy
         telemetry.addData("\tColorSensor", colorSensor.getArtifact());
+    }
+    
+    // handle button presses for 3 outtake options, and return true if no buttons were handled
+    private boolean handleOuttakeButtons() {
+        if (controller.outGreen()) {
+            spinOuttake(Artifact.GREEN);
+            return false;
+        } else if (controller.outPurple()) {
+            spinOuttake(Artifact.PURPLE);
+            return false;
+        } else if (controller.outMotif()) {
+            motifOuttakeLock = true;
+            motifOuttakeIndex = 0;
+            return false;
+        } else {
+            return true;
+        }
+    }
+    
+    private void iterateMotifOuttake() {
+        if (motifOuttakeIndex >= Params.motifArtifacts().length) {
+            motifOuttakeLock = false;
+            dynamicSpinOuttakeDelay = SPIN_OUTTAKE_DELAY_LONG;
+        } else {
+            spinOuttake(Params.motifArtifacts()[motifOuttakeIndex]);
+            motifOuttakeIndex += 1;
+        }
     }
     
     private void spinIntake() {
@@ -201,7 +191,7 @@ public class JellyTele extends BaseOpMode {
         }
         paddleDown(); // backup safety
         spindexer.setSlotIn(slot);
-        spindexerStartTime = System.currentTimeMillis();
+        delayStartTime = System.currentTimeMillis();
         spinState = SpinState.SPIN_INTAKE;
     }
 
@@ -214,8 +204,8 @@ public class JellyTele extends BaseOpMode {
         }
         paddleDown(); // backup safety
         spindexer.setSlotOut(slot);
-        spindexer.setContents(Artifact.NONE);
-        spindexerStartTime = System.currentTimeMillis();
+        drivetrain.brake(); // TODO: switch this back to below in startOuttake()? (drivers pref)
+        delayStartTime = System.currentTimeMillis();
         spinState = SpinState.SPIN_OUTTAKE;
     }
     
@@ -226,6 +216,63 @@ public class JellyTele extends BaseOpMode {
             spindexer.setSlotOut(1);
         } else {
             spindexer.setSlotIn(slot);
+        }
+    }
+    
+    private void checkIntakeCompleted() {
+        Artifact detectedArtifact = colorSensor.getArtifact();
+        if (detectedArtifact != Artifact.NONE) {
+            intake.off();
+            spindexer.setContents(detectedArtifact);
+            spinState = SpinState.STANDBY;
+            spinPostIntake(); // TODO: consider if necessary, doesn't currently save time
+        }
+    }
+    
+    private void outtakeVision(boolean aim) {
+        if (aim) {
+            aimRotation = vision.getGoalBearing(Params.alliance) * AIM_ROTATION_SPEED;
+        }
+        // ↓ decide power based on vision ↓
+        double distance = vision.getGoalDistance(Params.alliance);
+        if (distance > DISTANCE_FAR && distance < DISTANCE_TOO_FAR) {
+            outtake.onFar();
+        } else { // near is default
+            outtake.onNear();
+        }
+    }
+    
+    private void startOuttake() {
+//        drivetrain.brake(); // TODO: switch this back to here from spinOuttake()? (drivers pref)
+        paddleUp();
+        delayStartTime = System.currentTimeMillis();
+        spinState = SpinState.OUTTAKING;
+    }
+    
+    private void stopOuttake() {
+        outtake.off();
+        paddleDown();
+        spindexer.setContents(Artifact.NONE);
+        spinState = SpinState.STANDBY;
+        drivetrain.coast();
+        dynamicSpinOuttakeDelay = SPIN_OUTTAKE_DELAY_SHORT;
+    }
+    
+    private void unjamControl(boolean start) {
+        if (start) { // start unjam
+            spinState = SpinState.UNJAM;
+            spindexer.deenergize();
+            intake.reverse();
+            paddleDown();
+            outtake.off();
+            drivetrain.coast();
+            motifOuttakeLock = false;
+            dynamicSpinOuttakeDelay = SPIN_OUTTAKE_DELAY_LONG;
+        } else { // stop unjam
+            intake.off();
+            spindexer.energize();
+            spinPostIntake();
+            spinState = SpinState.STANDBY;
         }
     }
 
@@ -248,11 +295,12 @@ public class JellyTele extends BaseOpMode {
         telemetry.addLine("Match:");
         telemetry.addData("\tAlliance", Params.alliance);
         telemetry.addData("\tMotif", Params.motif);
-        
-        
+    }
+    
+    private void updateTiming() {
         // loops per sec experiment
-        long currentTime = System.nanoTime();
-        long nanoPerLoop = currentTime - loopTime;
+        long currentNanoTime = System.nanoTime();
+        long nanoPerLoop = currentNanoTime - prevLoopNanoTime;
         
         double loopsPerSec = 0;
         if (nanoPerLoop > 0) {
@@ -262,7 +310,17 @@ public class JellyTele extends BaseOpMode {
         telemetry.addLine();
         telemetry.addData("Millis Per Loop", (nanoPerLoop / 1e6));
         telemetry.addData("Loops Per Sec", loopsPerSec);
-        loopTime = currentTime;
+        prevLoopNanoTime = currentNanoTime;
+        
+        // endgame alert
+        if (matchTimer.seconds() >= 100 && !alertedEndgame) {
+            alertedEndgame = true;
+            // TODO: try custom rumble effects
+            controller.rumble(300, true);
+            controller.rumble(300, false);
+        }
+        
+        telemetry.addData("Match Time", matchTimer.seconds());
     }
     
     private void initFinishedTelemetry() {

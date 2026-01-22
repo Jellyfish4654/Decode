@@ -25,12 +25,12 @@ public class SensorColor {
 
     public SensorColor (RevColorSensorV3 sensor) {
         colorSensor = sensor;
+        colorSensor.setGain(GAIN);
     }
     
     public double[] detectRGBA() {
         colorSensor.setGain(GAIN);
         NormalizedRGBA raw = colorSensor.getNormalizedColors();
-        
         return new double[] {
                 Math.min(255, (raw.red*255*1000)),
                 Math.min(255, (raw.green*255*1000)),

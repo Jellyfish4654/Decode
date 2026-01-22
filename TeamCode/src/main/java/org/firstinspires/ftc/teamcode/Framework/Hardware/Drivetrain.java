@@ -17,9 +17,15 @@ public class Drivetrain {
         }
     }
 
-    public void setMotorZeroPowerBehavior(DcMotor.ZeroPowerBehavior behavior){
+    public void brake() {
         for (DcMotor driveMotor : driveMotors) {
-            driveMotor.setZeroPowerBehavior(behavior);
+            driveMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        }
+    }
+    
+    public void coast() { // couldn't use float to be consistent cuz its a keyword :(
+        for (DcMotor driveMotor : driveMotors) {
+            driveMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
         }
     }
 
