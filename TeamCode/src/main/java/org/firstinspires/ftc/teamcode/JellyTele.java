@@ -103,7 +103,7 @@ public class JellyTele extends BaseOpMode {
         } else if (spinState == SpinState.PRESPIN_OUTTAKE) {
             if (!motifOuttakeLock) {
                 if (handleOuttakeButtons()) {
-                    outtakeVision(false); // TODO: should aim correction be applied during
+                    outtakeVision(false); // TODO: should aim correction be applied during prespin?
                 }
             } else {
                 iterateMotifOuttake();
