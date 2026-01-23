@@ -45,7 +45,7 @@ public class AutoPositionFinder extends BaseAuto {
             headingSum = 0;
 
             for(AprilTagDetection tag : tagDetections){
-                if(!(tag.metadata.fieldPosition.get(0) == 0 && tag.metadata.fieldPosition.get(1) == 0 && tag.metadata.fieldPosition.get(2) == 0))
+                if(tag != null && !(tag.metadata.fieldPosition.get(0) == 0 && tag.metadata.fieldPosition.get(1) == 0 && tag.metadata.fieldPosition.get(2) == 0))
                 {
                     xSum += tag.robotPose.getPosition().x;
                     ySum += tag.robotPose.getPosition().y;
