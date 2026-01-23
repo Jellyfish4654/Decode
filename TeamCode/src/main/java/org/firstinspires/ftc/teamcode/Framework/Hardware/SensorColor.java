@@ -6,6 +6,7 @@ import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.hardware.rev.RevColorSensorV3;
 import com.qualcomm.robotcore.hardware.NormalizedRGBA;
 
+import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.teamcode.Framework.Params.Artifact;
 
 @Config
@@ -48,6 +49,10 @@ public class SensorColor {
                 hsvValues[1]*100,
                 hsvValues[2]*100
         };
+    }
+    
+    public double detectDistance() { // TODO: experiment with this?
+        return colorSensor.getDistance(DistanceUnit.MM);
     }
 
     

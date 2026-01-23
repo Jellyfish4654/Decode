@@ -27,7 +27,9 @@ public class ColorTuner extends LinearOpMode
         while (opModeIsActive()) {
             detectedColors = color.detectRGBA();
             hsvValues = color.detectHSV();
-
+            
+            telemetry.addData("Artifact", color.detectDistance());
+            
             telemetry.addData("R", detectedColors[0]);
             telemetry.addData("G", detectedColors[1]);
             telemetry.addData("B", detectedColors[2]);
@@ -37,8 +39,8 @@ public class ColorTuner extends LinearOpMode
             telemetry.addData("S", hsvValues[1]);
             telemetry.addData("V", hsvValues[2]);
 
-            telemetry.addData("Is green?",color.isGreen());
-            telemetry.addData("Is purple?",color.isPurple());
+            telemetry.addData("Is green?", color.isGreen());
+            telemetry.addData("Is purple?", color.isPurple());
             telemetry.addData("Artifact", color.getArtifact());
             telemetry.update();
         }
