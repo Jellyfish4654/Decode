@@ -9,7 +9,7 @@ import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 
 import org.firstinspires.ftc.teamcode.Framework.Hardware.SensorColor;
 
-@TeleOp(name = "Color Tuner", group = "2-Tuner")
+@TeleOp(name = "Color Tuner", group = "3-Tuner")
 public class ColorTuner extends LinearOpMode
 {
     @Override

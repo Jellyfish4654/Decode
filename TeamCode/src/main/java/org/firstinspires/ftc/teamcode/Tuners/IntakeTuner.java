@@ -7,7 +7,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 
-@TeleOp(name = "Intake Tuner", group = "2-Tuner")
+@TeleOp(name = "Intake Tuner", group = "3-Tuner")
 public class IntakeTuner extends LinearOpMode
 {
     @Override

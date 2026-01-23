@@ -8,7 +8,7 @@ import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import org.firstinspires.ftc.teamcode.Framework.Hardware.PaddleMotor;
 
-@TeleOp(name = "Paddle Motor Tuner", group = "2-Tuner")
+@TeleOp(name = "Paddle Motor Tuner", group = "3-Tuner")
 public class PaddleMotorTuner extends LinearOpMode
 {
     @Override
