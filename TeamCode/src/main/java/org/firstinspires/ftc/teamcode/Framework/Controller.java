@@ -2,6 +2,9 @@ package org.firstinspires.ftc.teamcode.Framework;
 
 
 import com.qualcomm.robotcore.hardware.Gamepad;
+
+import org.firstinspires.ftc.teamcode.JellyTele;
+
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 
@@ -53,6 +56,7 @@ public class Controller {
     Button intakeBtn;
     Button outPrespinBtn;
     Button unjamBtn;
+    Button clearSpindexerBtn;
     Button driveModeBtn;
     Button allianceRedBtn;
     Button allianceBlueBtn;
@@ -69,7 +73,7 @@ public class Controller {
         this.gamepad2 = gamepad2;
         //CHANGE BELOW TO CHANGE CONTROLLER CONFIG
         
-        TRIGGER_BUTTON_THRESHOLD = 0.35;
+        TRIGGER_BUTTON_THRESHOLD = 0.5;
 
         //Primary functions (intake, outtake, drivetrain)
         this.outGreenBtn = Button.PRIMARY_CIRCLE;
@@ -78,6 +82,7 @@ public class Controller {
         this.intakeBtn = Button.PRIMARY_RIGHT_TRIGGER_BUTTON;
         this.outPrespinBtn = Button.PRIMARY_TRIANGLE; // TODO: swap this and motif button?
         this.unjamBtn = Button.SECONDARY_LEFT_TRIGGER_BUTTON;
+        this.clearSpindexerBtn = Button.SECONDARY_RIGHT_TRIGGER_BUTTON;
 
         this.lowPrecisionBtn = Button.PRIMARY_LEFT_BUMPER;
         this.highPrecisionBtn = Button.PRIMARY_RIGHT_BUMPER;
@@ -94,7 +99,9 @@ public class Controller {
         this.motifGPPBtn = Button.SECONDARY_DPAD_LEFT;
         this.motifPGPBtn = Button.SECONDARY_DPAD_UP;
         this.motifPPGBtn = Button.SECONDARY_DPAD_RIGHT;
-
+        
+        this.gamepad1.setTriggerThreshold((float) TRIGGER_BUTTON_THRESHOLD);
+        this.gamepad2.setTriggerThreshold((float) TRIGGER_BUTTON_THRESHOLD);
     }
 
     private Field getField(Button btn) throws NoSuchFieldException{
@@ -135,10 +142,10 @@ public class Controller {
                 return Gamepad.class.getField("ps");
             case PRIMARY_LEFT_TRIGGER_BUTTON:
             case SECONDARY_LEFT_TRIGGER_BUTTON:
-                return Gamepad.class.getField("left_trigger");
+                return Gamepad.class.getField("left_trigger_pressed");
             case PRIMARY_RIGHT_TRIGGER_BUTTON:
             case SECONDARY_RIGHT_TRIGGER_BUTTON:
-                return Gamepad.class.getField("right_trigger");
+                return Gamepad.class.getField("right_trigger_pressed");
         }
 
         return null;
@@ -214,16 +221,7 @@ public class Controller {
     
     private boolean buttonIsOn(Button btn){
         try {
-            switch (btn) {
-                case PRIMARY_LEFT_TRIGGER_BUTTON:
-                case SECONDARY_LEFT_TRIGGER_BUTTON:
-                    return chooseGamepad(btn).left_trigger_pressed;
-                case PRIMARY_RIGHT_TRIGGER_BUTTON:
-                case SECONDARY_RIGHT_TRIGGER_BUTTON:
-                    return chooseGamepad(btn).right_trigger_pressed;
-                default:
-                    return this.getField(btn).getBoolean(chooseGamepad(btn));
-            }
+            return this.getField(btn).getBoolean(chooseGamepad(btn));
         }catch (Exception e){
             return false;
         }
@@ -311,6 +309,10 @@ public class Controller {
     public boolean unjam() {
         return buttonIsOn(this.unjamBtn);
     }
+    
+    public boolean clearSpindexer() {
+        return buttonIsOn(this.clearSpindexerBtn);
+    }
 
     public boolean outPurple() {
         return buttonIsOn(this.outPurpleBtn);
@@ -367,6 +369,10 @@ public class Controller {
     public boolean unjamPressed() {
         return buttonPressed(this.unjamBtn);
     }
+    
+    public boolean clearSpindexerPressed() {
+        return buttonPressed(this.clearSpindexerBtn);
+    }
 
     public boolean outPurplePressed() {
         return buttonPressed(this.outPurpleBtn);
@@ -420,12 +426,55 @@ public class Controller {
         }
 
     }
-    public void rumble(double rumble1, double rumble2, int durationMs, boolean rumbleSecondary){
-        if(rumbleSecondary){
-            this.gamepad2.rumble(rumble1,rumble2,durationMs);
-        }else{
-            this.gamepad1.rumble(rumble1,rumble2,durationMs);
+//    public void rumble(double rumble1, double rumble2, int durationMs, boolean rumbleSecondary){
+//        if(rumbleSecondary){
+//            this.gamepad2.rumble(rumble1,rumble2,durationMs);
+//        }else{
+//            this.gamepad1.rumble(rumble1,rumble2,durationMs);
+//        }
+//
+//    }
+    
+    public void megaRumble() {
+        Gamepad.RumbleEffect megaEffect = new Gamepad.RumbleEffect.Builder()
+                .addStep(1, 0, 250)
+                .addStep(0, 1, 250)
+                .addStep(1, 0, 250)
+                .addStep(0, 1, 250)
+                .addStep(1, 1, 500)
+                .build();
+        gamepad1.runRumbleEffect(megaEffect);
+        gamepad2.runRumbleEffect(megaEffect);
+    }
+    
+    public void setLEDs(JellyTele.SpinState state) {
+        double[] rgb = {0, 0, 0};
+        if (state != null) {
+            switch (state) {
+                case STANDBY:
+                    rgb = new double[] {0.9, 1, 0.9}; // white
+                    break;
+                case PRESPIN_OUTTAKE:
+                    rgb = new double[] {1, 0, 1}; // purple
+                    break;
+                case SPIN_INTAKE:
+                    rgb = new double[] {1, 1, 0}; // yellow
+                    break;
+                case SPIN_OUTTAKE:
+                    rgb = new double[] {0, 0.7, 1}; // cyan
+                    break;
+                case INTAKING:
+                    rgb = new double[] {0, 1, 0}; // green
+                    break;
+                case OUTTAKING:
+                    rgb = new double[] {0, 0.2, 1}; // blue
+                    break;
+                case UNJAM:
+                    rgb = new double[] {1, 0, 0}; // red
+                    break;
+            }
         }
-
+        this.gamepad1.setLedColor(rgb[0], rgb[1], rgb[2], Gamepad.LED_DURATION_CONTINUOUS); // TODO: keep LED for main driver?
+        this.gamepad2.setLedColor(rgb[0], rgb[1], rgb[2], Gamepad.LED_DURATION_CONTINUOUS);
     }
 }

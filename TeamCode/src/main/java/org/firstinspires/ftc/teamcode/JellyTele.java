@@ -30,7 +30,7 @@ public class JellyTele extends BaseOpMode {
     
     private long prevLoopNanoTime = 0;
 
-    private enum SpinState {
+    public enum SpinState {
         STANDBY,
         PRESPIN_OUTTAKE,
         SPIN_INTAKE,
@@ -79,8 +79,14 @@ public class JellyTele extends BaseOpMode {
         boolean spinOutCompleted = System.currentTimeMillis() - delayStartTime >= dynamicSpinOuttakeDelay;
         boolean outtakeCompleted = System.currentTimeMillis() - delayStartTime >= OUTTAKE_DELAY;
         aimRotation = 0;
+        controller.setLEDs(spinState);
         
-        // TODO: try controller lighting effects for each spin state (this could be right here or at each spinState write)
+        if (controller.clearSpindexer()) {
+            spindexer.setContents(1, Artifact.NONE);
+            spindexer.setContents(2, Artifact.NONE);
+            spindexer.setContents(3, Artifact.NONE);
+        }
+        
         if (controller.unjam()) { // ↓ ------------------ ↓ START UNJAM ↓ ------------------ ↓
             if (spinState != SpinState.UNJAM) {
                 unjamControl(true);
@@ -121,7 +127,12 @@ public class JellyTele extends BaseOpMode {
                 } else if (handleOuttakeButtons()) {
                     // ↑ this doesn't just get the return for the if, it also handles the button presses
                     if (controller.outPrespin()) {
-                        spinState = SpinState.PRESPIN_OUTTAKE;
+                        boolean anySlotsOccupied = spindexer.findSlot(Artifact.GREEN) != 0 || spindexer.findSlot(Artifact.PURPLE) != 0;
+                        if (anySlotsOccupied) {
+                            spinState = SpinState.PRESPIN_OUTTAKE;
+                        } else {
+                            controller.rumble(200,false);
+                        }
                     } else {
                         dynamicSpinOuttakeDelay = SPIN_OUTTAKE_DELAY_LONG;
                     }
@@ -315,12 +326,10 @@ public class JellyTele extends BaseOpMode {
         // endgame alert
         if (matchTimer.seconds() >= 100 && !alertedEndgame) {
             alertedEndgame = true;
-            // TODO: try custom rumble effects
-            controller.rumble(300, true);
-            controller.rumble(300, false);
+            controller.megaRumble();
         }
         
-        telemetry.addData("Match Time", matchTimer.seconds());
+        telemetry.addData("Match Time", (int) matchTimer.seconds());
     }
     
     private void initFinishedTelemetry() {

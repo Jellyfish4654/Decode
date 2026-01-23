@@ -97,8 +97,10 @@ public abstract class BaseOpMode extends LinearOpMode {
         vision = new Vision(hardwareMap.get(WebcamName.class, "vision"), this);
 
         controller = new Controller(gamepad1,gamepad2);
+        controller.setLEDs(null);
 
         imuSensor = initializeIMUSensor();
+        imuOffset = imuSensor.getRobotYawPitchRollAngles().getYaw(AngleUnit.RADIANS);
         
         matchTimer = new ElapsedTime(ElapsedTime.Resolution.MILLISECONDS);
     }
@@ -110,7 +112,6 @@ public abstract class BaseOpMode extends LinearOpMode {
                 RevHubOrientationOnRobot.LogoFacingDirection.LEFT,
                 RevHubOrientationOnRobot.UsbFacingDirection.UP));
         imu.initialize(parameters);
-        imuOffset = imuSensor.getRobotYawPitchRollAngles().getYaw(AngleUnit.RADIANS);
         return imu;
     }
     
