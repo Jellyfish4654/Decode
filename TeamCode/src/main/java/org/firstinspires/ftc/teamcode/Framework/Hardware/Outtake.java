@@ -25,7 +25,7 @@ public class Outtake {
         this.guiding = guiding;
         this.voltageSensor = voltSensor;
         
-        outtake.setDirection(DcMotor.Direction.FORWARD);
+        outtake.setDirection(DcMotor.Direction.REVERSE);
         outtake.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
         
         guiding.setDirection(DcMotor.Direction.FORWARD);
