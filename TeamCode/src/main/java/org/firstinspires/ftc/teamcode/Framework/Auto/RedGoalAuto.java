@@ -132,13 +132,13 @@ public class RedGoalAuto extends BaseAuto {
                                 spindexer.contentsSet(Artifact.PURPLE),
                                 new ParallelAction(
                                         spindexer.slotIn(),
-                                        new SleepAction(JellyTele.SPIN_INTAKE_DELAY/1000.0)
+                                        new SleepAction(JellyTele.SPINDEXER_DELAY /1000.0)
                                 ),
                                 collectArtifact2.build(),
                                 spindexer.contentsSet(Artifact.PURPLE),
                                 new ParallelAction(
                                         spindexer.slotIn(),
-                                        new SleepAction(JellyTele.SPIN_INTAKE_DELAY/1000.0)
+                                        new SleepAction(JellyTele.SPINDEXER_DELAY /1000.0)
                                 ),
                                 collectArtifact3.build(),
                                 spindexer.contentsSet(Artifact.GREEN),
@@ -156,13 +156,13 @@ public class RedGoalAuto extends BaseAuto {
                                 spindexer.contentsSet(Artifact.PURPLE),
                                 new ParallelAction(
                                         spindexer.slotIn(),
-                                        new SleepAction(JellyTele.SPIN_INTAKE_DELAY/1000.0)
+                                        new SleepAction(JellyTele.SPINDEXER_DELAY /1000.0)
                                 ),
                                 collectArtifact5.build(),
                                 spindexer.contentsSet(Artifact.GREEN),
                                 new ParallelAction(
                                         spindexer.slotIn(),
-                                        new SleepAction(JellyTele.SPIN_INTAKE_DELAY/1000.0)
+                                        new SleepAction(JellyTele.SPINDEXER_DELAY /1000.0)
                                 ),
                                 collectArtifact6.build(),
                                 spindexer.contentsSet(Artifact.PURPLE),

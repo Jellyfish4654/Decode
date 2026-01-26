@@ -58,7 +58,7 @@ public abstract class BaseOpMode extends LinearOpMode {
         drivetrain.setMotorDirections(new DcMotor.Direction[]{
                 DcMotor.Direction.REVERSE, // motorFL
                 DcMotor.Direction.REVERSE, // motorBL
-                DcMotor.Direction.FORWARD, // motorFR
+                DcMotor.Direction.FORWARD, // motorFR // TODO: check wiring and flip if necessary
                 DcMotor.Direction.FORWARD  // motorBR
         });
         

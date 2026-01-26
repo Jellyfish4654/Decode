@@ -50,17 +50,17 @@ public abstract class BaseAuto extends BaseOpMode {
             new ParallelAction(
                     spindexer.greenOut(),
                     outtake.outtakeOnNear(),
-                    new SleepAction(JellyTele.SPIN_OUTTAKE_DELAY_LONG/1000.0),
+                    new SleepAction(JellyTele.FLY_OUTTAKE_DELAY_LONG /1000.0),
                     outtake.outtakeOnNear()
             ),
             swingPaddle(),
             spindexer.purpleOut(),
             outtake.outtakeOnNear(),
-            new SleepAction(JellyTele.SPIN_OUTTAKE_DELAY_SHORT/1000.0),
+            new SleepAction(JellyTele.FLY_OUTTAKE_DELAY_SHORT /1000.0),
             swingPaddle(),
             spindexer.purpleOut(),
             outtake.outtakeOnNear(),
-            new SleepAction(JellyTele.SPIN_OUTTAKE_DELAY_SHORT/1000.0),
+            new SleepAction(JellyTele.FLY_OUTTAKE_DELAY_SHORT /1000.0),
             swingPaddle(),
             outtake.outtakeOff()
     );}
@@ -68,17 +68,17 @@ public abstract class BaseAuto extends BaseOpMode {
             new ParallelAction(
                     spindexer.purpleOut(),
                     outtake.outtakeOnNear(),
-                    new SleepAction(JellyTele.SPIN_OUTTAKE_DELAY_LONG/1000.0),
+                    new SleepAction(JellyTele.FLY_OUTTAKE_DELAY_LONG /1000.0),
                     outtake.outtakeOnNear()
             ),
             swingPaddle(),
             spindexer.greenOut(),
             outtake.outtakeOnNear(),
-            new SleepAction(JellyTele.SPIN_OUTTAKE_DELAY_SHORT/1000.0),
+            new SleepAction(JellyTele.FLY_OUTTAKE_DELAY_SHORT /1000.0),
             swingPaddle(),
             spindexer.purpleOut(),
             outtake.outtakeOnNear(),
-            new SleepAction(JellyTele.SPIN_OUTTAKE_DELAY_SHORT/1000.0),
+            new SleepAction(JellyTele.FLY_OUTTAKE_DELAY_SHORT /1000.0),
             swingPaddle(),
             outtake.outtakeOff()
     );}
@@ -86,17 +86,17 @@ public abstract class BaseAuto extends BaseOpMode {
             new ParallelAction(
                     spindexer.purpleOut(),
                     outtake.outtakeOnNear(),
-                    new SleepAction(JellyTele.SPIN_OUTTAKE_DELAY_LONG/1000.0),
+                    new SleepAction(JellyTele.FLY_OUTTAKE_DELAY_LONG /1000.0),
                     outtake.outtakeOnNear()
             ),
             swingPaddle(),
             spindexer.purpleOut(),
             outtake.outtakeOnNear(),
-            new SleepAction(JellyTele.SPIN_OUTTAKE_DELAY_SHORT/1000.0),
+            new SleepAction(JellyTele.FLY_OUTTAKE_DELAY_SHORT /1000.0),
             swingPaddle(),
             spindexer.greenOut(),
             outtake.outtakeOnNear(),
-            new SleepAction(JellyTele.SPIN_OUTTAKE_DELAY_SHORT/1000.0),
+            new SleepAction(JellyTele.FLY_OUTTAKE_DELAY_SHORT /1000.0),
             swingPaddle(),
             outtake.outtakeOff()
     );}

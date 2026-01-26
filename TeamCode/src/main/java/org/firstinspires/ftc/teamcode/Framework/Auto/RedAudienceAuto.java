@@ -119,13 +119,13 @@ public class RedAudienceAuto extends BaseAuto {
                         new ParallelAction(
                                 spindexer.purpleOut(),
                                 outtake.outtakeOnFar(),
-                                new SleepAction(JellyTele.SPIN_OUTTAKE_DELAY_LONG/1000.0)
+                                new SleepAction(JellyTele.FLY_OUTTAKE_DELAY_LONG /1000.0)
                         ),
                         swingPaddle(),
                         new ParallelAction(
                                 spindexer.greenOut(),
                                 outtake.outtakeOnFar(),
-                                new SleepAction(JellyTele.SPIN_OUTTAKE_DELAY_SHORT/1000.0)
+                                new SleepAction(JellyTele.FLY_OUTTAKE_DELAY_SHORT /1000.0)
                         ),
                         swingPaddle(),
                         outtake.outtakeOff(),

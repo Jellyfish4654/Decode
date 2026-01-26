@@ -19,10 +19,10 @@ public class JellyTele extends BaseOpMode {
     public static double DEADBAND_VALUE = 0.02;
     public static double STRAFE_ADJUSTMENT_FACTOR = 1.08;
     
-    public static long SPIN_INTAKE_DELAY = 550; // in millis
-    public static long SPIN_OUTTAKE_DELAY_LONG = 2700; // in millis -- TODO: still good?
-    public static long SPIN_OUTTAKE_DELAY_SHORT = 1000; // in millis -- for holding, motif, and auto sequences
-    public static long OUTTAKE_DELAY = 500; // in millis -- for full spin-up and assumed full spin-up
+    public static long SPINDEXER_DELAY = 550; // in millis
+    public static long FLY_OUTTAKE_DELAY_LONG = 2700; // in millis -- full time for outtake to spin up -- TODO: still good? (and below)
+    public static long FLY_OUTTAKE_DELAY_SHORT = 1000; // in millis -- recovery between sequential artifacts
+    public static long OUTTAKE_DELAY = 500; // in millis -- for artifact to fully outtake
     
     public static double DISTANCE_TOO_FAR = 200; // TODO: Adjust near/far distances?
     public static double DISTANCE_FAR = 70;
@@ -42,9 +42,11 @@ public class JellyTele extends BaseOpMode {
     private SpinState spinState = SpinState.STANDBY;
     private boolean motifOuttakeLock = false;
     private int motifOuttakeIndex = 0;
-    private long delayStartTime = 0;
+    private long spinDelayStartTime = 0;
+    private long flyDelayStartTime = 0;
+    private long outDelayStartTime = 0;
     private double aimRotation = 0;
-    private long dynamicSpinOuttakeDelay = SPIN_OUTTAKE_DELAY_LONG;
+    private long dynamicFlyOuttakeDelay = FLY_OUTTAKE_DELAY_LONG;
     private boolean alertedEndgame = false;
 
     
@@ -75,9 +77,9 @@ public class JellyTele extends BaseOpMode {
 
     // main auxiliary logic for intake, spindexer, outtake, and vision integrations
     private void updateAux() {
-        boolean spinInCompleted = System.currentTimeMillis() - delayStartTime >= SPIN_INTAKE_DELAY;
-        boolean spinOutCompleted = System.currentTimeMillis() - delayStartTime >= dynamicSpinOuttakeDelay;
-        boolean outtakeCompleted = System.currentTimeMillis() - delayStartTime >= OUTTAKE_DELAY;
+        boolean spinCompleted = System.currentTimeMillis() - spinDelayStartTime >= SPINDEXER_DELAY;
+        boolean flyOutCompleted = System.currentTimeMillis() - flyDelayStartTime >= dynamicFlyOuttakeDelay;
+        boolean outtakeCompleted = System.currentTimeMillis() - outDelayStartTime >= OUTTAKE_DELAY;
         aimRotation = 0;
         controller.setLEDs(spinState);
         
@@ -102,7 +104,7 @@ public class JellyTele extends BaseOpMode {
                 stopOuttake();
             }
         } else if (spinState == SpinState.SPIN_INTAKE) {
-            if (spinInCompleted) {
+            if (spinCompleted) {
                 intake.on();
                 spinState = SpinState.INTAKING;
             }
@@ -115,7 +117,7 @@ public class JellyTele extends BaseOpMode {
                 iterateMotifOuttake();
             }
         } else if (spinState == SpinState.SPIN_OUTTAKE) {
-            if (spinOutCompleted) {
+            if (spinCompleted && flyOutCompleted) {
                 startOuttake();
             } else {
                 outtakeVision(true);
@@ -124,17 +126,19 @@ public class JellyTele extends BaseOpMode {
             if (!motifOuttakeLock) {
                 if (controller.intake()) {
                     spinIntake();
+                    dynamicFlyOuttakeDelay = FLY_OUTTAKE_DELAY_LONG;
                 } else if (handleOuttakeButtons()) {
                     // ↑ this doesn't just get the return for the if, it also handles the button presses
                     if (controller.outPrespin()) {
                         boolean anySlotsOccupied = spindexer.findSlot(Artifact.GREEN) != 0 || spindexer.findSlot(Artifact.PURPLE) != 0;
                         if (anySlotsOccupied) {
                             spinState = SpinState.PRESPIN_OUTTAKE;
+                            flyDelayStartTime = System.currentTimeMillis();
                         } else {
                             controller.rumble(200,false);
                         }
                     } else {
-                        dynamicSpinOuttakeDelay = SPIN_OUTTAKE_DELAY_LONG;
+                        dynamicFlyOuttakeDelay = FLY_OUTTAKE_DELAY_LONG;
                     }
                 }
             } else { // Motif Outtake Logic ↓
@@ -151,6 +155,7 @@ public class JellyTele extends BaseOpMode {
         telemetry.addData("\tOuttakeVelocity", outtake.getVelocity());
         telemetry.addData("\tPaddleUp", paddleIsUp());
         telemetry.addData("\tMotif Lock",motifOuttakeLock);
+        telemetry.addData("\tDynamicOutFlyDelay", dynamicFlyOuttakeDelay);
 
         telemetry.addLine();
         telemetry.addLine("Spindexer:");
@@ -158,7 +163,6 @@ public class JellyTele extends BaseOpMode {
         telemetry.addData("\tSlot 1", spindexer.getContents(1));
         telemetry.addData("\tSlot 2", spindexer.getContents(2));
         telemetry.addData("\tSlot 3", spindexer.getContents(3));
-        telemetry.addData("\tOuttakeSpinDelay", dynamicSpinOuttakeDelay);
         
         telemetry.addLine();
         telemetry.addLine("Vision & Color:");
@@ -187,7 +191,7 @@ public class JellyTele extends BaseOpMode {
     private void iterateMotifOuttake() {
         if (motifOuttakeIndex >= Params.motifArtifacts().length) {
             motifOuttakeLock = false;
-            dynamicSpinOuttakeDelay = SPIN_OUTTAKE_DELAY_LONG;
+            dynamicFlyOuttakeDelay = FLY_OUTTAKE_DELAY_LONG;
         } else {
             spinOuttake(Params.motifArtifacts()[motifOuttakeIndex]);
             motifOuttakeIndex += 1;
@@ -202,7 +206,7 @@ public class JellyTele extends BaseOpMode {
         }
         paddleDown(); // backup safety
         spindexer.setSlotIn(slot);
-        delayStartTime = System.currentTimeMillis();
+        spinDelayStartTime = System.currentTimeMillis();
         spinState = SpinState.SPIN_INTAKE;
     }
 
@@ -216,7 +220,10 @@ public class JellyTele extends BaseOpMode {
         paddleDown(); // backup safety
         spindexer.setSlotOut(slot);
         drivetrain.brake(); // TODO: switch this back to below in startOuttake()? (drivers pref)
-        delayStartTime = System.currentTimeMillis();
+        spinDelayStartTime = System.currentTimeMillis();
+        if (spinState != SpinState.PRESPIN_OUTTAKE) {
+            flyDelayStartTime = System.currentTimeMillis();
+        }
         spinState = SpinState.SPIN_OUTTAKE;
     }
     
@@ -256,7 +263,7 @@ public class JellyTele extends BaseOpMode {
     private void startOuttake() {
 //        drivetrain.brake(); // TODO: switch this back to here from spinOuttake()? (drivers pref)
         paddleUp();
-        delayStartTime = System.currentTimeMillis();
+        outDelayStartTime = System.currentTimeMillis();
         spinState = SpinState.OUTTAKING;
     }
     
@@ -266,7 +273,7 @@ public class JellyTele extends BaseOpMode {
         spindexer.setContents(Artifact.NONE);
         spinState = SpinState.STANDBY;
         drivetrain.coast();
-        dynamicSpinOuttakeDelay = SPIN_OUTTAKE_DELAY_SHORT;
+        dynamicFlyOuttakeDelay = FLY_OUTTAKE_DELAY_SHORT;
     }
     
     private void unjamControl(boolean start) {
@@ -278,7 +285,7 @@ public class JellyTele extends BaseOpMode {
             outtake.off();
             drivetrain.coast();
             motifOuttakeLock = false;
-            dynamicSpinOuttakeDelay = SPIN_OUTTAKE_DELAY_LONG;
+            dynamicFlyOuttakeDelay = FLY_OUTTAKE_DELAY_LONG;
         } else { // stop unjam
             intake.off();
             spindexer.energize();
