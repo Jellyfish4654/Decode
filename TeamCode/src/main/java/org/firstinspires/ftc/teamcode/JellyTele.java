@@ -20,8 +20,8 @@ public class JellyTele extends BaseOpMode {
     public static double STRAFE_ADJUSTMENT_FACTOR = 1.08;
     
     public static long SPINDEXER_DELAY = 550; // in millis
-    public static long FLY_OUTTAKE_DELAY_LONG = 2700; // in millis -- full time for outtake to spin up -- TODO: still good? (and below)
-    public static long FLY_OUTTAKE_DELAY_SHORT = 1000; // in millis -- recovery between sequential artifacts
+    public static long FLY_OUTTAKE_DELAY_LONG = 3100; // in millis -- full time for outtake to spin up -- TODO: still good? (and below)
+    public static long FLY_OUTTAKE_DELAY_SHORT = 1300; // in millis -- recovery between sequential artifacts
     public static long OUTTAKE_DELAY = 500; // in millis -- for artifact to fully outtake
     
     public static double DISTANCE_TOO_FAR = 200; // TODO: Adjust near/far distances?

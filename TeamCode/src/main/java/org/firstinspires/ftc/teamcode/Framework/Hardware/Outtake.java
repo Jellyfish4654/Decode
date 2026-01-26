@@ -22,7 +22,7 @@ public class Outtake {
     public static double GUIDING_POWER = 1;
     
     // voltage compensation -- TODO: tune this now that it actually works
-    public static double VOLTAGE_COMP_STRENGTH = 1.3;
+    public static double VOLTAGE_COMP_STRENGTH = 1.031;
     public static double MIN_VOLTAGE_COMP = 0; // only use if its dropping unnecessarily
     
     public Outtake (DcMotor outtake, DcMotor guiding, VoltageSensor voltSensor) {
