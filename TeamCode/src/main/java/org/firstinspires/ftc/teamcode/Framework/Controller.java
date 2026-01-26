@@ -251,16 +251,16 @@ public class Controller {
         return 0.0;
     }
 
-    public double turnStickY(){
+    public double turnStickY(){  // y-values are inverted here so up is positive
         switch (this.turnStk){
             case PRIMARY_LEFT_JOYSTICK:
-                return this.gamepad1.left_stick_y;
+                return -this.gamepad1.left_stick_y;
             case PRIMARY_RIGHT_JOYSTICK:
-                return this.gamepad1.right_stick_y;
+                return -this.gamepad1.right_stick_y;
             case SECONDARY_LEFT_JOYSTICK:
-                return this.gamepad2.left_stick_y;
+                return -this.gamepad2.left_stick_y;
             case SECONDARY_RIGHT_JOYSTICK:
-                return this.gamepad2.right_stick_y;
+                return -this.gamepad2.right_stick_y;
         }
         return 0.0;
     }
@@ -279,16 +279,16 @@ public class Controller {
         return 0.0;
     }
 
-    public double moveStickY(){
+    public double moveStickY(){ // y-values are inverted here so up is positive
         switch (this.moveStk){
             case PRIMARY_LEFT_JOYSTICK:
                 return -this.gamepad1.left_stick_y;
             case PRIMARY_RIGHT_JOYSTICK:
                 return -this.gamepad1.right_stick_y;
             case SECONDARY_LEFT_JOYSTICK:
-                return this.gamepad2.left_stick_y;
+                return -this.gamepad2.left_stick_y;
             case SECONDARY_RIGHT_JOYSTICK:
-                return this.gamepad2.right_stick_y;
+                return -this.gamepad2.right_stick_y;
         }
         return 0.0;
     }
