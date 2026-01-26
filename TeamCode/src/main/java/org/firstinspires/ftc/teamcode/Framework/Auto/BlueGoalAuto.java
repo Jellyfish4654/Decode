@@ -132,23 +132,27 @@ public class BlueGoalAuto extends BaseAuto {
                         ),
                         new SequentialAction(
                                 collectArtifact1.build(),
-                                new SleepAction(0.5),
+                                intake.intakeOff(),
+                                new SleepAction(0.4),
                                 spindexer.contentsSet(Artifact.PURPLE),
                                 new ParallelAction(
+                                        intake.intakeOn(),
                                         spindexer.slotIn(),
                                         new SleepAction(JellyTele.SPINDEXER_DELAY /1000.0)
                                 ),
                                 collectArtifact2.build(),
-                                new SleepAction(0.5),
+                                intake.intakeOff(),
+                                new SleepAction(0.4),
                                 spindexer.contentsSet(Artifact.PURPLE),
                                 new ParallelAction(
+                                        intake.intakeOn(),
                                         spindexer.slotIn(),
                                         new SleepAction(JellyTele.SPINDEXER_DELAY /1000.0)
                                 ),
                                 collectArtifact3.build(),
-                                new SleepAction(0.5),
-                                spindexer.contentsSet(Artifact.GREEN),
-                                intake.intakeOff()
+                                intake.intakeOff(),
+                                new SleepAction(0.4),
+                                spindexer.contentsSet(Artifact.GREEN)
                         ),
                         outtake.outtakeOnNear(),
                         moveToShootFirst.build(),
