@@ -22,8 +22,8 @@ public class Outtake {
     public static double GUIDING_POWER = 1;
     
     // voltage compensation -- TODO: tune this now that it actually works
-    public static double NO_COMP_ABOVE_VOLTAGE = 13;
     public static double VOLTAGE_COMP_STRENGTH = 1.3;
+    public static double MIN_VOLTAGE_COMP = 0; // only use if its dropping unnecessarily
     
     public Outtake (DcMotor outtake, DcMotor guiding, VoltageSensor voltSensor) {
         this.outtake = outtake; // TODO: second outtake motor (check direction)
@@ -65,10 +65,10 @@ public class Outtake {
     }
     
     public double calcVoltageCompensation() {
-        double ratio = NO_COMP_ABOVE_VOLTAGE / getVoltage();
-        double boostOnlyRatio = Math.max(ratio, 1);
-        return Math.pow(boostOnlyRatio, VOLTAGE_COMP_STRENGTH);
+        double ratio = 13 / getVoltage();
+        double scaledRatio = Math.pow(ratio, VOLTAGE_COMP_STRENGTH);
         // Math.pow allows 12/12 to still be 1, while 12/10 to be larger than 1.2
+        return Math.max(scaledRatio, MIN_VOLTAGE_COMP);
     }
     
     public double getVelocity() {
