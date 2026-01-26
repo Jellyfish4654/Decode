@@ -145,10 +145,10 @@ public class JellyTele extends BaseOpMode {
         telemetry.addLine();
         telemetry.addLine("Aux:");
         telemetry.addData("\tSpinState", spinState);
-        telemetry.addData("\tVoltage", outtake.getVoltage());
-        telemetry.addData("\tVoltage Compensation", outtake.getVoltageCompensation());
         telemetry.addData("\tIntakeOn", intake.isOn());
+        telemetry.addData("\tOuttakeVoltComp", outtake.calcVoltageCompensation());
         telemetry.addData("\tOuttakePower", outtake.getPower());
+        telemetry.addData("\tOuttakeVelocity", outtake.getVelocity());
         telemetry.addData("\tPaddleUp", paddleIsUp());
         telemetry.addData("\tMotif Lock",motifOuttakeLock);
 

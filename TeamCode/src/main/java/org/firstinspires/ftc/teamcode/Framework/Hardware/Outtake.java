@@ -6,6 +6,7 @@ import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.acmerobotics.roadrunner.Action;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.VoltageSensor;
 
 @Config
@@ -14,18 +15,22 @@ public class Outtake {
     private final DcMotor guiding;
     private final VoltageSensor voltageSensor;
     
-    // TODO: PID! (keep as backup)
+    // BEWARE: numerous hours were wasted trying to create a PIDF controller for this flywheel...
+    // we were terribly unsuccessful. don't get any ideas. this is your warning.
     public static double NEAR_POWER = 0.89;
     public static double FAR_POWER = 1;
     public static double GUIDING_POWER = 1;
-    public static double VOLTAGE_COMP_STRENGTH = 1.3; // not necessary at all with pid
+    
+    // voltage compensation -- TODO: tune this now that it actually works
+    public static double NO_COMP_ABOVE_VOLTAGE = 13;
+    public static double VOLTAGE_COMP_STRENGTH = 1.3;
     
     public Outtake (DcMotor outtake, DcMotor guiding, VoltageSensor voltSensor) {
         this.outtake = outtake; // TODO: second outtake motor (check direction)
         this.guiding = guiding;
         this.voltageSensor = voltSensor;
         
-        outtake.setDirection(DcMotor.Direction.REVERSE);
+        outtake.setDirection(DcMotor.Direction.REVERSE); // TODO: fix wiring and flip this
         outtake.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
         
         guiding.setDirection(DcMotor.Direction.FORWARD);
@@ -33,12 +38,12 @@ public class Outtake {
     }
     
     public void onNear() {
-        outtake.setPower(applyVoltageCompensation(NEAR_POWER));
+        outtake.setPower(NEAR_POWER * calcVoltageCompensation());
         guiding.setPower(GUIDING_POWER);
     }
     
     public void onFar() {
-        outtake.setPower(applyVoltageCompensation(FAR_POWER));
+        outtake.setPower(FAR_POWER * calcVoltageCompensation());
         guiding.setPower(GUIDING_POWER);
     }
     
@@ -47,26 +52,28 @@ public class Outtake {
         guiding.setPower(0);
     }
     
-    public boolean isOn() {
-        return (outtake.getPower() != 0) || (guiding.getPower() != 0);
-    }
-    
     public double getPower() {
         return outtake.getPower();
+    }
+    
+    public boolean isOn() {
+        return (getPower() != 0) || (guiding.getPower() != 0);
     }
     
     public double getVoltage() {
         return voltageSensor.getVoltage();
     }
     
-    public double getVoltageCompensation() {
-        return Math.max(Math.pow((12.0 / voltageSensor.getVoltage()), VOLTAGE_COMP_STRENGTH), 1);
-        // Math.pow allows 12/12 to still be 1, while 10/12 to be larger than 1.2
+    public double calcVoltageCompensation() {
+        double ratio = NO_COMP_ABOVE_VOLTAGE / getVoltage();
+        double boostOnlyRatio = Math.max(ratio, 1);
+        return Math.pow(boostOnlyRatio, VOLTAGE_COMP_STRENGTH);
+        // Math.pow allows 12/12 to still be 1, while 12/10 to be larger than 1.2
     }
     
-    public double applyVoltageCompensation(double power) {
-        double voltageCompensation = 12.0 / voltageSensor.getVoltage();
-        return power * voltageCompensation;
+    public double getVelocity() {
+        DcMotorEx outtakeEx = (DcMotorEx) outtake;
+        return outtakeEx.getVelocity();
     }
     
     
