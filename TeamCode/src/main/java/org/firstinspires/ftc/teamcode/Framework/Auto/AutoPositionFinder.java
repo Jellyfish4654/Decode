@@ -1,9 +1,12 @@
 package org.firstinspires.ftc.teamcode.Framework.Auto;
 
+import static org.firstinspires.ftc.teamcode.Framework.Auto.RoadRunner.MecanumDrive.PARAMS;
+
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.roadrunner.Pose2d;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import org.firstinspires.ftc.teamcode.Framework.Auto.RoadRunner.MecanumDrive;
+import org.firstinspires.ftc.teamcode.Framework.Auto.RoadRunner.ThreeDeadWheelLocalizer;
 import org.firstinspires.ftc.vision.apriltag.AprilTagDetection;
 
 @Config
@@ -25,18 +28,18 @@ public class AutoPositionFinder extends BaseAuto {
     @Override
     public void runOpMode() throws InterruptedException {
         initHardware(true);
-        MecanumDrive drive = new MecanumDrive(hardwareMap, new Pose2d(posX,posY,heading));
-        MecanumDrive camDrive = new MecanumDrive(hardwareMap, new Pose2d(posX,posY,heading));
-        currentPos = new Pose2d(posX,posY,heading);
-        currentCamPos = new Pose2d(posX,posY,heading);
+        ThreeDeadWheelLocalizer localizer = new ThreeDeadWheelLocalizer(hardwareMap, PARAMS.inPerTick, new Pose2d(posX,posY,heading));
+        ThreeDeadWheelLocalizer camLocalizer = new ThreeDeadWheelLocalizer(hardwareMap, PARAMS.inPerTick, new Pose2d(posX,posY,heading));
+        currentPos = new Pose2d(posX,posY,Math.toRadians(heading));
+        currentCamPos = new Pose2d(posX,posY,Math.toRadians(heading));
         waitForStart();
         while(opModeIsActive()){
-            if(gamepad1.triangleWasPressed()){
-                drive.localizer.setPose(new Pose2d(posX,posY,heading));
-                camDrive.localizer.setPose(new Pose2d(posX,posY,heading));
+            if(gamepad1.triangleWasPressed()) {
+                localizer.setPose(new Pose2d(posX, posY, Math.toRadians(heading)));
+                camLocalizer.setPose(new Pose2d(posX, posY, Math.toRadians(heading)));
             }
-            drive.localizer.update();
-            camDrive.localizer.update();
+            localizer.update();
+            camLocalizer.update();
 
             //variables to make an avg position, assuming multiple tag detections differ
             tagDetections = vision.getTags();
@@ -55,15 +58,15 @@ public class AutoPositionFinder extends BaseAuto {
             }
 
 
-            currentPos = drive.localizer.getPose();
-            currentCamPos = camDrive.localizer.getPose();
+            currentPos = localizer.getPose();
+            currentCamPos = camLocalizer.getPose();
 
             if(ODO_PODS_AVG_WITH_CAM || tagDetections.length == 0){
                 xSum += currentCamPos.position.x;
                 ySum += currentCamPos.position.y;
                 headingSum += currentCamPos.heading.toDouble();
 
-                camDrive.localizer.setPose(
+                camLocalizer.setPose(
                         new Pose2d(
                                 xSum/(tagDetections.length+1),
                                 ySum/(tagDetections.length+1),
@@ -71,7 +74,7 @@ public class AutoPositionFinder extends BaseAuto {
                         )
                 );
             }else{
-                camDrive.localizer.setPose(
+                camLocalizer.setPose(
                         new Pose2d(
                                 xSum/(tagDetections.length),
                                 ySum/(tagDetections.length),
@@ -79,7 +82,7 @@ public class AutoPositionFinder extends BaseAuto {
                         )
                 );
             }
-            currentCamPos = camDrive.localizer.getPose();
+            currentCamPos = camLocalizer.getPose();
             telemetry.addData("X Pos",currentPos.position.x);
             telemetry.addData("Y Pos",currentPos.position.y);
             telemetry.addData("Heading (deg)",Math.toDegrees(currentPos.heading.toDouble()));

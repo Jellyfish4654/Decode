@@ -17,7 +17,7 @@ public class Outtake {
     
     // BEWARE: numerous hours were wasted trying to create a PIDF controller for this flywheel...
     // we were terribly unsuccessful. don't get any ideas. this is your warning.
-    public static double NEAR_POWER = 0.89;
+    public static double NEAR_POWER = 0.763;
     public static double FAR_POWER = 1;
     public static double GUIDING_POWER = 1;
     
