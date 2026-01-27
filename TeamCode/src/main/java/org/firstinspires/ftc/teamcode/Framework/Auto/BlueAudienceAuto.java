@@ -21,73 +21,80 @@ public class BlueAudienceAuto extends BaseAuto {
     Pose2d shootPose;
     @Override
     public void runOpMode() throws InterruptedException {
-        initHardware(true);
+
+
+        // ↓ -------------- ↓ -------------- ↓ POSES ↓ -------------- ↓ -------------- ↓
         Pose2d initialPose = new Pose2d(61.5, -23.5, Math.toRadians(180));
+
+        Pose2d preshootPose = new Pose2d(new Vector2d(-20,-20),Math.toRadians(-140));
+        Pose2d cornerOnePose = new Pose2d(new Vector2d(54,-58), Math.toRadians(-70));
+        Pose2d cornerTwoPose = new Pose2d(new Vector2d(60,-58), Math.toRadians(-90));
+        Pose2d shootOnePose = new Pose2d(new Vector2d(-20,-20),Math.toRadians(-140));
+        Pose2d collectArtifact1 = new Pose2d(35.5,-35,Math.toRadians(-90));
+        Pose2d collectArtifact2 = new Pose2d(35.5,-40,Math.toRadians(-90));
+        Pose2d collectArtifact3 = new Pose2d(35.5,-45,Math.toRadians(-90));
+        Pose2d shootTwoPose = shootOnePose;
+
+        // ↓ -------------- ↓ -------------- ↓ INITIALIZATION ↓ -------------- ↓ -------------- ↓
+        initHardware(true);
         MecanumDrive drive = new MecanumDrive(hardwareMap, initialPose);
         Params.alliance = Params.Alliance.BLUE;
 
         // ↓ -------------- ↓ -------------- ↓ TRAJECTORIES ↓ -------------- ↓ -------------- ↓
-
-        TrajectoryActionBuilder moveToScan;
-        scanPose = null; //pos1
-
-        TrajectoryActionBuilder moveToShoot;
-        shootPose = null; //pos2
-
-        TrajectoryActionBuilder moveToPark;
-
         TrajectoryActionBuilder preshoot = drive.actionBuilder(initialPose)
-                .strafeToLinearHeading(new Vector2d(-20,-20),Math.toRadians(-140));
-        Pose2d preshootPose = new Pose2d(new Vector2d(-20,-20),Math.toRadians(-140));
+                .strafeToLinearHeading(preshootPose.position,preshootPose.heading);
+
 
         TrajectoryActionBuilder cornerOne = drive.actionBuilder(preshootPose)
-                .strafeToLinearHeading(new Vector2d(54,-58), Math.toRadians(-70));
-        Pose2d cornerOnePose = new Pose2d(new Vector2d(54,-58), Math.toRadians(-70));
+                .strafeToLinearHeading(cornerOnePose.position, cornerOnePose.heading, intakeMovementConstraint);
+
 
         TrajectoryActionBuilder cornerTwo = drive.actionBuilder(cornerOnePose)
-                .splineToConstantHeading(new Vector2d(60,-58), Math.toRadians(-90));
-        Pose2d cornerTwoPose = new Pose2d(new Vector2d(60,-58), Math.toRadians(-90));
+                .splineToConstantHeading(cornerTwoPose.position, cornerTwoPose.heading, intakeMovementConstraint);
+
 
         TrajectoryActionBuilder shootOne = drive.actionBuilder(cornerTwoPose)
-                .strafeToLinearHeading(new Vector2d(-20,-20),Math.toRadians(-140));
-        Pose2d shootOnePose = new Pose2d(new Vector2d(-20,-20),Math.toRadians(-140));
+                .strafeToLinearHeading(shootOnePose.position,shootOnePose.heading);
+
 
         SequentialAction motifOneCollector = new SequentialAction(
                 new ParallelAction(
                         new SequentialAction(
                                 spindexer.slotIn(),
+                                new SleepAction(JellyTele.SPINDEXER_DELAY),
                                 spindexer.contentsSet(Params.Artifact.GREEN)
                         ),
 
                         intake.intakeOn(),
                         drive.actionBuilder(shootOnePose)
-                                .splineToLinearHeading(new Pose2d(35.5,-35,Math.toRadians(-90)),Math.toRadians(-90))
+                                .splineToLinearHeading(collectArtifact1,Math.toRadians(-90), intakeMovementConstraint)
                                 .build()
                 ),
                 new ParallelAction(
                         new SequentialAction(
                                 spindexer.slotIn(),
+                                new SleepAction(JellyTele.SPINDEXER_DELAY),
                                 spindexer.contentsSet(Params.Artifact.PURPLE)
                         ),
-                        drive.actionBuilder(new Pose2d(35.5,-35,Math.toRadians(-90)))
-                                .strafeToLinearHeading(new Vector2d(35.5,-40),Math.toRadians(-90))
+                        drive.actionBuilder(collectArtifact1)
+                                .strafeToLinearHeading(collectArtifact2.position,collectArtifact2.heading, intakeMovementConstraint)
                                 .build()
                 ),
                 new ParallelAction(
                         new SequentialAction(
                                 spindexer.slotIn(),
+                                new SleepAction(JellyTele.SPINDEXER_DELAY),
                                 spindexer.contentsSet(Params.Artifact.PURPLE)
                         ),
-                        drive.actionBuilder(new Pose2d(35.5,-40,Math.toRadians(-90)))
-                                .lineToYConstantHeading(-45)
+                        drive.actionBuilder(collectArtifact2)
+                                .lineToYConstantHeading(collectArtifact3.position.y, intakeMovementConstraint)
                                 .build()
                 ),
                 intake.intakeOff()
         );
 
-        TrajectoryActionBuilder shootTwo = drive.actionBuilder(new Pose2d(35.5,-45,Math.toRadians(-90)))
-                .strafeToLinearHeading(new Vector2d(-20,-20),Math.toRadians(-140));
-        Pose2d shootTwoPose = shootOnePose;
+        TrajectoryActionBuilder shootTwo = drive.actionBuilder(collectArtifact3)
+                .strafeToLinearHeading(shootTwoPose.position,shootTwoPose.heading);
 
         TrajectoryActionBuilder park = drive.actionBuilder(shootTwoPose)
                 .lineToX(30);

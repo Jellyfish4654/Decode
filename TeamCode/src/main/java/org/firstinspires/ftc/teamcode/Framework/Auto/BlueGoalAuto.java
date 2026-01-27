@@ -39,68 +39,76 @@ public class BlueGoalAuto extends BaseAuto {
     public void runOpMode() throws InterruptedException {
 
 
-        initHardware(true);
+
+        // ↓ -------------- ↓ -------------- ↓ POSES ↓ -------------- ↓ -------------- ↓
         Pose2d initialPose = new Pose2d(-46, -48, Math.toRadians(230));
+        scanPose = new Pose2d(-33.5, -20, Math.toRadians(140)); //pos1
+        shootPose = new Pose2d (-27, -27, Math.toRadians(225)); //pos2
+        collectFirstPose = new Pose2d(-9.5, -22, Math.toRadians(265)); //pos3
+        artifactPose1 = new Pose2d(-9.5, -34, Math.toRadians(265));
+        artifactPose2 = new Pose2d(-9.5, -39, Math.toRadians(265));
+        artifactPose3 = new Pose2d(-9.5, -44, Math.toRadians(265));
+        collectSecondPose = new Pose2d(14, -26, Math.toRadians(255)); //pos3
+        artifactPose4 = new Pose2d(14, -34, Math.toRadians(255));
+        artifactPose5 = new Pose2d(14, -39, Math.toRadians(255));
+        artifactPose6 = new Pose2d(14, -44, Math.toRadians(255));
+        // ↓ -------------- ↓ -------------- ↓ INITIALIZATION ↓ -------------- ↓ -------------- ↓
+        initHardware(true);
         MecanumDrive drive = new MecanumDrive(hardwareMap, initialPose);
         Params.alliance = Params.Alliance.BLUE;
 
         // ↓ -------------- ↓ -------------- ↓ TRAJECTORIES ↓ -------------- ↓ -------------- ↓
 
+
         TrajectoryActionBuilder moveToScan = drive.actionBuilder(initialPose)
-                .strafeToLinearHeading(new Vector2d(-33.5, -20), Math.toRadians(140));
-        scanPose = new Pose2d(-33.5, -20, Math.toRadians(140)); //pos1
+                .strafeToLinearHeading(scanPose.position, scanPose.heading);
+
 
         TrajectoryActionBuilder moveToShootPreload = drive.actionBuilder(scanPose)
-                .strafeToLinearHeading(new Vector2d(-27, -27), Math.toRadians(225));
-        shootPose = new Pose2d (-27, -27, Math.toRadians(225)); //pos2
+                .strafeToLinearHeading(shootPose.position,shootPose.heading);
+
 
         TrajectoryActionBuilder moveToCollectFirst = drive.actionBuilder(shootPose)
-                .splineToLinearHeading(new Pose2d(new Vector2d(-9.5, -22), Math.toRadians(265)),Math.toRadians(265));
-        collectFirstPose = new Pose2d(-9.5, -22, Math.toRadians(265)); //pos3
+                .splineToLinearHeading(collectFirstPose,Math.toRadians(265));
 
         TrajectoryActionBuilder collectArtifact1 = drive.actionBuilder(collectFirstPose)
-                .strafeToConstantHeading(new Vector2d(-9.5,-34), intakeMovementConstraint);
+                .strafeToConstantHeading(artifactPose1.position, intakeMovementConstraint);
 
-        artifactPose1 = new Pose2d(-9.5, -34, Math.toRadians(265));
 
         TrajectoryActionBuilder collectArtifact2 = drive.actionBuilder(artifactPose1)
-                .strafeToConstantHeading(new Vector2d(-9.5,-39), intakeMovementConstraint);
+                .strafeToConstantHeading(artifactPose2.position, intakeMovementConstraint);
 
-        artifactPose2 = new Pose2d(-9.5, -39, Math.toRadians(265));
 
         TrajectoryActionBuilder collectArtifact3 = drive.actionBuilder(artifactPose2)
-                .strafeToConstantHeading(new Vector2d(-9.5,-44), intakeMovementConstraint);
+                .strafeToConstantHeading(artifactPose3.position, intakeMovementConstraint);
 
-        artifactPose3 = new Pose2d(-9.5, -44, Math.toRadians(265));
 
-        TrajectoryActionBuilder openGate; //ignore this unless we decide to go for 12 ball
         gatePose = null; //pos4
+        TrajectoryActionBuilder openGate; //ignore this unless we decide to go for 12 ball
 
         TrajectoryActionBuilder moveToShootFirst = drive.actionBuilder(artifactPose3)
-                .splineToLinearHeading(new Pose2d(new Vector2d(-27, -27), Math.toRadians(213)),Math.toRadians(255));
+                .splineToLinearHeading(shootPose,Math.toRadians(255));
 
         TrajectoryActionBuilder moveToCollectSecond = drive.actionBuilder(shootPose)
-                .strafeToLinearHeading(new Vector2d(14, -26), Math.toRadians(255));
-        collectFirstPose = new Pose2d(14, -26, Math.toRadians(255)); //pos3
+                .strafeToLinearHeading(collectSecondPose.position, collectSecondPose.heading);
 
-        TrajectoryActionBuilder collectArtifact4 = drive.actionBuilder(collectFirstPose)
-                .strafeToConstantHeading(new Vector2d(14,-34), intakeMovementConstraint);
+        TrajectoryActionBuilder collectArtifact4 = drive.actionBuilder(collectSecondPose)
+                .strafeToConstantHeading(artifactPose4.position, intakeMovementConstraint);
 
-        artifactPose4 = new Pose2d(14, -34, Math.toRadians(255));
 
         TrajectoryActionBuilder collectArtifact5 = drive.actionBuilder(artifactPose1)
-                .strafeToConstantHeading(new Vector2d(14,-39), intakeMovementConstraint);
+                .strafeToConstantHeading(artifactPose5.position, intakeMovementConstraint);
 
-        artifactPose5 = new Pose2d(14, -39, Math.toRadians(255));
 
         TrajectoryActionBuilder collectArtifact6 = drive.actionBuilder(artifactPose2)
-                .strafeToConstantHeading(new Vector2d(14,-44), intakeMovementConstraint);
+                .strafeToConstantHeading(artifactPose6.position, intakeMovementConstraint);
 
-        artifactPose6 = new Pose2d(14, -44, Math.toRadians(255));
 
         TrajectoryActionBuilder moveToShootSecond = drive.actionBuilder(artifactPose6)
-                .strafeToLinearHeading(new Vector2d(-27, -27), Math.toRadians(225));
+                .strafeToLinearHeading(shootPose.position, shootPose.heading);
 
+        //TODO: REFACTOR IF USING IF NOT THEN JUST LEAVE IT IN THE CODEBASE I GUESS LOL
+        thirdPose = new Pose2d(35.5, -53, Math.toRadians(270)); //pos6
         TrajectoryActionBuilder collectThird = drive.actionBuilder(shootPose) // ignore also unless doing 12 ball
                 .strafeToLinearHeading(new Vector2d(35.5, -31), Math.toRadians(270))
                 .lineToY(-43)
@@ -108,7 +116,6 @@ public class BlueGoalAuto extends BaseAuto {
                 .lineToY(-48)
                 .waitSeconds(1)
                 .lineToY(-53);
-        thirdPose = new Pose2d(35.5, -53, Math.toRadians(270)); //pos6
 
         TrajectoryActionBuilder moveToShootThird = drive.actionBuilder(thirdPose) // ignore unless doing 12 ball
                 .strafeToLinearHeading(new Vector2d(-23.5, -23.5), Math.toRadians(225));

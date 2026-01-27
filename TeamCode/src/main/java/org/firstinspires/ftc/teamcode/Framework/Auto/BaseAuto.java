@@ -128,7 +128,7 @@ public abstract class BaseAuto extends BaseOpMode {
             return false;
         }
     }
-    // intake movement constraint
+    // intake movement constraint TODO: tune
     VelConstraint intakeMovementConstraint = new VelConstraint() {
         @Override
         public double maxRobotVel(@NonNull Pose2dDual<Arclength> pose2dDual, @NonNull PosePath posePath, double v) {
