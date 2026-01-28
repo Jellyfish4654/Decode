@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.Framework;
 
+import com.acmerobotics.roadrunner.Pose2d;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -8,6 +10,8 @@ public class Params {
     // set both in auto for use in auto and teleop
     public static Alliance alliance = Alliance.BLUE;
     public static Motif motif = Motif.GPP;
+
+    public static Pose2d pose = new Pose2d(0,0,0);
     
     public enum Alliance {
         RED,

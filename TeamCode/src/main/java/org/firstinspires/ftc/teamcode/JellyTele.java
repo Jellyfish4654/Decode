@@ -1,9 +1,12 @@
 package org.firstinspires.ftc.teamcode;
 
+import static org.firstinspires.ftc.teamcode.Framework.Auto.RoadRunner.MecanumDrive.PARAMS;
+
 import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
+import org.firstinspires.ftc.teamcode.Framework.Auto.RoadRunner.ThreeDeadWheelLocalizer;
 import org.firstinspires.ftc.teamcode.Framework.BaseOpMode;
 
 import org.firstinspires.ftc.teamcode.Framework.Params;
@@ -49,9 +52,11 @@ public class JellyTele extends BaseOpMode {
     private long dynamicFlyOuttakeDelay = FLY_OUTTAKE_DELAY_LONG;
     private boolean alertedEndgame = false;
 
-    
+    private ThreeDeadWheelLocalizer localizer;
+
     @Override
     public void runOpMode() throws InterruptedException {
+        localizer = new ThreeDeadWheelLocalizer(hardwareMap,PARAMS.inPerTick,Params.pose);
         initHardware(false);
         initFinishedTelemetry();
         waitForStart();
@@ -61,6 +66,7 @@ public class JellyTele extends BaseOpMode {
             updateAux();
             updateParameters();
             updateTiming();
+            updateLocalizer(true,localizer);
             telemetry.update();
         }
         stopHardware();

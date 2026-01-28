@@ -105,6 +105,7 @@ public class BlueAudienceAuto extends BaseAuto {
         waitForStart();
         if (isStopRequested()) return;
         Actions.runBlocking(
+                new ParallelAction(
                 new SequentialAction(
                         scanMotif(),
                         preshoot.build(),
@@ -138,7 +139,7 @@ public class BlueAudienceAuto extends BaseAuto {
                         shootTwo.build(),
                         new ShootMotif(),
                         park.build()
-                )
+                ),new CamCorrection(drive))
         );
 
 

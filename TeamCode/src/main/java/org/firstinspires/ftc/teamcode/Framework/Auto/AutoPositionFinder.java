@@ -39,7 +39,7 @@ public class AutoPositionFinder extends BaseAuto {
                 camLocalizer.setPose(new Pose2d(posX, posY, Math.toRadians(heading)));
             }
             localizer.update();
-            camLocalizer.update();
+            //camLocalizer.update();
 
             //variables to make an avg position, assuming multiple tag detections differ
             tagDetections = vision.getTags();
@@ -47,7 +47,7 @@ public class AutoPositionFinder extends BaseAuto {
             ySum = 0;
             headingSum = 0;
 
-            for(AprilTagDetection tag : tagDetections){
+            /*for(AprilTagDetection tag : tagDetections){
                 if(tag != null && !(tag.metadata.fieldPosition.get(0) == 0 && tag.metadata.fieldPosition.get(1) == 0 && tag.metadata.fieldPosition.get(2) == 0))
                 {
                     xSum += tag.robotPose.getPosition().x;
@@ -55,22 +55,22 @@ public class AutoPositionFinder extends BaseAuto {
 
                     headingSum += tag.robotPose.getOrientation().getYaw();
                 }
-            }
+            }*/
 
 
             currentPos = localizer.getPose();
             currentCamPos = camLocalizer.getPose();
 
-            if(ODO_PODS_AVG_WITH_CAM || tagDetections.length == 0){
+            /*if(ODO_PODS_AVG_WITH_CAM || tagDetections.length == 0){
                 xSum += currentCamPos.position.x;
                 ySum += currentCamPos.position.y;
-                headingSum += currentCamPos.heading.toDouble();
+                headingSum += Math.toDegrees(currentCamPos.heading.toDouble());
 
                 camLocalizer.setPose(
                         new Pose2d(
                                 xSum/(tagDetections.length+1),
                                 ySum/(tagDetections.length+1),
-                                headingSum/(tagDetections.length+1)
+                                Math.toRadians(headingSum/(tagDetections.length+1))
                         )
                 );
             }else{
@@ -78,11 +78,12 @@ public class AutoPositionFinder extends BaseAuto {
                         new Pose2d(
                                 xSum/(tagDetections.length),
                                 ySum/(tagDetections.length),
-                                headingSum/(tagDetections.length)
+                                Math.toRadians(headingSum/(tagDetections.length))
                         )
                 );
-            }
-            currentCamPos = camLocalizer.getPose();
+            }*/
+
+            currentCamPos = updateLocalizer(true,camLocalizer);
             telemetry.addData("X Pos",currentPos.position.x);
             telemetry.addData("Y Pos",currentPos.position.y);
             telemetry.addData("Heading (deg)",Math.toDegrees(currentPos.heading.toDouble()));

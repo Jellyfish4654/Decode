@@ -1,7 +1,11 @@
 package org.firstinspires.ftc.teamcode.Framework;
 
+import static org.firstinspires.ftc.teamcode.Framework.Auto.RoadRunner.MecanumDrive.PARAMS;
+
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
+import com.acmerobotics.roadrunner.Pose2d;
+import com.acmerobotics.roadrunner.Vector2d;
 import com.qualcomm.hardware.rev.RevColorSensorV3;
 import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
@@ -14,6 +18,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
+import org.firstinspires.ftc.teamcode.Framework.Auto.RoadRunner.ThreeDeadWheelLocalizer;
 import org.firstinspires.ftc.teamcode.Framework.Hardware.Drivetrain;
 import org.firstinspires.ftc.teamcode.Framework.Hardware.Intake;
 import org.firstinspires.ftc.teamcode.Framework.Hardware.Outtake;
@@ -23,6 +28,7 @@ import org.firstinspires.ftc.teamcode.Framework.Hardware.SensorColor;
 import org.firstinspires.ftc.teamcode.Framework.Hardware.Spindexer;
 import org.firstinspires.ftc.teamcode.Framework.Hardware.Vision;
 import org.firstinspires.ftc.teamcode.Framework.Params.Artifact;
+import org.firstinspires.ftc.vision.apriltag.AprilTagDetection;
 
 public abstract class BaseOpMode extends LinearOpMode {
     protected Drivetrain drivetrain;
@@ -104,7 +110,42 @@ public abstract class BaseOpMode extends LinearOpMode {
         
         matchTimer = new ElapsedTime(ElapsedTime.Resolution.MILLISECONDS);
     }
-    
+    public Pose2d updateLocalizer(boolean useCamera, ThreeDeadWheelLocalizer deadWheelLocalizer){
+        double xSum;
+        double ySum;
+        double headingSum;
+        Pose2d currentPos;
+        AprilTagDetection[] tagDetections;
+        deadWheelLocalizer.update();
+
+        if(useCamera){
+            currentPos = deadWheelLocalizer.getPose();
+            tagDetections = vision.getTags();
+            xSum = 0;
+            ySum = 0;
+            headingSum = 0;
+            for(AprilTagDetection tag : tagDetections){
+                if(tag != null && !(tag.metadata.fieldPosition.get(0) == 0 && tag.metadata.fieldPosition.get(1) == 0 && tag.metadata.fieldPosition.get(2) == 0))
+                {
+                    xSum += tag.robotPose.getPosition().x;
+                    ySum += tag.robotPose.getPosition().y;
+
+                    headingSum += tag.robotPose.getOrientation().getYaw();
+                }
+            }
+            currentPos = new Pose2d(
+                    (currentPos.position.x+xSum)/(tagDetections.length+1),
+                    (currentPos.position.y+ySum)/(tagDetections.length+1),
+                    Math.toRadians((Math.toDegrees(currentPos.heading.toDouble())+xSum)/(tagDetections.length+1))
+            );
+            deadWheelLocalizer.setPose(currentPos);
+            deadWheelLocalizer.update();
+
+        }
+        Params.pose = deadWheelLocalizer.getPose();
+        return deadWheelLocalizer.getPose();
+
+    }
     private IMU initializeIMUSensor()
     {
         IMU imu = hardwareMap.get(IMU.class, "imu");

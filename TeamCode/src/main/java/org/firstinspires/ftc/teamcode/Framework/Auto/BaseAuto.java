@@ -13,12 +13,26 @@ import com.acmerobotics.roadrunner.SleepAction;
 import com.acmerobotics.roadrunner.VelConstraint;
 import com.acmerobotics.roadrunner.ftc.Actions;
 
+import org.firstinspires.ftc.teamcode.Framework.Auto.RoadRunner.MecanumDrive;
+import org.firstinspires.ftc.teamcode.Framework.Auto.RoadRunner.ThreeDeadWheelLocalizer;
 import org.firstinspires.ftc.teamcode.Framework.BaseOpMode;
 import org.firstinspires.ftc.teamcode.Framework.Params;
 import org.firstinspires.ftc.teamcode.JellyTele;
 import org.firstinspires.ftc.teamcode.Framework.Params.Artifact;
 
 public abstract class BaseAuto extends BaseOpMode {
+    // Cam correction?
+    public class CamCorrection implements Action {
+        MecanumDrive drivetrain;
+        CamCorrection(MecanumDrive drivetrain){
+            updateLocalizer(true, (ThreeDeadWheelLocalizer) drivetrain.localizer);
+        }
+        @Override
+        public boolean run(@NonNull TelemetryPacket packet) {
+            updateLocalizer(true, (ThreeDeadWheelLocalizer) drivetrain.localizer);
+            return true;
+        }
+    }
     // ↓ -------------- ↓ -------------- ↓ AUTO SHOOTING ACTIONS ↓ -------------- ↓ -------------- ↓
     public class SpindexerTelemetry implements Action {
         int time = 0;
