@@ -25,7 +25,8 @@ public abstract class BaseAuto extends BaseOpMode {
     public class CamCorrection implements Action {
         MecanumDrive drivetrain;
         CamCorrection(MecanumDrive drivetrain){
-            updateLocalizer(true, (ThreeDeadWheelLocalizer) drivetrain.localizer);
+            this.drivetrain = drivetrain;
+            updateLocalizer(true, (ThreeDeadWheelLocalizer) this.drivetrain.localizer);
         }
         @Override
         public boolean run(@NonNull TelemetryPacket packet) {

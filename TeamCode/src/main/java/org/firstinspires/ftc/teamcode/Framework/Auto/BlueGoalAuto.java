@@ -37,9 +37,6 @@ public class BlueGoalAuto extends BaseAuto {
     Pose2d thirdPose;
     @Override
     public void runOpMode() throws InterruptedException {
-
-
-
         // ↓ -------------- ↓ -------------- ↓ POSES ↓ -------------- ↓ -------------- ↓
         Pose2d initialPose = new Pose2d(-52, -49, Math.toRadians(-128));
         scanPose = new Pose2d(-17.9, -15.4, Math.toRadians(153.3)); //pos1
@@ -56,17 +53,12 @@ public class BlueGoalAuto extends BaseAuto {
         initHardware(true);
         MecanumDrive drive = new MecanumDrive(hardwareMap, initialPose);
         Params.alliance = Params.Alliance.BLUE;
-
         // ↓ -------------- ↓ -------------- ↓ TRAJECTORIES ↓ -------------- ↓ -------------- ↓
-
-
         TrajectoryActionBuilder moveToScan = drive.actionBuilder(initialPose)
                 .strafeToLinearHeading(scanPose.position, scanPose.heading);
 
-
         TrajectoryActionBuilder moveToShootPreload = drive.actionBuilder(scanPose)
                 .strafeToLinearHeading(shootPose.position,shootPose.heading);
-
 
         TrajectoryActionBuilder moveToCollectFirst = drive.actionBuilder(shootPose)
                 .splineToLinearHeading(collectFirstPose,Math.toRadians(265));
@@ -74,14 +66,11 @@ public class BlueGoalAuto extends BaseAuto {
         TrajectoryActionBuilder collectArtifact1 = drive.actionBuilder(collectFirstPose)
                 .strafeToConstantHeading(artifactPose1.position, intakeMovementConstraint);
 
-
         TrajectoryActionBuilder collectArtifact2 = drive.actionBuilder(artifactPose1)
                 .strafeToConstantHeading(artifactPose2.position, intakeMovementConstraint);
 
-
         TrajectoryActionBuilder collectArtifact3 = drive.actionBuilder(artifactPose2)
                 .strafeToConstantHeading(artifactPose3.position, intakeMovementConstraint);
-
 
         gatePose = null; //pos4
         TrajectoryActionBuilder openGate; //ignore this unless we decide to go for 12 ball
@@ -126,74 +115,72 @@ public class BlueGoalAuto extends BaseAuto {
         waitForStart();
         if (isStopRequested()) return;
         Actions.runBlocking(
-                new ParallelAction(
-                    new SequentialAction(
-                            moveToScan.build(),
-                            scanMotif(),
-                            outtake.outtakeOnNear(),
-                            moveToShootPreload.build(),
-                            new ShootMotif(),
-                            new ParallelAction(
-                                    moveToCollectFirst.build(),
-                                    intake.intakeOn(),
-                                    spindexer.slotIn()
-                            ),
-                            new SequentialAction(
-                                    collectArtifact1.build(),
-                                    intake.intakeOff(),
-                                    new SleepAction(0.4),
-                                    spindexer.contentsSet(Artifact.PURPLE),
-                                    new ParallelAction(
-                                            intake.intakeOn(),
-                                            spindexer.slotIn(),
-                                            new SleepAction(JellyTele.SPINDEXER_DELAY /1000.0)
-                                    ),
-                                    collectArtifact2.build(),
-                                    intake.intakeOff(),
-                                    new SleepAction(0.4),
-                                    spindexer.contentsSet(Artifact.PURPLE),
-                                    new ParallelAction(
-                                            intake.intakeOn(),
-                                            spindexer.slotIn(),
-                                            new SleepAction(JellyTele.SPINDEXER_DELAY /1000.0)
-                                    ),
-                                    collectArtifact3.build(),
-                                    intake.intakeOff(),
-                                    new SleepAction(0.4),
-                                    spindexer.contentsSet(Artifact.GREEN)
-                            ),
-                            outtake.outtakeOnNear(),
-                            moveToShootFirst.build(),
-                            new ShootMotif(),
-                            new ParallelAction(
-                                    moveToCollectSecond.build(),
-                                    intake.intakeOn(),
-                                    spindexer.slotIn()
-                            ),
-                            new SequentialAction(
-                                    collectArtifact4.build(),
-                                    spindexer.contentsSet(Artifact.PURPLE),
-                                    new ParallelAction(
-                                            spindexer.slotIn(),
-                                            new SleepAction(JellyTele.SPINDEXER_DELAY /1000.0)
-                                    ),
-                                    collectArtifact5.build(),
-                                    spindexer.contentsSet(Artifact.GREEN),
-                                    new ParallelAction(
-                                            spindexer.slotIn(),
-                                            new SleepAction(JellyTele.SPINDEXER_DELAY /1000.0)
-                                    ),
-                                    collectArtifact6.build(),
-                                    spindexer.contentsSet(Artifact.PURPLE),
-                                    intake.intakeOff()
-                            ),
-                            outtake.outtakeOnNear(),
-                            moveToShootSecond.build(),
-                            new ShootMotif(),
-                            //get out of shooting zone
-                            drive.actionBuilder(shootPose).strafeTo(new Vector2d(-25,-45)).build()
+                new SequentialAction(
+                    moveToScan.build(),
+                    scanMotif(),
+                    outtake.outtakeOnNear(),
+                    moveToShootPreload.build(),
+                    new ShootMotif(),
+                    new ParallelAction(
+                            moveToCollectFirst.build(),
+                            intake.intakeOn(),
+                            spindexer.slotIn()
                     ),
-                    new CamCorrection(drive))
+                    new SequentialAction(
+                            collectArtifact1.build(),
+                            intake.intakeOff(),
+                            new SleepAction(0.4),
+                            spindexer.contentsSet(Artifact.PURPLE),
+                            new ParallelAction(
+                                    intake.intakeOn(),
+                                    spindexer.slotIn(),
+                                    new SleepAction(JellyTele.SPINDEXER_DELAY /1000.0)
+                            ),
+                            collectArtifact2.build(),
+                            intake.intakeOff(),
+                            new SleepAction(0.4),
+                            spindexer.contentsSet(Artifact.PURPLE),
+                            new ParallelAction(
+                                    intake.intakeOn(),
+                                    spindexer.slotIn(),
+                                    new SleepAction(JellyTele.SPINDEXER_DELAY /1000.0)
+                            ),
+                            collectArtifact3.build(),
+                            intake.intakeOff(),
+                            new SleepAction(0.4),
+                            spindexer.contentsSet(Artifact.GREEN)
+                    ),
+                    outtake.outtakeOnNear(),
+                    moveToShootFirst.build(),
+                    new ShootMotif(),
+                    new ParallelAction(
+                            moveToCollectSecond.build(),
+                            intake.intakeOn(),
+                            spindexer.slotIn()
+                    ),
+                    new SequentialAction(
+                            collectArtifact4.build(),
+                            spindexer.contentsSet(Artifact.PURPLE),
+                            new ParallelAction(
+                                    spindexer.slotIn(),
+                                    new SleepAction(JellyTele.SPINDEXER_DELAY /1000.0)
+                            ),
+                            collectArtifact5.build(),
+                            spindexer.contentsSet(Artifact.GREEN),
+                            new ParallelAction(
+                                    spindexer.slotIn(),
+                                    new SleepAction(JellyTele.SPINDEXER_DELAY /1000.0)
+                            ),
+                            collectArtifact6.build(),
+                            spindexer.contentsSet(Artifact.PURPLE),
+                            intake.intakeOff()
+                    ),
+                    outtake.outtakeOnNear(),
+                    moveToShootSecond.build(),
+                    new ShootMotif(),
+                    //get out of shooting zone
+                    drive.actionBuilder(shootPose).strafeTo(new Vector2d(-25,-45)).build()
+            )
         );
     }
 
