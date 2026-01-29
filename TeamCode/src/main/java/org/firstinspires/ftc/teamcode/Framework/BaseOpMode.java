@@ -18,7 +18,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
-import org.firstinspires.ftc.teamcode.Framework.Auto.RoadRunner.ThreeDeadWheelLocalizer;
+import org.firstinspires.ftc.teamcode.Framework.Auto.RoadRunner.CameraThreeDeadWheelLocalizer;
 import org.firstinspires.ftc.teamcode.Framework.Hardware.Drivetrain;
 import org.firstinspires.ftc.teamcode.Framework.Hardware.Intake;
 import org.firstinspires.ftc.teamcode.Framework.Hardware.Outtake;
@@ -28,7 +28,6 @@ import org.firstinspires.ftc.teamcode.Framework.Hardware.SensorColor;
 import org.firstinspires.ftc.teamcode.Framework.Hardware.Spindexer;
 import org.firstinspires.ftc.teamcode.Framework.Hardware.Vision;
 import org.firstinspires.ftc.teamcode.Framework.Params.Artifact;
-import org.firstinspires.ftc.vision.apriltag.AprilTagDetection;
 
 public abstract class BaseOpMode extends LinearOpMode {
     protected Drivetrain drivetrain;
@@ -42,6 +41,7 @@ public abstract class BaseOpMode extends LinearOpMode {
     protected Controller controller;
     protected IMU imuSensor;
     protected ElapsedTime matchTimer;
+    protected CameraThreeDeadWheelLocalizer localizer;
     protected double imuOffset = 0;
 
     public final boolean PADDLE_MOTOR = false;
@@ -98,7 +98,7 @@ public abstract class BaseOpMode extends LinearOpMode {
             spindexer.setContents(3, Artifact.PURPLE);
         }
 
-        colorSensor = new SensorColor (hardwareMap.get(RevColorSensorV3.class, "colorSensor"));
+        colorSensor = new SensorColor(hardwareMap.get(RevColorSensorV3.class, "colorSensor"));
 
         vision = new Vision(hardwareMap.get(WebcamName.class, "vision"), this);
 
@@ -107,44 +107,10 @@ public abstract class BaseOpMode extends LinearOpMode {
 
         imuSensor = initializeIMUSensor();
         imuOffset = imuSensor.getRobotYawPitchRollAngles().getYaw(AngleUnit.RADIANS);
-        
+
+        localizer = new CameraThreeDeadWheelLocalizer(hardwareMap,PARAMS.inPerTick,Params.pose,vision);
+
         matchTimer = new ElapsedTime(ElapsedTime.Resolution.MILLISECONDS);
-    }
-    public Pose2d updateLocalizer(boolean useCamera, ThreeDeadWheelLocalizer deadWheelLocalizer){
-        double xSum;
-        double ySum;
-        double headingSum;
-        Pose2d currentPos;
-        AprilTagDetection[] tagDetections;
-        deadWheelLocalizer.update();
-
-        if(useCamera){
-            currentPos = deadWheelLocalizer.getPose();
-            tagDetections = vision.getTags();
-            xSum = 0;
-            ySum = 0;
-            headingSum = 0;
-            for(AprilTagDetection tag : tagDetections){
-                if(tag != null && !(tag.metadata.fieldPosition.get(0) == 0 && tag.metadata.fieldPosition.get(1) == 0 && tag.metadata.fieldPosition.get(2) == 0))
-                {
-                    xSum += tag.robotPose.getPosition().x;
-                    ySum += tag.robotPose.getPosition().y;
-
-                    headingSum += tag.robotPose.getOrientation().getYaw();
-                }
-            }
-            currentPos = new Pose2d(
-                    (currentPos.position.x+xSum)/(tagDetections.length+1),
-                    (currentPos.position.y+ySum)/(tagDetections.length+1),
-                    Math.toRadians((Math.toDegrees(currentPos.heading.toDouble())+xSum)/(tagDetections.length+1))
-            );
-            deadWheelLocalizer.setPose(currentPos);
-            deadWheelLocalizer.update();
-
-        }
-        Params.pose = deadWheelLocalizer.getPose();
-        return deadWheelLocalizer.getPose();
-
     }
     private IMU initializeIMUSensor()
     {

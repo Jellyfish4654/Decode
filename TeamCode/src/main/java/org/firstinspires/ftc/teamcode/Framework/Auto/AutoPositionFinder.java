@@ -5,6 +5,8 @@ import static org.firstinspires.ftc.teamcode.Framework.Auto.RoadRunner.MecanumDr
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.roadrunner.Pose2d;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+
+import org.firstinspires.ftc.teamcode.Framework.Auto.RoadRunner.CameraThreeDeadWheelLocalizer;
 import org.firstinspires.ftc.teamcode.Framework.Auto.RoadRunner.MecanumDrive;
 import org.firstinspires.ftc.teamcode.Framework.Auto.RoadRunner.ThreeDeadWheelLocalizer;
 import org.firstinspires.ftc.vision.apriltag.AprilTagDetection;
@@ -29,7 +31,7 @@ public class AutoPositionFinder extends BaseAuto {
     public void runOpMode() throws InterruptedException {
         initHardware(true);
         ThreeDeadWheelLocalizer localizer = new ThreeDeadWheelLocalizer(hardwareMap, PARAMS.inPerTick, new Pose2d(posX,posY,heading));
-        ThreeDeadWheelLocalizer camLocalizer = new ThreeDeadWheelLocalizer(hardwareMap, PARAMS.inPerTick, new Pose2d(posX,posY,heading));
+        ThreeDeadWheelLocalizer camLocalizer = new CameraThreeDeadWheelLocalizer(hardwareMap, PARAMS.inPerTick, new Pose2d(posX,posY,heading),vision);
         currentPos = new Pose2d(posX,posY,Math.toRadians(heading));
         currentCamPos = new Pose2d(posX,posY,Math.toRadians(heading));
         waitForStart();
@@ -39,51 +41,16 @@ public class AutoPositionFinder extends BaseAuto {
                 camLocalizer.setPose(new Pose2d(posX, posY, Math.toRadians(heading)));
             }
             localizer.update();
-            //camLocalizer.update();
+            camLocalizer.update();
 
             //variables to make an avg position, assuming multiple tag detections differ
-            tagDetections = vision.getTags();
             xSum = 0;
             ySum = 0;
             headingSum = 0;
 
-            /*for(AprilTagDetection tag : tagDetections){
-                if(tag != null && !(tag.metadata.fieldPosition.get(0) == 0 && tag.metadata.fieldPosition.get(1) == 0 && tag.metadata.fieldPosition.get(2) == 0))
-                {
-                    xSum += tag.robotPose.getPosition().x;
-                    ySum += tag.robotPose.getPosition().y;
-
-                    headingSum += tag.robotPose.getOrientation().getYaw();
-                }
-            }*/
-
-
             currentPos = localizer.getPose();
             currentCamPos = camLocalizer.getPose();
 
-            /*if(ODO_PODS_AVG_WITH_CAM || tagDetections.length == 0){
-                xSum += currentCamPos.position.x;
-                ySum += currentCamPos.position.y;
-                headingSum += Math.toDegrees(currentCamPos.heading.toDouble());
-
-                camLocalizer.setPose(
-                        new Pose2d(
-                                xSum/(tagDetections.length+1),
-                                ySum/(tagDetections.length+1),
-                                Math.toRadians(headingSum/(tagDetections.length+1))
-                        )
-                );
-            }else{
-                camLocalizer.setPose(
-                        new Pose2d(
-                                xSum/(tagDetections.length),
-                                ySum/(tagDetections.length),
-                                Math.toRadians(headingSum/(tagDetections.length))
-                        )
-                );
-            }*/
-
-            currentCamPos = updateLocalizer(true,camLocalizer);
             telemetry.addData("X Pos",currentPos.position.x);
             telemetry.addData("Y Pos",currentPos.position.y);
             telemetry.addData("Heading (deg)",Math.toDegrees(currentPos.heading.toDouble()));

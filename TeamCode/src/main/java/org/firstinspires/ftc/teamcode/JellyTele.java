@@ -3,9 +3,12 @@ package org.firstinspires.ftc.teamcode;
 import static org.firstinspires.ftc.teamcode.Framework.Auto.RoadRunner.MecanumDrive.PARAMS;
 
 import com.acmerobotics.dashboard.config.Config;
+import com.acmerobotics.roadrunner.Pose2d;
+import com.acmerobotics.roadrunner.Vector2d;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
+import org.firstinspires.ftc.teamcode.Framework.Auto.RoadRunner.CameraThreeDeadWheelLocalizer;
 import org.firstinspires.ftc.teamcode.Framework.Auto.RoadRunner.ThreeDeadWheelLocalizer;
 import org.firstinspires.ftc.teamcode.Framework.BaseOpMode;
 
@@ -30,7 +33,11 @@ public class JellyTele extends BaseOpMode {
     public static double DISTANCE_TOO_FAR = 200; // TODO: Adjust near/far distances?
     public static double DISTANCE_FAR = 70;
     public static double AIM_ROTATION_SPEED = 0.02;
-    
+
+    public static boolean USE_LOCALIZER = true; //TODO: yes or no
+
+    public static Vector2d RED_GOAL_POS = new Vector2d(-65,65);
+    public static Vector2d BLUE_GOAL_POS = new Vector2d(-65,-65);
     private long prevLoopNanoTime = 0;
 
     public enum SpinState {
@@ -52,11 +59,8 @@ public class JellyTele extends BaseOpMode {
     private long dynamicFlyOuttakeDelay = FLY_OUTTAKE_DELAY_LONG;
     private boolean alertedEndgame = false;
 
-    private ThreeDeadWheelLocalizer localizer;
-
     @Override
     public void runOpMode() throws InterruptedException {
-        localizer = new ThreeDeadWheelLocalizer(hardwareMap,PARAMS.inPerTick,Params.pose);
         initHardware(false);
         initFinishedTelemetry();
         waitForStart();
@@ -66,7 +70,7 @@ public class JellyTele extends BaseOpMode {
             updateAux();
             updateParameters();
             updateTiming();
-            updateLocalizer(true,localizer);
+            localizer.update();
             telemetry.update();
         }
         stopHardware();
@@ -175,6 +179,12 @@ public class JellyTele extends BaseOpMode {
         telemetry.addData("\tGoalBearing", vision.getGoalBearing(Params.alliance)); // potentially heavy
         telemetry.addData("\tGoalDistance", vision.getGoalDistance(Params.alliance)); // potentially heavy
         telemetry.addData("\tColorSensor", colorSensor.getArtifact());
+
+        telemetry.addLine();
+        telemetry.addLine("Localizer: ");
+        telemetry.addData("\tX: ", localizer.getPose().position.x);
+        telemetry.addData("\tY: ", localizer.getPose().position.y);
+        telemetry.addData("\tHeading: ", Math.toDegrees(localizer.getPose().heading.toDouble()));
     }
     
     // handle button presses for 3 outtake options, and return true if no buttons were handled
@@ -254,16 +264,39 @@ public class JellyTele extends BaseOpMode {
     }
     
     private void outtakeVision(boolean aim) {
-        if (aim) {
-            aimRotation = vision.getGoalBearing(Params.alliance) * AIM_ROTATION_SPEED;
+        if(USE_LOCALIZER){
+            if (aim) {
+                aimRotation = vision.getGoalBearing(Params.alliance) * AIM_ROTATION_SPEED;
+            }
+            // ↓ decide power based on vision ↓
+            double distance = vision.getGoalDistance(Params.alliance);
+            if (distance > DISTANCE_FAR && distance < DISTANCE_TOO_FAR) {
+                outtake.onFar();
+            } else { // near is default
+                outtake.onNear();
+            }
+        }else{
+            // ↓ decide power/aim based on LOCALIZER ↓
+            Pose2d currentPose = localizer.getPose();
+            double xDist = currentPose.position.x - (Params.alliance == Alliance.RED ? RED_GOAL_POS.x : BLUE_GOAL_POS.x);
+            double yDist = currentPose.position.y - (Params.alliance == Alliance.RED ? RED_GOAL_POS.y : BLUE_GOAL_POS.y);
+            double localizerBearing = Math.toDegrees(currentPose.heading.toDouble()) - 180 - (Params.alliance == Alliance.RED ? -1 : 1) * Math.toDegrees(Math.atan(yDist / xDist));
+            if (aim) {
+                aimRotation = localizerBearing * AIM_ROTATION_SPEED;
+            }
+
+
+            double distance = Math.sqrt(
+                    Math.pow(xDist,2)+
+                    Math.pow(yDist,2)
+            );
+            if (distance > DISTANCE_FAR && distance < DISTANCE_TOO_FAR) {
+                outtake.onFar();
+            } else { // near is default
+                outtake.onNear();
+            }
         }
-        // ↓ decide power based on vision ↓
-        double distance = vision.getGoalDistance(Params.alliance);
-        if (distance > DISTANCE_FAR && distance < DISTANCE_TOO_FAR) {
-            outtake.onFar();
-        } else { // near is default
-            outtake.onNear();
-        }
+
     }
     
     private void startOuttake() {

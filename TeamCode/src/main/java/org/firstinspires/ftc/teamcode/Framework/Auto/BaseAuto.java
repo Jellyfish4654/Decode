@@ -21,19 +21,6 @@ import org.firstinspires.ftc.teamcode.JellyTele;
 import org.firstinspires.ftc.teamcode.Framework.Params.Artifact;
 
 public abstract class BaseAuto extends BaseOpMode {
-    // Cam correction?
-    public class CamCorrection implements Action {
-        MecanumDrive drivetrain;
-        CamCorrection(MecanumDrive drivetrain){
-            this.drivetrain = drivetrain;
-            updateLocalizer(true, (ThreeDeadWheelLocalizer) this.drivetrain.localizer);
-        }
-        @Override
-        public boolean run(@NonNull TelemetryPacket packet) {
-            updateLocalizer(true, (ThreeDeadWheelLocalizer) drivetrain.localizer);
-            return true;
-        }
-    }
     // ↓ -------------- ↓ -------------- ↓ AUTO SHOOTING ACTIONS ↓ -------------- ↓ -------------- ↓
     public class SpindexerTelemetry implements Action {
         int time = 0;

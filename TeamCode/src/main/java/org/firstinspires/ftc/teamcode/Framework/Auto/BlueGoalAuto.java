@@ -14,6 +14,7 @@ import com.acmerobotics.roadrunner.Vector2d;
 import com.acmerobotics.roadrunner.ftc.Actions;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
+import org.firstinspires.ftc.teamcode.Framework.Auto.RoadRunner.CameraMecanumDrive;
 import org.firstinspires.ftc.teamcode.Framework.Auto.RoadRunner.MecanumDrive;
 import org.firstinspires.ftc.teamcode.Framework.Params;
 import org.firstinspires.ftc.teamcode.JellyTele;
@@ -51,7 +52,8 @@ public class BlueGoalAuto extends BaseAuto {
         artifactPose6 = new Pose2d(9.4, -46.2, Math.toRadians(-94.2));
         // ↓ -------------- ↓ -------------- ↓ INITIALIZATION ↓ -------------- ↓ -------------- ↓
         initHardware(true);
-        MecanumDrive drive = new MecanumDrive(hardwareMap, initialPose);
+        //TODO: SEE IF THIS BREAKS EVERYTHING
+        CameraMecanumDrive drive = new CameraMecanumDrive(hardwareMap, initialPose, vision);
         Params.alliance = Params.Alliance.BLUE;
         // ↓ -------------- ↓ -------------- ↓ TRAJECTORIES ↓ -------------- ↓ -------------- ↓
         TrajectoryActionBuilder moveToScan = drive.actionBuilder(initialPose)

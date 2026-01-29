@@ -10,6 +10,7 @@ import com.acmerobotics.roadrunner.Vector2d;
 import com.acmerobotics.roadrunner.ftc.Actions;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
+import org.firstinspires.ftc.teamcode.Framework.Auto.RoadRunner.CameraMecanumDrive;
 import org.firstinspires.ftc.teamcode.Framework.Auto.RoadRunner.MecanumDrive;
 import org.firstinspires.ftc.teamcode.Framework.Params;
 import org.firstinspires.ftc.teamcode.JellyTele;
@@ -37,7 +38,8 @@ public class BlueAudienceAuto extends BaseAuto {
 
         // ↓ -------------- ↓ -------------- ↓ INITIALIZATION ↓ -------------- ↓ -------------- ↓
         initHardware(true);
-        MecanumDrive drive = new MecanumDrive(hardwareMap, initialPose);
+        //TODO: SEE IF THIS BREAKS EVERYTHING
+        CameraMecanumDrive drive = new CameraMecanumDrive(hardwareMap, initialPose, vision);
         Params.alliance = Params.Alliance.BLUE;
 
         // ↓ -------------- ↓ -------------- ↓ TRAJECTORIES ↓ -------------- ↓ -------------- ↓
@@ -105,7 +107,6 @@ public class BlueAudienceAuto extends BaseAuto {
         waitForStart();
         if (isStopRequested()) return;
         Actions.runBlocking(
-                new ParallelAction(
                 new SequentialAction(
                         scanMotif(),
                         preshoot.build(),
@@ -139,7 +140,7 @@ public class BlueAudienceAuto extends BaseAuto {
                         shootTwo.build(),
                         new ShootMotif(),
                         park.build()
-                ),new CamCorrection(drive))
+                )
         );
 
 
