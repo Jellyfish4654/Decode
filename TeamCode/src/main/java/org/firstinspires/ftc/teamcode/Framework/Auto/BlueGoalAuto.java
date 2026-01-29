@@ -39,7 +39,7 @@ public class BlueGoalAuto extends BaseAuto {
     public void runOpMode() throws InterruptedException {
         // ↓ -------------- ↓ -------------- ↓ POSES ↓ -------------- ↓ -------------- ↓
         Pose2d initialPose = new Pose2d(-52, -49, Math.toRadians(-128));
-        scanPose = new Pose2d(-17.9, -15.4, Math.toRadians(153.3)); //pos1
+        scanPose = new Pose2d(-17.9, -15.4, Math.toRadians(158)); //pos1
         shootPose = new Pose2d (-13.5, -13.76, Math.toRadians(-136)); //pos2
         collectFirstPose = new Pose2d(-12.3, -31.65, Math.toRadians(-92)); //pos3
         artifactPose1 = new Pose2d(-12.4, -34.5, Math.toRadians(-91.5));
