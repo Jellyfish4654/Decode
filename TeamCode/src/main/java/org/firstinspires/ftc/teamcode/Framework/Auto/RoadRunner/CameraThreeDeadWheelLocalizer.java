@@ -4,6 +4,7 @@ import com.acmerobotics.roadrunner.Pose2d;
 import com.acmerobotics.roadrunner.PoseVelocity2d;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
+import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.teamcode.Framework.Hardware.Vision;
 import org.firstinspires.ftc.vision.apriltag.AprilTagDetection;
 
@@ -26,10 +27,11 @@ public class CameraThreeDeadWheelLocalizer extends ThreeDeadWheelLocalizer{
         double xSum;
         double ySum;
         double headingSum;
+        int validTagAmount = 0;
         Pose2d currentPos;
         AprilTagDetection[] tagDetections;
 
-        currentPos = getPose();
+        currentPos = super.getPose();
         tagDetections = vision.getTags();
         xSum = 0;
         ySum = 0;
@@ -40,28 +42,30 @@ public class CameraThreeDeadWheelLocalizer extends ThreeDeadWheelLocalizer{
                     xSum += tag.robotPose.getPosition().x;
                     ySum += tag.robotPose.getPosition().y;
                     
-                    headingSum += tag.robotPose.getOrientation().getYaw();
+                    headingSum += tag.robotPose.getOrientation().getYaw(AngleUnit.DEGREES);
+                    validTagAmount++;
                 }
             }
         }
-        if(weightVisionFully){
+        if(weightVisionFully && validTagAmount >= 1){
             currentPos = new Pose2d(
-                    xSum / tagDetections.length,
-                    ySum / tagDetections.length,
-                    Math.toRadians((headingSum) / tagDetections.length)
+                    xSum / validTagAmount,
+                    ySum / validTagAmount,
+                    currentPos.heading.toDouble()
+                    //Math.toRadians((headingSum) / validTagAmount)
             );
-            if(tagDetections.length>0){
+            if(validTagAmount>0){
                 weightVisionFully = false;
             }
         }else {
             currentPos = new Pose2d(
-                    (currentPos.position.x + xSum) / (tagDetections.length + 1),
-                    (currentPos.position.y + ySum) / (tagDetections.length + 1),
-                    Math.toRadians((Math.toDegrees(currentPos.heading.toDouble()) + xSum) / (tagDetections.length + 1))
+                    (currentPos.position.x + xSum) / (validTagAmount + 1),
+                    (currentPos.position.y + ySum) / (validTagAmount + 1),
+                    currentPos.heading.toDouble()
+                    //Math.toRadians((Math.toDegrees(currentPos.heading.toDouble()) + headingSum) / (validTagAmount + 1))
             );
         }
-        setPose(currentPos);
-        super.update();
+        super.setPose(currentPos);
 
         return ret;
     }

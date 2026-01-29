@@ -53,7 +53,7 @@ public class BlueGoalAuto extends BaseAuto {
         // ↓ -------------- ↓ -------------- ↓ INITIALIZATION ↓ -------------- ↓ -------------- ↓
         initHardware(true);
         //TODO: SEE IF THIS BREAKS EVERYTHING
-        MecanumDrive drive = new MecanumDrive(hardwareMap, initialPose);
+        CameraMecanumDrive drive = new CameraMecanumDrive(hardwareMap, initialPose, vision);
         Params.alliance = Params.Alliance.BLUE;
         // ↓ -------------- ↓ -------------- ↓ TRAJECTORIES ↓ -------------- ↓ -------------- ↓
         TrajectoryActionBuilder moveToScan = drive.actionBuilder(initialPose)
@@ -87,11 +87,11 @@ public class BlueGoalAuto extends BaseAuto {
                 .strafeToConstantHeading(artifactPose4.position, intakeMovementConstraint);
 
 
-        TrajectoryActionBuilder collectArtifact5 = drive.actionBuilder(artifactPose1)
+        TrajectoryActionBuilder collectArtifact5 = drive.actionBuilder(artifactPose4)
                 .strafeToConstantHeading(artifactPose5.position, intakeMovementConstraint);
 
 
-        TrajectoryActionBuilder collectArtifact6 = drive.actionBuilder(artifactPose2)
+        TrajectoryActionBuilder collectArtifact6 = drive.actionBuilder(artifactPose5)
                 .strafeToConstantHeading(artifactPose6.position, intakeMovementConstraint);
 
 
