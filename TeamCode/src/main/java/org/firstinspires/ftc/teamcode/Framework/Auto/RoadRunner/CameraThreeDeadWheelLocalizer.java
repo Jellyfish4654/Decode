@@ -59,7 +59,7 @@ public class CameraThreeDeadWheelLocalizer extends ThreeDeadWheelLocalizer{
                     Math.toRadians((Math.toDegrees(currentPos.heading.toDouble()) + xSum) / (tagDetections.length + 1))
             );
         }
-        setPose(currentPos);
+asdfasdf
         update();
 
         return ret;
