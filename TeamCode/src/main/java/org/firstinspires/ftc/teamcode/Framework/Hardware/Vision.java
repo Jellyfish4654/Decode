@@ -90,8 +90,8 @@ public class Vision {
     Exposure 0 to 204 ms
     Gain 0 to 255
      */
-    public static int GAIN = 25; // TODO: tune gain in diff lighting conditions
-    public static long EXPOSURE = 30;
+    public static int GAIN = 40; // TODO: tune gain in diff lighting conditions
+    public static long EXPOSURE = 10;
     
     public static double GOAL_BEARING_DEADBAND = 3; // +- degrees that aim correction is not applied
 

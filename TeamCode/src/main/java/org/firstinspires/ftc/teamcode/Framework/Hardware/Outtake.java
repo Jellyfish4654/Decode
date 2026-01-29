@@ -73,7 +73,13 @@ public class Outtake {
     
     public double getVelocity() {
         DcMotorEx outtakeEx = (DcMotorEx) outtake;
-        return outtakeEx.getVelocity();
+        double velocity =  outtakeEx.getVelocity();
+        if (outtake.getDirection() == DcMotor.Direction.REVERSE) {
+            return -velocity;
+        } else {
+            return velocity;
+        }
+        
     }
     
     

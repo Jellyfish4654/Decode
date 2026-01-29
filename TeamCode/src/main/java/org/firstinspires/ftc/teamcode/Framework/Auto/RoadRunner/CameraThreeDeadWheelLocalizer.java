@@ -35,19 +35,20 @@ public class CameraThreeDeadWheelLocalizer extends ThreeDeadWheelLocalizer{
         ySum = 0;
         headingSum = 0;
         for(AprilTagDetection tag : tagDetections){
-            if(tag != null && !(tag.metadata.fieldPosition.get(0) == 0 && tag.metadata.fieldPosition.get(1) == 0 && tag.metadata.fieldPosition.get(2) == 0))
-            {
-                xSum += tag.robotPose.getPosition().x;
-                ySum += tag.robotPose.getPosition().y;
-
-                headingSum += tag.robotPose.getOrientation().getYaw();
+            if(tag != null) {
+                if (!(tag.metadata.fieldPosition.get(0) == 0 && tag.metadata.fieldPosition.get(1) == 0 && tag.metadata.fieldPosition.get(2) == 0)) {
+                    xSum += tag.robotPose.getPosition().x;
+                    ySum += tag.robotPose.getPosition().y;
+                    
+                    headingSum += tag.robotPose.getOrientation().getYaw();
+                }
             }
         }
         if(weightVisionFully){
             currentPos = new Pose2d(
                     xSum / tagDetections.length,
                     ySum / tagDetections.length,
-                    Math.toRadians((xSum) / tagDetections.length)
+                    Math.toRadians((headingSum) / tagDetections.length)
             );
             if(tagDetections.length>0){
                 weightVisionFully = false;
@@ -60,7 +61,7 @@ public class CameraThreeDeadWheelLocalizer extends ThreeDeadWheelLocalizer{
             );
         }
         setPose(currentPos);
-        update();
+        super.update();
 
         return ret;
     }

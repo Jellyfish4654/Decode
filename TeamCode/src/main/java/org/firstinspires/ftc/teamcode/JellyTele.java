@@ -34,7 +34,7 @@ public class JellyTele extends BaseOpMode {
     public static double DISTANCE_FAR = 70;
     public static double AIM_ROTATION_SPEED = 0.02;
 
-    public static boolean USE_LOCALIZER = true; //TODO: yes or no
+    public static boolean USE_LOCALIZER = false; //TODO: yes or no
 
     public static Vector2d RED_GOAL_POS = new Vector2d(-65,65);
     public static Vector2d BLUE_GOAL_POS = new Vector2d(-65,-65);
@@ -207,6 +207,7 @@ public class JellyTele extends BaseOpMode {
     private void iterateMotifOuttake() {
         if (motifOuttakeIndex >= Params.motifArtifacts().length) {
             motifOuttakeLock = false;
+            outtake.off();
             dynamicFlyOuttakeDelay = FLY_OUTTAKE_DELAY_LONG;
         } else {
             spinOuttake(Params.motifArtifacts()[motifOuttakeIndex]);
@@ -264,7 +265,7 @@ public class JellyTele extends BaseOpMode {
     }
     
     private void outtakeVision(boolean aim) {
-        if(USE_LOCALIZER){
+        if (!USE_LOCALIZER) {
             if (aim) {
                 aimRotation = vision.getGoalBearing(Params.alliance) * AIM_ROTATION_SPEED;
             }
@@ -275,7 +276,7 @@ public class JellyTele extends BaseOpMode {
             } else { // near is default
                 outtake.onNear();
             }
-        }else{
+        } else {
             // ↓ decide power/aim based on LOCALIZER ↓
             Pose2d currentPose = localizer.getPose();
             double xDist = currentPose.position.x - (Params.alliance == Alliance.RED ? RED_GOAL_POS.x : BLUE_GOAL_POS.x);
@@ -307,7 +308,9 @@ public class JellyTele extends BaseOpMode {
     }
     
     private void stopOuttake() {
-        outtake.off();
+        if (!motifOuttakeLock) {
+            outtake.off();
+        }
         paddleDown();
         spindexer.setContents(Artifact.NONE);
         spinState = SpinState.STANDBY;

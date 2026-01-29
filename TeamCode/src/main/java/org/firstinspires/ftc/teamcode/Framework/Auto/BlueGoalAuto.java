@@ -53,7 +53,7 @@ public class BlueGoalAuto extends BaseAuto {
         // ↓ -------------- ↓ -------------- ↓ INITIALIZATION ↓ -------------- ↓ -------------- ↓
         initHardware(true);
         //TODO: SEE IF THIS BREAKS EVERYTHING
-        CameraMecanumDrive drive = new CameraMecanumDrive(hardwareMap, initialPose, vision);
+        MecanumDrive drive = new MecanumDrive(hardwareMap, initialPose);
         Params.alliance = Params.Alliance.BLUE;
         // ↓ -------------- ↓ -------------- ↓ TRAJECTORIES ↓ -------------- ↓ -------------- ↓
         TrajectoryActionBuilder moveToScan = drive.actionBuilder(initialPose)

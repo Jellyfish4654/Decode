@@ -15,7 +15,7 @@ public class SensorColor {
     public static float GAIN = 0.1F;
     public static boolean USE_HSV = true;
     
-    public static int[] HSV_PURPLE_RANGE = {210, 280};
+    public static int[] HSV_PURPLE_RANGE = {200, 270};
     public static int[] HSV_GREEN_RANGE = {120, 180};
     public static int HSV_MIN_VALUE = 45;
     
