@@ -52,8 +52,7 @@ public class BlueGoalAuto extends BaseAuto {
     public static double[] artifact6 = {22.9, -32.44, 41.8};
 
     ThreeDeadWheelLocalizer camLocalizer;
-    Pose2d currentCamPose = new Pose2d(0, 0, 0);
-    boolean enablePoseCorrection = false; //enable this if the shootpose somehow keeps getting off
+    public static boolean enablePoseCorrection = false; //enable this if the shootpose somehow keeps getting off
     double offsetX = 0;
     double offsetY = 0;
     double offsetHeading = 0;
@@ -76,7 +75,6 @@ public class BlueGoalAuto extends BaseAuto {
         //TODO: SEE IF THIS BREAKS EVERYTHING
         MecanumDrive drive = new MecanumDrive(hardwareMap, initialPose);
         camLocalizer = new CameraThreeDeadWheelLocalizer(hardwareMap, PARAMS.inPerTick, initialPose, vision);
-        currentCamPose = initialPose;
         Params.alliance = Params.Alliance.BLUE;
         // ↓ -------------- ↓ -------------- ↓ TRAJECTORIES ↓ -------------- ↓ -------------- ↓
         TrajectoryActionBuilder moveToScan = drive.actionBuilder(initialPose)
