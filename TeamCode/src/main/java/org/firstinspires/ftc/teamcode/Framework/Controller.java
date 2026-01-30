@@ -440,9 +440,13 @@ public class Controller {
     public void megaRumble() {
         Gamepad.RumbleEffect megaEffect = new Gamepad.RumbleEffect.Builder()
                 .addStep(1, 0, 250)
+                .addStep(0, 0, 250)
                 .addStep(0, 1, 250)
+                .addStep(0, 0, 250)
                 .addStep(1, 0, 250)
+                .addStep(0, 0, 250)
                 .addStep(0, 1, 250)
+                .addStep(0, 0, 250)
                 .addStep(1, 1, 500)
                 .build();
         gamepad1.runRumbleEffect(megaEffect);
