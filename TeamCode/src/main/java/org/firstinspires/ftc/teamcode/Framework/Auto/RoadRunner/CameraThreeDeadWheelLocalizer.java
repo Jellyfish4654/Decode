@@ -22,7 +22,7 @@ public class CameraThreeDeadWheelLocalizer extends ThreeDeadWheelLocalizer{
 
     @Override
     public PoseVelocity2d update(){
-        PoseVelocity2d ret = super.update();
+        super.update();
 
         double xSum;
         double ySum;
@@ -51,23 +51,20 @@ public class CameraThreeDeadWheelLocalizer extends ThreeDeadWheelLocalizer{
             currentPos = new Pose2d(
                     xSum / validTagAmount,
                     ySum / validTagAmount,
-                    currentPos.heading.toDouble()
-                    //Math.toRadians((headingSum) / validTagAmount)
+                    Math.toRadians((headingSum) / validTagAmount)
             );
-            if(validTagAmount>0){
-                weightVisionFully = false;
-            }
+            weightVisionFully = false;
+
         }else {
             currentPos = new Pose2d(
                     (currentPos.position.x + xSum) / (validTagAmount + 1),
                     (currentPos.position.y + ySum) / (validTagAmount + 1),
-                    currentPos.heading.toDouble()
-                    //Math.toRadians((Math.toDegrees(currentPos.heading.toDouble()) + headingSum) / (validTagAmount + 1))
+                    Math.toRadians((Math.toDegrees(currentPos.heading.toDouble()) + headingSum) / (validTagAmount + 1))
             );
         }
         super.setPose(currentPos);
 
-        return ret;
+        return super.update();
     }
 
 
