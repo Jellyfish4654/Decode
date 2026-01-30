@@ -47,7 +47,7 @@ public class CameraThreeDeadWheelLocalizer extends ThreeDeadWheelLocalizer{
                     xSum += tag.robotPose.getPosition().x;
                     ySum += tag.robotPose.getPosition().y;
                     
-                    headingSum += tag.robotPose.getOrientation().getYaw(AngleUnit.DEGREES);
+                    headingSum += normalizeTo360(tag.robotPose.getOrientation().getYaw(AngleUnit.DEGREES));
                     validTagAmount++;
                 }
             }
@@ -64,7 +64,7 @@ public class CameraThreeDeadWheelLocalizer extends ThreeDeadWheelLocalizer{
             currentPos = new Pose2d(
                     (currentPos.position.x + xSum) / (validTagAmount + 1),
                     (currentPos.position.y + ySum) / (validTagAmount + 1),
-                    Math.toRadians((Math.toDegrees(currentPos.heading.toDouble()) + headingSum) / (validTagAmount + 1))
+                    Math.toRadians((normalizeTo360(Math.toDegrees(currentPos.heading.toDouble())) + headingSum) / (validTagAmount + 1))
             );
         }
         super.setPose(currentPos);
@@ -89,5 +89,9 @@ public class CameraThreeDeadWheelLocalizer extends ThreeDeadWheelLocalizer{
                 Math.pow(getGoalRelativeLocation(alliance)[0],2)+
                 Math.pow(getGoalRelativeLocation(alliance)[1],2)
         );
+    }
+
+    private double normalizeTo360(double angle){
+        return angle < 0 ? 360+angle : angle;
     }
 }
