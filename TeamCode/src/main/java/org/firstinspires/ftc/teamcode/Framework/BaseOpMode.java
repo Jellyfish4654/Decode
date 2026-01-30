@@ -44,7 +44,7 @@ public abstract class BaseOpMode extends LinearOpMode {
     protected CameraThreeDeadWheelLocalizer localizer;
     protected double imuOffset = 0;
 
-    public final boolean PADDLE_MOTOR = false;
+    protected final boolean PADDLE_MOTOR = false;
     
     // TODO: we need to make sure nothing moves during auto → teleop transition
     public void initHardware(boolean auto) {

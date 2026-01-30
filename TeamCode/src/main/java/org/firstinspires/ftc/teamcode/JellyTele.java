@@ -35,9 +35,7 @@ public class JellyTele extends BaseOpMode {
     public static double AIM_ROTATION_SPEED = 0.02;
 
     public static boolean USE_LOCALIZER = false; //TODO: yes or no
-
-    public static Vector2d RED_GOAL_POS = new Vector2d(-65,65);
-    public static Vector2d BLUE_GOAL_POS = new Vector2d(-65,-65);
+    
     private long prevLoopNanoTime = 0;
 
     public enum SpinState {
@@ -265,37 +263,25 @@ public class JellyTele extends BaseOpMode {
     }
     
     private void outtakeVision(boolean aim) {
+        double bearing;
+        double distance;
         if (!USE_LOCALIZER) {
-            if (aim) {
-                aimRotation = vision.getGoalBearing(Params.alliance) * AIM_ROTATION_SPEED;
-            }
-            // ↓ decide power based on vision ↓
-            double distance = vision.getGoalDistance(Params.alliance);
-            if (distance > DISTANCE_FAR && distance < DISTANCE_TOO_FAR) {
-                outtake.onFar();
-            } else { // near is default
-                outtake.onNear();
-            }
+            bearing = vision.getGoalBearing(Params.alliance) ;
+            distance = vision.getGoalDistance(Params.alliance);
         } else {
-            // ↓ decide power/aim based on LOCALIZER ↓
-            Pose2d currentPose = localizer.getPose();
-            double xDist = currentPose.position.x - (Params.alliance == Alliance.RED ? RED_GOAL_POS.x : BLUE_GOAL_POS.x);
-            double yDist = currentPose.position.y - (Params.alliance == Alliance.RED ? RED_GOAL_POS.y : BLUE_GOAL_POS.y);
-            double localizerBearing = Math.toDegrees(currentPose.heading.toDouble()) - 180 - (Params.alliance == Alliance.RED ? -1 : 1) * Math.toDegrees(Math.atan(yDist / xDist));
-            if (aim) {
-                aimRotation = localizerBearing * AIM_ROTATION_SPEED;
-            }
-
-
-            double distance = Math.sqrt(
-                    Math.pow(xDist,2)+
-                    Math.pow(yDist,2)
-            );
-            if (distance > DISTANCE_FAR && distance < DISTANCE_TOO_FAR) {
-                outtake.onFar();
-            } else { // near is default
-                outtake.onNear();
-            }
+            bearing = localizer.getGoalBearing(Params.alliance);
+            distance = localizer.getGoalDistance(Params.alliance);
+        }
+        
+        if (aim) {
+            aimRotation = bearing * AIM_ROTATION_SPEED;
+        }
+        
+        // ↓ decide power based on distance ↓
+        if (distance > DISTANCE_FAR && distance < DISTANCE_TOO_FAR) {
+            outtake.onFar();
+        } else { // near is default
+            outtake.onNear();
         }
 
     }

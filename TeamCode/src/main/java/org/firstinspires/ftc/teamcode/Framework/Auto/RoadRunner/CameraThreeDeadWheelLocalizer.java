@@ -2,13 +2,18 @@ package org.firstinspires.ftc.teamcode.Framework.Auto.RoadRunner;
 
 import com.acmerobotics.roadrunner.Pose2d;
 import com.acmerobotics.roadrunner.PoseVelocity2d;
+import com.acmerobotics.roadrunner.Vector2d;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.teamcode.Framework.Hardware.Vision;
+import org.firstinspires.ftc.teamcode.Framework.Params.Alliance;
 import org.firstinspires.ftc.vision.apriltag.AprilTagDetection;
 
 public class CameraThreeDeadWheelLocalizer extends ThreeDeadWheelLocalizer{
+    public static Vector2d RED_GOAL_POS = new Vector2d(-65,65);
+    public static Vector2d BLUE_GOAL_POS = new Vector2d(-65,-65);
+    
     Vision vision;
     boolean weightVisionFully;
     public CameraThreeDeadWheelLocalizer(HardwareMap hardwareMap, double inPerTick, Pose2d initialPose, Vision vision) {
@@ -69,6 +74,23 @@ public class CameraThreeDeadWheelLocalizer extends ThreeDeadWheelLocalizer{
 
         return ret;
     }
-
-
+    
+    private double[] getGoalRelativeLocation(Alliance alliance) {
+        Pose2d currentPose = getPose();
+        double xDist = currentPose.position.x - (alliance == Alliance.RED ? RED_GOAL_POS.x : BLUE_GOAL_POS.x);
+        double yDist = currentPose.position.y - (alliance == Alliance.RED ? RED_GOAL_POS.y : BLUE_GOAL_POS.y);
+        double bearing = Math.toDegrees(currentPose.heading.toDouble()) - 180 - (org.firstinspires.ftc.teamcode.Framework.Params.alliance == Alliance.RED ? -1 : 1) * Math.toDegrees(Math.atan(yDist / xDist));
+        return new double[] {xDist, yDist, bearing};
+    }
+    
+    public double getGoalBearing(Alliance alliance) {
+        return getGoalRelativeLocation(alliance)[2];
+    }
+    
+    public double getGoalDistance(Alliance alliance) {
+        return Math.sqrt(
+                Math.pow(getGoalRelativeLocation(alliance)[0],2)+
+                Math.pow(getGoalRelativeLocation(alliance)[1],2)
+        );
+    }
 }
