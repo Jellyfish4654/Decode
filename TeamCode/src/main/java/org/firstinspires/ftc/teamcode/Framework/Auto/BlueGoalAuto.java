@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.Framework.Auto;
 
+import static org.firstinspires.ftc.teamcode.Framework.Auto.RoadRunner.MecanumDrive.PARAMS;
+
 import androidx.annotation.NonNull;
 
 import com.acmerobotics.dashboard.config.Config;
@@ -15,7 +17,9 @@ import com.acmerobotics.roadrunner.ftc.Actions;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
 import org.firstinspires.ftc.teamcode.Framework.Auto.RoadRunner.CameraMecanumDrive;
+import org.firstinspires.ftc.teamcode.Framework.Auto.RoadRunner.CameraThreeDeadWheelLocalizer;
 import org.firstinspires.ftc.teamcode.Framework.Auto.RoadRunner.MecanumDrive;
+import org.firstinspires.ftc.teamcode.Framework.Auto.RoadRunner.ThreeDeadWheelLocalizer;
 import org.firstinspires.ftc.teamcode.Framework.Params;
 import org.firstinspires.ftc.teamcode.JellyTele;
 import org.firstinspires.ftc.teamcode.Framework.Params.Artifact;
@@ -36,24 +40,59 @@ public class BlueGoalAuto extends BaseAuto {
     Pose2d artifactPose5;
     Pose2d artifactPose6;
     Pose2d thirdPose;
+    // ↓ -------------- ↓ -------------- ↓ POSITIONS TO CHANGE IN FTC DASH ↓ -------------- ↓ -------------- ↓
+    // the doubles are the difference between the pose and shooting pose
+    double collectFirstX = 1.2;
+    double collectFirstY = -17.89;
+    double collectFirstHeading = 44;
+    double artifact1X = 1.1;
+    double artifact1Y = -20.74;
+    double artifact1Heading = 44.5;
+    double artifact2X = 1.1;
+    double artifact2Y = -25.44;
+    double artifact2Heading = 44;
+    double artifact3X = 0.6;
+    double artifact3Y = -30.24;
+    double artifact3Heading = 43;
+    double collectSecondX = 23.5;
+    double collectSecondY = -30.91;
+    double collectSecondHeading = 42.5;
+    double artifact4X = 23.6;
+    double artifact4Y = -21.84;
+    double artifact4Heading = 42.7;
+    double artifact5X = 23.3;
+    double artifact5Y = -26.64;
+    double artifact5Heading = 42.3;
+    double artifact6X = 22.9;
+    double artifact6Y = -32.44;
+    double artifact6Heading = 41.8;
+
+    ThreeDeadWheelLocalizer camLocalizer;
+    Pose2d currentCamPose = new Pose2d(0, 0, 0);
+    boolean enablePoseCorrection = false; //enable this if the shootpose somehow keeps getting off
+    double offsetX = 0;
+    double offsetY = 0;
+    double offsetHeading = 0;
     @Override
     public void runOpMode() throws InterruptedException {
         // ↓ -------------- ↓ -------------- ↓ POSES ↓ -------------- ↓ -------------- ↓
-        Pose2d initialPose = new Pose2d(-52, -49, Math.toRadians(-128));
+        Pose2d initialPose = new Pose2d(-52, -49, Math.toRadians(232));
         scanPose = new Pose2d(-17.9, -15.4, Math.toRadians(158)); //pos1
-        shootPose = new Pose2d (-13.5, -13.76, Math.toRadians(-136)); //pos2
-        collectFirstPose = new Pose2d(-12.3, -31.65, Math.toRadians(-92)); //pos3
-        artifactPose1 = new Pose2d(-12.4, -34.5, Math.toRadians(-91.5));
-        artifactPose2 = new Pose2d(-12.4, -39.2, Math.toRadians(-92));
-        artifactPose3 = new Pose2d(-12.9, -44, Math.toRadians(-93));
-        collectSecondPose = new Pose2d(10, -44.67, Math.toRadians(-93.5)); //pos3
-        artifactPose4 = new Pose2d(10.1, -35.6, Math.toRadians(-93.3));
-        artifactPose5 = new Pose2d(9.8, -40.4, Math.toRadians(-93.7));
-        artifactPose6 = new Pose2d(9.4, -46.2, Math.toRadians(-94.2));
+        shootPose = new Pose2d (-13.5, -13.76, Math.toRadians(224)); //pos2
+        collectFirstPose = new Pose2d(shootPose.position.x + collectFirstX, shootPose.position.y + collectFirstY, shootPose.heading.toDouble() + Math.toRadians(collectFirstHeading));
+        artifactPose1 = new Pose2d(shootPose.position.x + artifact1X, shootPose.position.y + artifact1Y, shootPose.heading.toDouble() + Math.toRadians(artifact1Heading));
+        artifactPose2 = new Pose2d(shootPose.position.x + artifact2X, shootPose.position.y + artifact2Y, shootPose.heading.toDouble() + Math.toRadians(artifact2Heading));
+        artifactPose3 = new Pose2d(shootPose.position.x + artifact3X, shootPose.position.y + artifact3Y, shootPose.heading.toDouble() + Math.toRadians(artifact3Heading));
+        collectSecondPose = new Pose2d(shootPose.position.x + collectSecondX, shootPose.position.y + collectSecondY, shootPose.heading.toDouble() + Math.toRadians(collectSecondHeading));
+        artifactPose4 = new Pose2d(shootPose.position.x + artifact4X, shootPose.position.y + artifact4Y, shootPose.heading.toDouble() + Math.toRadians(artifact4Heading));
+        artifactPose5 = new Pose2d(shootPose.position.x + artifact5X, shootPose.position.y + artifact5Y, shootPose.heading.toDouble() + Math.toRadians(artifact5Heading));
+        artifactPose6 = new Pose2d(shootPose.position.x + artifact6X, shootPose.position.y + artifact6Y, shootPose.heading.toDouble() + Math.toRadians(artifact6Heading));
         // ↓ -------------- ↓ -------------- ↓ INITIALIZATION ↓ -------------- ↓ -------------- ↓
         initHardware(true);
         //TODO: SEE IF THIS BREAKS EVERYTHING
         MecanumDrive drive = new MecanumDrive(hardwareMap, initialPose);
+        camLocalizer = new CameraThreeDeadWheelLocalizer(hardwareMap, PARAMS.inPerTick, initialPose, vision);
+        currentCamPose = initialPose;
         Params.alliance = Params.Alliance.BLUE;
         // ↓ -------------- ↓ -------------- ↓ TRAJECTORIES ↓ -------------- ↓ -------------- ↓
         TrajectoryActionBuilder moveToScan = drive.actionBuilder(initialPose)
@@ -78,7 +117,7 @@ public class BlueGoalAuto extends BaseAuto {
         TrajectoryActionBuilder openGate; //ignore this unless we decide to go for 12 ball
 
         TrajectoryActionBuilder moveToShootFirst = drive.actionBuilder(artifactPose3)
-                .splineToLinearHeading(shootPose,Math.toRadians(255));
+                .splineToLinearHeading(shootPose,Math.toRadians(260));
 
         TrajectoryActionBuilder moveToCollectSecond = drive.actionBuilder(shootPose)
                 .strafeToLinearHeading(collectSecondPose.position, collectSecondPose.heading);
@@ -122,7 +161,10 @@ public class BlueGoalAuto extends BaseAuto {
                     scanMotif(),
                     outtake.outtakeOnNear(),
                     moveToShootPreload.build(),
-                    new ShootMotif(),
+                    new ParallelAction(
+                            correctPoses(),
+                            new ShootMotif()
+                    ),
                     new ParallelAction(
                             moveToCollectFirst.build(),
                             intake.intakeOn(),
@@ -154,7 +196,10 @@ public class BlueGoalAuto extends BaseAuto {
                     ),
                     outtake.outtakeOnNear(),
                     moveToShootFirst.build(),
-                    new ShootMotif(),
+                    new ParallelAction(
+                            correctPoses(),
+                            new ShootMotif()
+                    ),
                     new ParallelAction(
                             moveToCollectSecond.build(),
                             intake.intakeOn(),
@@ -179,12 +224,43 @@ public class BlueGoalAuto extends BaseAuto {
                     ),
                     outtake.outtakeOnNear(),
                     moveToShootSecond.build(),
-                    new ShootMotif(),
+                    new ParallelAction(
+                            correctPoses(),
+                            new ShootMotif()
+                    ),
                     //get out of shooting zone
                     drive.actionBuilder(shootPose).strafeTo(new Vector2d(-25,-45)).build()
             )
         );
     }
+
+    public class CorrectPoses implements Action {
+        @Override
+        public boolean run (@NonNull TelemetryPacket packet) {
+            camLocalizer.update();
+            Pose2d currentPose = camLocalizer.getPose();
+            if (currentPose != null) {
+                if (enablePoseCorrection) {
+                    offsetX = shootPose.position.x - currentPose.position.x;
+                    offsetY = shootPose.position.y - currentPose.position.y;
+                    offsetHeading = Math.toDegrees(shootPose.heading.toDouble() - currentPose.heading.toDouble());
+                } else {
+                    shootPose = currentPose;
+                }
+                collectFirstPose = new Pose2d(shootPose.position.x + collectFirstX + offsetX, shootPose.position.y + collectFirstY + offsetY, Math.toRadians(collectFirstHeading + offsetHeading));
+                artifactPose1 = new Pose2d(shootPose.position.x + artifact1X + offsetX, shootPose.position.y + artifact1Y + offsetY, Math.toRadians(artifact1Heading + offsetHeading));
+                artifactPose2 = new Pose2d(shootPose.position.x + artifact2X + offsetX, shootPose.position.y + artifact2Y + offsetY, Math.toRadians(artifact2Heading + offsetHeading));
+                artifactPose3 = new Pose2d(shootPose.position.x + artifact3X + offsetX, shootPose.position.y + artifact3Y + offsetY, Math.toRadians(artifact3Heading + offsetHeading));
+                collectSecondPose = new Pose2d(shootPose.position.x + collectSecondX + offsetX, shootPose.position.y + collectSecondY + offsetY, Math.toRadians(collectSecondHeading + offsetHeading));
+                artifactPose4 = new Pose2d(shootPose.position.x + artifact4X + offsetX, shootPose.position.y + artifact4Y + offsetY, Math.toRadians(artifact4Heading + offsetHeading));
+                artifactPose5 = new Pose2d(shootPose.position.x + artifact5X + offsetX, shootPose.position.y + artifact5Y + offsetY, Math.toRadians(artifact5Heading + offsetHeading));
+                artifactPose6 = new Pose2d(shootPose.position.x + artifact6X + offsetX, shootPose.position.y + artifact6Y + offsetY, Math.toRadians(artifact6Heading + offsetHeading));
+            }
+            return false;
+        }
+    }
+
+    public Action correctPoses() { return new CorrectPoses(); }
 
 
     public class VerifyPos implements Action {
