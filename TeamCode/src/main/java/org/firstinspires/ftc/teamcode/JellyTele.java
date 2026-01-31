@@ -277,8 +277,9 @@ public class JellyTele extends BaseOpMode {
             aimRotation = bearing * AIM_ROTATION_SPEED;
         }
         
+        // TODO: do these override buttons for real
         // ↓ decide power based on distance ↓
-        if (distance > DISTANCE_FAR && distance < DISTANCE_TOO_FAR) {
+        if (((distance > DISTANCE_FAR && distance < DISTANCE_TOO_FAR) || gamepad2.right_bumper) && !gamepad2.left_bumper) {
             outtake.onFar();
         } else { // near is default
             outtake.onNear();
