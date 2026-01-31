@@ -13,8 +13,6 @@ import com.acmerobotics.roadrunner.SleepAction;
 import com.acmerobotics.roadrunner.VelConstraint;
 import com.acmerobotics.roadrunner.ftc.Actions;
 
-import org.firstinspires.ftc.teamcode.Framework.Auto.RoadRunner.MecanumDrive;
-import org.firstinspires.ftc.teamcode.Framework.Auto.RoadRunner.ThreeDeadWheelLocalizer;
 import org.firstinspires.ftc.teamcode.Framework.BaseOpMode;
 import org.firstinspires.ftc.teamcode.Framework.Params;
 import org.firstinspires.ftc.teamcode.JellyTele;
@@ -49,12 +47,11 @@ public abstract class BaseAuto extends BaseOpMode {
     );}
 
     SequentialAction shootGPP() { return new SequentialAction(
-            new ParallelAction(
-                    spindexer.greenOut(),
-                    outtake.outtakeOnNear(),
-                    new SleepAction(JellyTele.FLY_OUTTAKE_DELAY_LONG /1000.0),
-                    outtake.outtakeOnNear()
-            ),
+//            new ParallelAction(
+//                    spindexer.greenOut(),
+//                    outtake.outtakeOnNear(),
+//                    new SleepAction(JellyTele.SPINDEXER_DELAY /1000.0)
+//            ),
             swingPaddle(),
             spindexer.purpleOut(),
             outtake.outtakeOnNear(),
@@ -67,12 +64,11 @@ public abstract class BaseAuto extends BaseOpMode {
             outtake.outtakeOff()
     );}
     SequentialAction shootPGP() { return new SequentialAction(
-            new ParallelAction(
-                    spindexer.purpleOut(),
-                    outtake.outtakeOnNear(),
-                    new SleepAction(JellyTele.FLY_OUTTAKE_DELAY_LONG /1000.0),
-                    outtake.outtakeOnNear()
-            ),
+//            new ParallelAction(
+//                    spindexer.purpleOut(),
+//                    outtake.outtakeOnNear(),
+//                    new SleepAction(JellyTele.SPINDEXER_DELAY /1000.0)
+//            ),
             swingPaddle(),
             spindexer.greenOut(),
             outtake.outtakeOnNear(),
@@ -85,12 +81,11 @@ public abstract class BaseAuto extends BaseOpMode {
             outtake.outtakeOff()
     );}
     SequentialAction shootPPG() { return new SequentialAction(
-            new ParallelAction(
-                    spindexer.purpleOut(),
-                    outtake.outtakeOnNear(),
-                    new SleepAction(JellyTele.FLY_OUTTAKE_DELAY_LONG /1000.0),
-                    outtake.outtakeOnNear()
-            ),
+//            new ParallelAction(
+//                    spindexer.purpleOut(),
+//                    outtake.outtakeOnNear(),
+//                    new SleepAction(JellyTele.SPINDEXER_DELAY /1000.0)
+//            ),
             swingPaddle(),
             spindexer.purpleOut(),
             outtake.outtakeOnNear(),
@@ -117,12 +112,18 @@ public abstract class BaseAuto extends BaseOpMode {
                     break;
                 case PGP:
                     Actions.runBlocking(
-                            shootPGP()
+                            new ParallelAction(
+                                    shootPGP(),
+                                    spindexerTelemetry(1)
+                            )
                     );
                     break;
                 case PPG:
                     Actions.runBlocking(
-                            shootPPG()
+                            new ParallelAction(
+                                    shootPPG(),
+                                    spindexerTelemetry(1)
+                            )
                     );
                     break;
 
@@ -130,6 +131,27 @@ public abstract class BaseAuto extends BaseOpMode {
             return false;
         }
     }
+    
+    public class SpindexerFirstOut implements Action {
+        @Override
+        public boolean run(@NonNull TelemetryPacket packet) {
+            switch (Params.motif) {
+                case GPP:
+                    Actions.runBlocking(
+                            spindexer.greenOut()
+                    );
+                    break;
+                case PGP:
+                case PPG:
+                    Actions.runBlocking(
+                            spindexer.purpleOut()
+                    );
+                    break;
+            }
+            return false;
+        }
+    }
+    
     // intake movement constraint TODO: tune
     VelConstraint intakeMovementConstraint = new VelConstraint() {
         @Override

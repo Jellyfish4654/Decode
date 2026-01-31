@@ -42,14 +42,14 @@ public class BlueGoalAuto extends BaseAuto {
     // ↓ -------------- ↓ -------------- ↓ POSITIONS TO CHANGE IN FTC DASH ↓ -------------- ↓ -------------- ↓
     public static double[] shoot = {-13.5, -13.76, 224};
     // the doubles are the difference between the pose and shooting pose
-    public static double[] collectFirst = {1.2, -17.89, 44};
-    public static double[] artifact1 = {1.1, -20.74, 44.5};
-    public static double[] artifact2 = {1.1, -25.44, 44};
-    public static double[] artifact3 = {0.6, -30.24, 43};
-    public static double[] collectSecond = {23.5, -30.91, 42.5};
-    public static double[] artifact4 = {23.6, -21.84, 42.7};
-    public static double[] artifact5 = {23.3, -26.64, 42.3};
-    public static double[] artifact6 = {22.9, -32.44, 41.8};
+    public static double[] collectFirst = {1.2, -13, 45};
+    public static double[] artifact1 = {1.1, -20.2, 44.5};
+    public static double[] artifact2 = {1.1, -25, 44};
+    public static double[] artifact3 = {0.6, -35, 43};
+    public static double[] collectSecond = {23.5, -13, 45};
+    public static double[] artifact4 = {23.6, -18.2, 42.7};
+    public static double[] artifact5 = {23.3, -23, 42.3};
+    public static double[] artifact6 = {22.9, -40, 41.8};
 
     ThreeDeadWheelLocalizer camLocalizer;
     public static boolean enablePoseCorrection = false; //enable this if the shootpose somehow keeps getting off
@@ -84,7 +84,7 @@ public class BlueGoalAuto extends BaseAuto {
                 .strafeToLinearHeading(shootPose.position,shootPose.heading);
 
         TrajectoryActionBuilder moveToCollectFirst = drive.actionBuilder(shootPose)
-                .splineToLinearHeading(collectFirstPose,Math.toRadians(265));
+                .strafeToLinearHeading(collectFirstPose.position, collectFirstPose.heading);
 
         TrajectoryActionBuilder collectArtifact1 = drive.actionBuilder(collectFirstPose)
                 .strafeToConstantHeading(artifactPose1.position, intakeMovementConstraint);
@@ -99,7 +99,7 @@ public class BlueGoalAuto extends BaseAuto {
         TrajectoryActionBuilder openGate; //ignore this unless we decide to go for 12 ball
 
         TrajectoryActionBuilder moveToShootFirst = drive.actionBuilder(artifactPose3)
-                .splineToLinearHeading(shootPose,Math.toRadians(260));
+                .strafeToLinearHeading(shootPose.position, shootPose.heading);
 
         TrajectoryActionBuilder moveToCollectSecond = drive.actionBuilder(shootPose)
                 .strafeToLinearHeading(collectSecondPose.position, collectSecondPose.heading);
@@ -139,42 +139,47 @@ public class BlueGoalAuto extends BaseAuto {
         if (isStopRequested()) return;
         Actions.runBlocking(
                 new SequentialAction(
-                    moveToScan.build(),
-                    scanMotif(),
                     outtake.outtakeOnNear(),
+                    moveToScan.build(),
+                    outtake.outtakeOnNear(),
+                    scanMotif(),
+                    new SpindexerFirstOut(),
                     moveToShootPreload.build(),
+                    new SleepAction(JellyTele.FLY_OUTTAKE_DELAY_SHORT /1000.0),
                     new ParallelAction(
                             correctPoses(),
                             new ShootMotif()
                     ),
                     new ParallelAction(
                             moveToCollectFirst.build(),
-                            intake.intakeOn(),
                             spindexer.slotIn()
                     ),
                     new SequentialAction(
+                            intake.intakeOn(),
                             collectArtifact1.build(),
+                            new SleepAction(0.3),
                             intake.intakeOff(),
-                            new SleepAction(0.4),
                             spindexer.contentsSet(Artifact.PURPLE),
                             new ParallelAction(
-                                    intake.intakeOn(),
                                     spindexer.slotIn(),
                                     new SleepAction(JellyTele.SPINDEXER_DELAY /1000.0)
                             ),
+                            intake.intakeOn(),
                             collectArtifact2.build(),
+                            new SleepAction(0.3),
                             intake.intakeOff(),
-                            new SleepAction(0.4),
+                            outtake.outtakeOnNear(), // ------- outtake prespin
                             spindexer.contentsSet(Artifact.PURPLE),
                             new ParallelAction(
-                                    intake.intakeOn(),
                                     spindexer.slotIn(),
                                     new SleepAction(JellyTele.SPINDEXER_DELAY /1000.0)
                             ),
+                            intake.intakeOn(),
                             collectArtifact3.build(),
+                            new SleepAction(0.3),
                             intake.intakeOff(),
-                            new SleepAction(0.4),
-                            spindexer.contentsSet(Artifact.GREEN)
+                            spindexer.contentsSet(Artifact.GREEN),
+                            new SpindexerFirstOut()
                     ),
                     outtake.outtakeOnNear(),
                     moveToShootFirst.build(),
@@ -184,25 +189,34 @@ public class BlueGoalAuto extends BaseAuto {
                     ),
                     new ParallelAction(
                             moveToCollectSecond.build(),
-                            intake.intakeOn(),
                             spindexer.slotIn()
                     ),
                     new SequentialAction(
+                            intake.intakeOn(),
                             collectArtifact4.build(),
+                            new SleepAction(0.3),
+                            intake.intakeOff(),
                             spindexer.contentsSet(Artifact.PURPLE),
                             new ParallelAction(
                                     spindexer.slotIn(),
                                     new SleepAction(JellyTele.SPINDEXER_DELAY /1000.0)
                             ),
+                            intake.intakeOn(),
                             collectArtifact5.build(),
+                            new SleepAction(0.3),
+                            intake.intakeOff(),
+                            outtake.outtakeOnNear(), // ------- prespin
                             spindexer.contentsSet(Artifact.GREEN),
                             new ParallelAction(
                                     spindexer.slotIn(),
                                     new SleepAction(JellyTele.SPINDEXER_DELAY /1000.0)
                             ),
+                            intake.intakeOn(),
                             collectArtifact6.build(),
+                            new SleepAction(0.3),
+                            intake.intakeOff(),
                             spindexer.contentsSet(Artifact.PURPLE),
-                            intake.intakeOff()
+                            new SpindexerFirstOut()
                     ),
                     outtake.outtakeOnNear(),
                     moveToShootSecond.build(),

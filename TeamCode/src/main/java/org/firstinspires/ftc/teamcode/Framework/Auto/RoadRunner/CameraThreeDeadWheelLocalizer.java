@@ -47,7 +47,7 @@ public class CameraThreeDeadWheelLocalizer extends ThreeDeadWheelLocalizer{
                     xSum += tag.robotPose.getPosition().x;
                     ySum += tag.robotPose.getPosition().y;
                     
-                    headingSum += normalizeTo360(tag.robotPose.getOrientation().getYaw(AngleUnit.DEGREES));
+                    headingSum += normalizeTo360(-tag.robotPose.getOrientation().getYaw(AngleUnit.DEGREES));
                     validTagAmount++;
                 }
             }
