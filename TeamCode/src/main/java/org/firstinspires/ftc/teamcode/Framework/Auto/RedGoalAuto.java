@@ -43,13 +43,13 @@ public class RedGoalAuto extends BaseAuto {
     public static double[] shoot = {-13.5, 13.76, -224};
     // the doubles are the difference between the pose and shooting pose
     public static double[] collectFirst = {1.2, 13, -45};
-    public static double[] artifact1 = {1.1, 20.2, -44.5};
-    public static double[] artifact2 = {1.1, 25, -44};
-    public static double[] artifact3 = {0.6, 35, -43};
-    public static double[] collectSecond = {23.5, 13, -45};
-    public static double[] artifact4 = {23.6, 18.2, -42.7};
-    public static double[] artifact5 = {23.3, 23, -42.3};
-    public static double[] artifact6 = {22.9, 40, -41.8};
+    public static double[] artifact1 = {1.1, 20.2, -45};
+    public static double[] artifact2 = {1.1, 25, -45};
+    public static double[] artifact3 = {0.6, 35, -45};
+    public static double[] collectSecond = {27, 13, -47};
+    public static double[] artifact4 = {27, 18.2, -47};
+    public static double[] artifact5 = {27, 23, -47};
+    public static double[] artifact6 = {27, 40, -47};
 
     ThreeDeadWheelLocalizer camLocalizer;
     public static boolean enablePoseCorrection = false; //enable this if the shootpose somehow keeps getting off
@@ -266,7 +266,7 @@ public class RedGoalAuto extends BaseAuto {
         }
         @Override
         public boolean run(@NonNull TelemetryPacket packet) {
-            double goalBearing = vision.getGoalBearing(Params.alliance);
+            double goalBearing = vision.getGoalBearing(Params.alliance, false);
             double goalDistance = vision.getGoalDistance(Params.alliance);
             double goalX = -58.5;
             double goalY = -54.5;

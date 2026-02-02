@@ -91,9 +91,10 @@ public class Vision {
     Gain 0 to 255
      */
     public static int GAIN = 40; // TODO: tune gain in diff lighting conditions
-    public static long EXPOSURE = 10;
+    public static long EXPOSURE = 15;
     
-    public static double GOAL_BEARING_DEADBAND = 3; // +- degrees that aim correction is not applied
+    public static double GOAL_NEAR_BEARING_DEADBAND = 3; // +- degrees that aim correction is not applied
+    public static double GOAL_FAR_BEARING_DEADBAND = 0.5; // +- degrees that aim correction is not applied
 
 
     private CameraName name;
@@ -225,7 +226,7 @@ public class Vision {
      * @return double of the given alliance's goal's bearing. If goal is
      * not in frame or bearing is less than deadband value, returns 0
      */
-    public double getGoalBearing(Alliance alliance) {
+    public double getGoalBearing(Alliance alliance, boolean isFar) {
         int goalTagID = 20;
         if (alliance == Alliance.RED) {
             goalTagID = 24;
@@ -235,7 +236,7 @@ public class Vision {
         for (AprilTagDetection tag : allTags) {
             if (tag.id == goalTagID) {
                 double bearing = -getTagNav(tag)[1];
-                if (Math.abs(bearing) < GOAL_BEARING_DEADBAND) {
+                if (Math.abs(bearing) < (isFar ? GOAL_FAR_BEARING_DEADBAND:GOAL_NEAR_BEARING_DEADBAND)) {
                     bearing = 0;
                 }
                 return bearing;

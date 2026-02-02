@@ -28,24 +28,25 @@ import org.firstinspires.ftc.teamcode.JellyTele;
 public class BlueAudienceAuto extends BaseAuto {
     Pose2d scanPose;
     Pose2d shootPose;
-    Pose2d collectCorner;
-    Pose2d collectCorner1;
-    Pose2d collectCorner2;
-    Pose2d collectArtifact;
-    Pose2d collectArtifact1;
-    Pose2d collectArtifact2;
-    Pose2d collectArtifact3;
+    Pose2d collectCornerPose;
+    Pose2d collectCorner1Pose;
+    Pose2d collectCorner2Pose;
+    Pose2d collectArtifactPose;
+    Pose2d collectArtifact1Pose;
+    Pose2d collectArtifact2Pose;
+    Pose2d collectArtifact3Pose;
 
     // ↓ -------------- ↓ -------------- ↓ POSITIONS TO CHANGE IN FTC DASH ↓ -------------- ↓ -------------- ↓
-    public static double[] shoot = {-13.5, -13.76, 224};
+    public static double[] shoot = {56, -12.5, -140};
     // the doubles are the difference between the pose and shooting pose
-    public static double[] corner = {1.2, -17.89, 44};
-    public static double[] corner1 = {1.1, -20.74, 44.5};
-    public static double[] corner2 = {1.1, -25.44, 44};
-    public static double[] artifact = {23.5, -30.91, 42.5};
-    public static double[] artifact1 = {0.6, -30.24, 43};
-    public static double[] artifact2 = {23.6, -21.84, 42.7};
-    public static double[] artifact3 = {23.3, -26.64, 42.3};
+    public static double[] scan = {-16, -11, -40};
+    public static double[] corner = {1.2, -17.89, 50};
+    public static double[] corner1 = {1.1, -20.74, 50.5};
+    public static double[] corner2 = {1.1, -25.44, 50};
+    public static double[] artifact = {23.5, -30.91, 96};
+    public static double[] artifact1 = {23.5, -32, 96};
+    public static double[] artifact2 = {23.6, -35, 96};
+    public static double[] artifact3 = {23.3, -38, 96};
 
     ThreeDeadWheelLocalizer camLocalizer;
     public static boolean enablePoseCorrection = false; //enable this if the shootpose somehow keeps getting off
@@ -59,14 +60,15 @@ public class BlueAudienceAuto extends BaseAuto {
         // ↓ -------------- ↓ -------------- ↓ POSES ↓ -------------- ↓ -------------- ↓
         Pose2d initialPose = new Pose2d(61.5, -23.5, Math.toRadians(180));
         //TODO: tune these poses using autopositionfinder
-        shootPose = new Pose2d(new Vector2d(-20,-20),Math.toRadians(-140));
-        collectCorner = new Pose2d(shootPose.position.x + corner[0], shootPose.position.y + corner[1], shootPose.heading.toDouble() + Math.toRadians(corner[2]));
-        collectCorner1 = new Pose2d(shootPose.position.x + corner1[0], shootPose.position.y + corner1[1], shootPose.heading.toDouble() + Math.toRadians(corner1[2]));
-        collectCorner2 = new Pose2d(shootPose.position.x + corner2[0], shootPose.position.y + corner2[1], shootPose.heading.toDouble() + Math.toRadians(corner2[2]));
-        collectArtifact = new Pose2d(shootPose.position.x + artifact[0], shootPose.position.y + artifact[1], shootPose.heading.toDouble() + Math.toRadians(artifact[2]));
-        collectArtifact1 = new Pose2d(shootPose.position.x + artifact1[0], shootPose.position.y + artifact1[1], shootPose.heading.toDouble() + Math.toRadians(artifact1[2]));
-        collectArtifact2 = new Pose2d(shootPose.position.x + artifact2[0], shootPose.position.y + artifact2[1], shootPose.heading.toDouble() + Math.toRadians(artifact2[2]));
-        collectArtifact3 = new Pose2d(shootPose.position.x + artifact3[0], shootPose.position.y + artifact3[1], shootPose.heading.toDouble() + Math.toRadians(artifact3[2]));
+        shootPose = new Pose2d(new Vector2d(shoot[0],shoot[1]),Math.toRadians(shoot[2]));
+        scanPose = new Pose2d(shootPose.position.x + scan[0], shootPose.position.y + scan[1], shootPose.heading.toDouble() + Math.toRadians(scan[2]));
+        collectCornerPose = new Pose2d(shootPose.position.x + corner[0], shootPose.position.y + corner[1], shootPose.heading.toDouble() + Math.toRadians(corner[2]));
+        collectCorner1Pose = new Pose2d(shootPose.position.x + corner1[0], shootPose.position.y + corner1[1], shootPose.heading.toDouble() + Math.toRadians(corner1[2]));
+        collectCorner2Pose = new Pose2d(shootPose.position.x + corner2[0], shootPose.position.y + corner2[1], shootPose.heading.toDouble() + Math.toRadians(corner2[2]));
+        collectArtifactPose = new Pose2d(shootPose.position.x + artifact[0], shootPose.position.y + artifact[1], shootPose.heading.toDouble() + Math.toRadians(artifact[2]));
+        collectArtifact1Pose = new Pose2d(shootPose.position.x + artifact1[0], shootPose.position.y + artifact1[1], shootPose.heading.toDouble() + Math.toRadians(artifact1[2]));
+        collectArtifact2Pose = new Pose2d(shootPose.position.x + artifact2[0], shootPose.position.y + artifact2[1], shootPose.heading.toDouble() + Math.toRadians(artifact2[2]));
+        collectArtifact3Pose = new Pose2d(shootPose.position.x + artifact3[0], shootPose.position.y + artifact3[1], shootPose.heading.toDouble() + Math.toRadians(artifact3[2]));
 
         // ↓ -------------- ↓ -------------- ↓ INITIALIZATION ↓ -------------- ↓ -------------- ↓
         initHardware(true);
@@ -76,60 +78,56 @@ public class BlueAudienceAuto extends BaseAuto {
         Params.alliance = Params.Alliance.BLUE;
 
         // ↓ -------------- ↓ -------------- ↓ TRAJECTORIES ↓ -------------- ↓ -------------- ↓
-        TrajectoryActionBuilder preshoot = drive.actionBuilder(initialPose)
+        TrajectoryActionBuilder scanMotif = drive.actionBuilder(initialPose)
+                .strafeToLinearHeading(scanPose.position,scanPose.heading);
+        TrajectoryActionBuilder preshoot = drive.actionBuilder(scanPose)
                 .strafeToLinearHeading(shootPose.position,shootPose.heading);
+        
+        TrajectoryActionBuilder collectArtifact = drive.actionBuilder(shootPose)
+                .strafeToLinearHeading(collectArtifactPose.position,collectArtifactPose.heading);
 
-
-        TrajectoryActionBuilder cornerOne = drive.actionBuilder(shootPose)
-                .strafeToLinearHeading(collectCorner1.position, collectCorner1.heading, intakeMovementConstraint);
-
-
-        TrajectoryActionBuilder cornerTwo = drive.actionBuilder(collectCorner1)
-                .splineToConstantHeading(collectCorner2.position, collectCorner2.heading, intakeMovementConstraint);
-
-
-        TrajectoryActionBuilder shootOne = drive.actionBuilder(collectCorner2)
+        TrajectoryActionBuilder collectArtifact1 = drive.actionBuilder(shootPose)
+                .strafeToLinearHeading(collectArtifact1Pose.position,collectArtifact1Pose.heading);
+        
+        TrajectoryActionBuilder collectArtifact2 = drive.actionBuilder(collectArtifact1Pose)
+                .strafeToLinearHeading(collectArtifact2Pose.position,collectArtifact2Pose.heading);
+        
+        TrajectoryActionBuilder collectArtifact3 = drive.actionBuilder(collectArtifact2Pose)
+                .strafeToLinearHeading(collectArtifact3Pose.position,collectArtifact3Pose.heading);
+        
+        TrajectoryActionBuilder shootOne = drive.actionBuilder(collectArtifact3Pose)
                 .strafeToLinearHeading(shootPose.position,shootPose.heading);
 
 
         SequentialAction motifOneCollector = new SequentialAction(
+                collectArtifact.build(),
+                new SleepAction(0.1),
+                intake.intakeOn(),
+                outtake.outtakeOnFar(), // ------- outtake prespin
+                collectArtifact1.build(),
+                new SleepAction(0.3),
+                intake.intakeOff(),
+                spindexer.contentsSet(Params.Artifact.GREEN),
                 new ParallelAction(
-                        new SequentialAction(
-                                spindexer.slotIn(),
-                                new SleepAction(JellyTele.SPINDEXER_DELAY),
-                                spindexer.contentsSet(Params.Artifact.GREEN)
-                        ),
-
-                        intake.intakeOn(),
-                        drive.actionBuilder(shootPose)
-                                .splineToLinearHeading(collectArtifact1,Math.toRadians(-90), intakeMovementConstraint)
-                                .build()
+                        spindexer.slotIn(),
+                        new SleepAction(JellyTele.SPINDEXER_DELAY /1000.0)
                 ),
+                intake.intakeOn(),
+                collectArtifact2.build(),
+                new SleepAction(0.3),
+                intake.intakeOff(),
+                spindexer.contentsSet(Params.Artifact.PURPLE),
                 new ParallelAction(
-                        new SequentialAction(
-                                spindexer.slotIn(),
-                                new SleepAction(JellyTele.SPINDEXER_DELAY),
-                                spindexer.contentsSet(Params.Artifact.PURPLE)
-                        ),
-                        drive.actionBuilder(collectArtifact1)
-                                .strafeToLinearHeading(collectArtifact2.position,collectArtifact2.heading, intakeMovementConstraint)
-                                .build()
+                        spindexer.slotIn(),
+                        new SleepAction(JellyTele.SPINDEXER_DELAY /1000.0)
                 ),
-                new ParallelAction(
-                        new SequentialAction(
-                                spindexer.slotIn(),
-                                new SleepAction(JellyTele.SPINDEXER_DELAY),
-                                spindexer.contentsSet(Params.Artifact.PURPLE)
-                        ),
-                        drive.actionBuilder(collectArtifact2)
-                                .lineToYConstantHeading(collectArtifact3.position.y, intakeMovementConstraint)
-                                .build()
-                ),
-                intake.intakeOff()
+                intake.intakeOn(),
+                collectArtifact3.build(),
+                new SleepAction(0.3),
+                intake.intakeOff(),
+                spindexer.contentsSet(Params.Artifact.PURPLE),
+                new SpindexerFirstOut()
         );
-
-        TrajectoryActionBuilder shootTwo = drive.actionBuilder(collectArtifact3)
-                .strafeToLinearHeading(shootPose.position,shootPose.heading);
 
         TrajectoryActionBuilder park = drive.actionBuilder(shootPose)
                 .lineToX(30);
@@ -141,37 +139,22 @@ public class BlueAudienceAuto extends BaseAuto {
         if (isStopRequested()) return;
         Actions.runBlocking(
                 new SequentialAction(
+                        outtake.outtakeOnFar(),
+                        scanMotif.build(),
                         scanMotif(),
+                        new SpindexerFirstOut(),
                         preshoot.build(),
+                        new SleepAction(0.5),
                         new ShootMotif(),
-                        new ParallelAction(
-                                intake.intakeOn(),
-                                spindexer.slotIn(),
-                                cornerOne.build(),
-                                spindexer.contentsSet(Params.Artifact.PURPLE)
-                        ),
-                        new ParallelAction(
-                                spindexer.slotIn(),
-                                cornerTwo.build(),
-                                spindexer.contentsSet(Params.Artifact.GREEN)
-                        ),
-                        shootOne.build(),
-                        new ParallelAction(
-                                spindexer.purpleOut(),
-                                outtake.outtakeOnFar(),
-                                new SleepAction(JellyTele.FLY_OUTTAKE_DELAY_LONG /1000.0)
-                        ),
-                        swingPaddle(),
-                        new ParallelAction(
-                                spindexer.greenOut(),
-                                outtake.outtakeOnFar(),
-                                new SleepAction(JellyTele.FLY_OUTTAKE_DELAY_SHORT /1000.0)
-                        ),
-                        swingPaddle(),
-                        outtake.outtakeOff(),
+                        spindexer.slotIn(),
                         motifOneCollector,
-                        shootTwo.build(),
+                        outtake.outtakeOnFar(),
+                        new SpindexerFirstOut(),
+                        shootOne.build(),
                         new ShootMotif(),
+                        outtake.outtakeOff(),
+                        //motifOneCollector,
+                        //new ShootMotif(),
                         park.build()
                 )
         );
@@ -190,13 +173,13 @@ public class BlueAudienceAuto extends BaseAuto {
                 } else {
                     shootPose = currentPose;
                 }
-                collectCorner = new Pose2d(shootPose.position.x + corner[0] + offsetX, shootPose.position.y + corner[1] + offsetY, shootPose.heading.toDouble() + Math.toRadians(corner[2] + offsetHeading));
-                collectCorner1 = new Pose2d(shootPose.position.x + corner1[0] + offsetX, shootPose.position.y + corner1[1] + offsetY, shootPose.heading.toDouble() + Math.toRadians(corner1[2] + offsetHeading));
-                collectCorner2 = new Pose2d(shootPose.position.x + corner2[0] + offsetX, shootPose.position.y + corner2[1] + offsetY, shootPose.heading.toDouble() + Math.toRadians(corner2[2] + offsetHeading));
-                collectArtifact = new Pose2d(shootPose.position.x + artifact[0] + offsetX, shootPose.position.y + artifact[1] + offsetY, shootPose.heading.toDouble() + Math.toRadians(artifact[2] + offsetHeading));
-                collectArtifact1 = new Pose2d(shootPose.position.x + artifact1[0] + offsetX, shootPose.position.y + artifact1[1] + offsetY, shootPose.heading.toDouble() + Math.toRadians(artifact1[2] + offsetHeading));
-                collectArtifact2 = new Pose2d(shootPose.position.x + artifact2[0] + offsetX, shootPose.position.y + artifact2[1] + offsetY, shootPose.heading.toDouble() + Math.toRadians(artifact2[2] + offsetHeading));
-                collectArtifact3 = new Pose2d(shootPose.position.x + artifact3[0] + offsetX, shootPose.position.y + artifact3[1] + offsetY, shootPose.heading.toDouble() + Math.toRadians(artifact3[2] + offsetHeading));
+                collectCornerPose = new Pose2d(shootPose.position.x + corner[0] + offsetX, shootPose.position.y + corner[1] + offsetY, shootPose.heading.toDouble() + Math.toRadians(corner[2] + offsetHeading));
+                collectCorner1Pose = new Pose2d(shootPose.position.x + corner1[0] + offsetX, shootPose.position.y + corner1[1] + offsetY, shootPose.heading.toDouble() + Math.toRadians(corner1[2] + offsetHeading));
+                collectCorner2Pose = new Pose2d(shootPose.position.x + corner2[0] + offsetX, shootPose.position.y + corner2[1] + offsetY, shootPose.heading.toDouble() + Math.toRadians(corner2[2] + offsetHeading));
+                collectArtifactPose = new Pose2d(shootPose.position.x + artifact[0] + offsetX, shootPose.position.y + artifact[1] + offsetY, shootPose.heading.toDouble() + Math.toRadians(artifact[2] + offsetHeading));
+                collectArtifact1Pose = new Pose2d(shootPose.position.x + artifact1[0] + offsetX, shootPose.position.y + artifact1[1] + offsetY, shootPose.heading.toDouble() + Math.toRadians(artifact1[2] + offsetHeading));
+                collectArtifact2Pose = new Pose2d(shootPose.position.x + artifact2[0] + offsetX, shootPose.position.y + artifact2[1] + offsetY, shootPose.heading.toDouble() + Math.toRadians(artifact2[2] + offsetHeading));
+                collectArtifact3Pose = new Pose2d(shootPose.position.x + artifact3[0] + offsetX, shootPose.position.y + artifact3[1] + offsetY, shootPose.heading.toDouble() + Math.toRadians(artifact3[2] + offsetHeading));
             }
             return false;
         }

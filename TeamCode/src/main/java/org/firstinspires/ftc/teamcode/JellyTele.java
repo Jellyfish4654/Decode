@@ -142,6 +142,7 @@ public class JellyTele extends BaseOpMode {
                         if (anySlotsOccupied) {
                             spinState = SpinState.PRESPIN_OUTTAKE;
                             flyDelayStartTime = System.currentTimeMillis();
+                            outtake.onNear();
                         } else {
                             controller.rumble(200,false);
                         }
@@ -174,7 +175,7 @@ public class JellyTele extends BaseOpMode {
         
         telemetry.addLine();
         telemetry.addLine("Vision & Color:");
-        telemetry.addData("\tGoalBearing", vision.getGoalBearing(Params.alliance)); // potentially heavy
+        telemetry.addData("\tGoalBearing", vision.getGoalBearing(Params.alliance, true)); // potentially heavy
         telemetry.addData("\tGoalDistance", vision.getGoalDistance(Params.alliance)); // potentially heavy
         telemetry.addData("\tColorSensor", colorSensor.getArtifact());
 
@@ -236,6 +237,7 @@ public class JellyTele extends BaseOpMode {
         spindexer.setSlotOut(slot);
         drivetrain.brake(); // TODO: switch this back to below in startOuttake()? (drivers pref)
         spinDelayStartTime = System.currentTimeMillis();
+        outtake.onNear();
         if (spinState != SpinState.PRESPIN_OUTTAKE) {
             flyDelayStartTime = System.currentTimeMillis();
         }
@@ -263,28 +265,38 @@ public class JellyTele extends BaseOpMode {
     }
     
     private void outtakeVision(boolean aim) {
+        // TODO: do these override buttons for real
         double bearing;
         double distance;
+        boolean isFar = false;
         if (!USE_LOCALIZER) {
-            bearing = vision.getGoalBearing(Params.alliance) ;
             distance = vision.getGoalDistance(Params.alliance);
+            if (gamepad2.right_bumper) {
+                isFar = true;
+            } else if (distance != 0 && !gamepad2.left_bumper) { // ignore if no goal apriltag recognized
+                isFar = distance > DISTANCE_FAR && distance < DISTANCE_TOO_FAR; // near is default
+            }
+            bearing = vision.getGoalBearing(Params.alliance, isFar) ;
         } else {
             bearing = localizer.getGoalBearing(Params.alliance);
             distance = localizer.getGoalDistance(Params.alliance);
+            if (gamepad2.right_bumper) {
+                isFar = true;
+            } else if (!gamepad2.left_bumper) {
+                isFar = distance > DISTANCE_FAR && distance < DISTANCE_TOO_FAR; // near is default
+            }
         }
         
         if (aim) {
             aimRotation = bearing * AIM_ROTATION_SPEED;
         }
         
-        // TODO: do these override buttons for real
-        // ↓ decide power based on distance ↓
-        if (((distance > DISTANCE_FAR && distance < DISTANCE_TOO_FAR) || gamepad2.right_bumper) && !gamepad2.left_bumper) {
+        // ↓ apply power based on distance ↓
+        if (isFar) {
             outtake.onFar();
-        } else { // near is default
+        } else {
             outtake.onNear();
         }
-
     }
     
     private void startOuttake() {
@@ -360,7 +372,7 @@ public class JellyTele extends BaseOpMode {
         prevLoopNanoTime = currentNanoTime;
         
         // endgame alert
-        if (matchTimer.seconds() >= 100 && !alertedEndgame) {
+        if (matchTimer.seconds() >= 110 && !alertedEndgame) {
             alertedEndgame = true;
             controller.megaRumble();
         }

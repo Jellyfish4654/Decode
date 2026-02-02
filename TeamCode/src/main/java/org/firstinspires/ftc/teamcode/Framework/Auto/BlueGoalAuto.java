@@ -266,7 +266,7 @@ public class BlueGoalAuto extends BaseAuto {
         }
         @Override
         public boolean run(@NonNull TelemetryPacket packet) {
-            double goalBearing = vision.getGoalBearing(Params.alliance);
+            double goalBearing = vision.getGoalBearing(Params.alliance, false);
             double goalDistance = vision.getGoalDistance(Params.alliance);
             double goalX = -58.5;
             double goalY = -54.5;
