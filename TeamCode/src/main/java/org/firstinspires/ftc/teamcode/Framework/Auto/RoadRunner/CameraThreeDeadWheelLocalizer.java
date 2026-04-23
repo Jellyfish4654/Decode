@@ -41,16 +41,20 @@ public class CameraThreeDeadWheelLocalizer extends ThreeDeadWheelLocalizer{
         xSum = 0;
         ySum = 0;
         headingSum = 0;
-        for(AprilTagDetection tag : tagDetections){
-            if(tag != null) {
-                if (!(tag.metadata.fieldPosition.get(0) == 0 && tag.metadata.fieldPosition.get(1) == 0 && tag.metadata.fieldPosition.get(2) == 0)) {
-                    xSum += tag.robotPose.getPosition().x;
-                    ySum += tag.robotPose.getPosition().y;
-                    
-                    headingSum += normalizeTo360(-tag.robotPose.getOrientation().getYaw(AngleUnit.DEGREES));
-                    validTagAmount++;
+        try {
+            for (AprilTagDetection tag : tagDetections) {
+                if (tag != null) {
+                    if (!(tag.metadata.fieldPosition.get(0) == 0 && tag.metadata.fieldPosition.get(1) == 0 && tag.metadata.fieldPosition.get(2) == 0)) {
+                        xSum += tag.robotPose.getPosition().x;
+                        ySum += tag.robotPose.getPosition().y;
+                        
+                        headingSum += normalizeTo360(-tag.robotPose.getOrientation().getYaw(AngleUnit.DEGREES));
+                        validTagAmount++;
+                    }
                 }
             }
+        } catch (Exception e) {
+            validTagAmount = 5;
         }
         if(weightVisionFully && validTagAmount >= 1){
             currentPos = new Pose2d(
