@@ -230,6 +230,7 @@ public class JellyTele extends BaseOpMode {
         if (slot == 0) {
             controller.rumble(200,false);
             motifOuttakeLock = false;
+            outtake.off();
             return;
         }
         paddleDown(); // backup safety
